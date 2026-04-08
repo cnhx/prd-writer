@@ -25,6 +25,10 @@ paths:
   template_dir: ./templates
 
 platform_mapping:
+  codex:
+    context_loader: local_files_and_workspace_docs
+    opus_polisher: final_review_prompt_or_best_available_model
+    git_publisher: git_cli_if_repo_exists
   hermes:
     context_loader: file_tools_plus_optional_obsidian
     opus_polisher: subagent_or_model_override

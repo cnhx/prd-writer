@@ -1,0 +1,34 @@
+agent:
+  name: prd-writer
+  platform: claude_code
+  mode: platform_ready
+
+knowledge_base:
+  enabled: false
+  type: files   # files | none
+  root_path: ""
+  include_paths: []
+  fallback_strategy: ask_or_continue_with_gaps
+
+polish:
+  enabled: true
+  preferred_mode: opus   # opus | fallback_model | none
+  strict_preserve_facts: true
+
+publish:
+  save_required: true
+  git_commit: false
+  create_pr: false
+  suggest_commit_message_when_disabled: true
+
+paths:
+  output_dir: ./docs/prd
+  template_dir: ./templates
+
+platform_mapping:
+  claude_code:
+    instruction_file: CLAUDE.md
+    workflow_file: platforms/claude-code/prd-workflow.md
+    polish_file: platforms/claude-code/opus-prd-polish.md
+    context_loader: local_files_and_user_docs
+    git_publisher: git_cli_if_repo_exists
