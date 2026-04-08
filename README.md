@@ -1,10 +1,4 @@
----
-feature: 02-Projects/Tools/prd-writer/assets/banner.svg
-thumbnail: 02-Projects/Tools/prd-writer/assets/banner.svg
----
 # PRD Writer
-
-![](assets/banner.svg)
 
 Portable PRD writer kit for teams that want structured, reusable, cross-platform PRD workflows.
 
