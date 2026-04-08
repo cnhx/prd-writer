@@ -53,6 +53,8 @@ Typical use cases:
 - `platforms/codex/` — Codex-ready adapter files
 - `platforms/claude-code/` — Claude Code-ready adapter files
 - `platforms/openclaw/` — OpenClaw-ready adapter files
+- `scripts/verify-platform-adapters.sh` — adapter consistency verification
+- `tests/verify-platform-adapters.sh` — repository validation entrypoint
 - `docs/PORTABILITY.md` — portability boundaries and release checklist
 - `docs/INSTALL-CODEX.md` — Codex setup notes
 - `docs/INSTALL-CLAUDE-CODE.md` — Claude Code setup notes
@@ -91,6 +93,14 @@ Platform-specific invocation examples:
 - `platforms/codex/sample-invocation.md`
 - `platforms/claude-code/sample-invocation.md`
 - `platforms/openclaw/sample-invocation.md`
+
+## Validation
+
+Run the adapter verification test before opening a PR:
+
+```sh
+sh tests/verify-platform-adapters.sh
+```
 
 ## Minimal mode
 
