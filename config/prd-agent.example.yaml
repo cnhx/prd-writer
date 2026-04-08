@@ -1,0 +1,39 @@
+agent:
+  name: prd-writer
+  mode: portable
+
+knowledge_base:
+  enabled: false
+  type: obsidian   # obsidian | files | none
+  root_path: ""
+  include_paths: []
+  fallback_strategy: ask_or_continue_with_gaps
+
+polish:
+  enabled: true
+  preferred_mode: opus   # opus | fallback_model | none
+  strict_preserve_facts: true
+
+publish:
+  save_required: true
+  git_commit: false
+  create_pr: false
+  suggest_commit_message_when_disabled: true
+
+paths:
+  output_dir: ./outputs
+  template_dir: ./templates
+
+platform_mapping:
+  hermes:
+    context_loader: file_tools_plus_optional_obsidian
+    opus_polisher: subagent_or_model_override
+    git_publisher: git_cli
+  openclaw:
+    context_loader: file_tools_plus_optional_obsidian
+    opus_polisher: model_override_or_review_pass
+    git_publisher: git_cli
+  claude_code:
+    context_loader: local_files_and_user_docs
+    opus_polisher: final_opus_review_pass
+    git_publisher: git_cli_if_repo_exists
