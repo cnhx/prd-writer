@@ -128,11 +128,16 @@ If you plan to extend this repo, the best additions are:
 - install helpers for individual platforms
 - tests or lint rules for PRD structure validation
 
-## License
-
-MIT
-
-
 ## Contributing
 
 Read [`CONTRIBUTING.md`](CONTRIBUTING.md) before opening a pull request.
+
+## Project governance
+
+- [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md)
+- [`SECURITY.md`](SECURITY.md)
+- [`.github/release-template.md`](.github/release-template.md)
+
+## License
+
+MIT
