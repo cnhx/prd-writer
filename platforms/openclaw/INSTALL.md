@@ -6,6 +6,7 @@
 - `platforms/openclaw/prd-workflow.md` -> import as the main workflow
 - `platforms/openclaw/opus-prd-polish.md` -> import if polish is enabled
 - `platforms/openclaw/config.example.yaml` -> copy and rename for local use
+- `platforms/openclaw/sample-invocation.md` -> use as the first run prompt
 
 ## Recommended Setup
 
@@ -13,6 +14,7 @@
 2. Set the output directory before the first run.
 3. Disable git publish until the target repo policy is clear.
 4. Keep knowledge base access optional.
+5. Start from `platforms/openclaw/sample-invocation.md` and pair it with `examples/sample-input-brief.md`.
 
 ## Notes
 

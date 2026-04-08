@@ -73,7 +73,8 @@ Typical use cases:
 2. Follow that directory's `INSTALL.md`
 3. Copy the adapter files into your target workspace
 4. Adjust `config.example.yaml` for your paths and publish policy
-5. Run the workflow against `examples/sample-input-brief.md`
+5. Start from that platform's `sample-invocation.md`
+6. Run the workflow against `examples/sample-input-brief.md`
 
 ### Portable core mode
 
@@ -85,6 +86,11 @@ Typical use cases:
    - Opus polish
    - git commit
 5. Run the workflow against `examples/sample-input-brief.md`
+
+Platform-specific invocation examples:
+- `platforms/codex/sample-invocation.md`
+- `platforms/claude-code/sample-invocation.md`
+- `platforms/openclaw/sample-invocation.md`
 
 ## Minimal mode
 

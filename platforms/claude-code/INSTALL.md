@@ -6,6 +6,7 @@
 - `platforms/claude-code/prd-workflow.md` -> keep as a prompt module or local skill
 - `platforms/claude-code/opus-prd-polish.md` -> keep if polish is enabled
 - `platforms/claude-code/config.example.yaml` -> copy and rename for local use
+- `platforms/claude-code/sample-invocation.md` -> use as the first run prompt
 
 ## Recommended Setup
 
@@ -13,6 +14,7 @@
 2. Keep the workflow and polish files in a stable prompt path.
 3. Set the output directory before the first run.
 4. Disable git publish until the target repo policy is clear.
+5. Start from `platforms/claude-code/sample-invocation.md` and pair it with `examples/sample-input-brief.md`.
 
 ## Notes
 
