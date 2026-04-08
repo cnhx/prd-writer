@@ -38,6 +38,8 @@ Bad contributions usually do one of these:
 - `config/` — example configs by platform
 - `docs/` — install and portability guidance
 - `examples/` — example inputs and outputs
+- `scripts/` — repository maintenance and verification helpers
+- `tests/` — lightweight validation entrypoints
 - `assets/` — visual assets such as banner/social preview
 
 ## Before opening a PR
@@ -60,6 +62,8 @@ Please check:
    - what changed
    - why it matters
    - what platforms were considered
+6. Run:
+   - `sh tests/verify-platform-adapters.sh`
 
 ## PR style
 

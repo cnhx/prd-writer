@@ -1,20 +1,20 @@
 # Install in Claude Code
 
+The ready-to-copy Claude Code adapter lives in `platforms/claude-code/`.
+
 ## Recommended Setup
 
-1. Copy `agent/PRD-AGENT.md` into your Claude Code workspace as the PRD agent definition.
-2. Convert `skills/prd-workflow.md` into either:
-   - a reusable prompt file, or
-   - a local skill if your Claude Code setup supports it.
-3. Convert `skills/opus-prd-polish.md` into a final review prompt.
-4. Start from `config/prd-agent.example.yaml` and adapt paths.
+1. Copy `platforms/claude-code/CLAUDE.md` into the target workspace root, or merge it into an existing `CLAUDE.md`.
+2. Keep `platforms/claude-code/prd-workflow.md` available as a reusable prompt module or local skill.
+3. Keep `platforms/claude-code/opus-prd-polish.md` as the optional final polish prompt.
+4. Copy `platforms/claude-code/config.example.yaml` and adapt the paths and publish settings.
 
 ## Minimum Working Mode
 
 Set:
-- knowledge_base.enabled = false
-- publish.git_commit = false
-- polish.enabled = true or false based on your Opus access
+- `knowledge_base.enabled = false`
+- `publish.git_commit = false`
+- `polish.enabled = false` if you do not have a higher-tier review pass
 
 ## Suggested Invocation Pattern
 
@@ -27,4 +27,4 @@ Set:
 
 ## Compatibility Notes
 
-Claude Code users may not have a formal skill registry. In that case, treat the files in `/skills` as prompt modules, not installable packages.
+Claude Code users may not have a formal skill registry. In that case, treat the files in `platforms/claude-code/` as prompt modules, not installable packages.

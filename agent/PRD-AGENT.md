@@ -31,6 +31,16 @@ The agent depends on capabilities, not platform-specific names:
 
 ## Platform Mapping
 
+### Codex
+
+- Context Loader -> workspace file reads, repo search, and user-provided docs
+- Product Interrogation -> prompt-guided question flow
+- PRD Composer -> markdown draft written to file
+- PRD Reviewer -> explicit review checklist pass
+- Optional Knowledge Base Connector -> local folder or disabled mode
+- Optional Opus Polisher -> final review prompt or best available model
+- Optional Git Publisher -> git CLI if repository available
+
 ### Hermes / OpenClaw
 
 - Context Loader -> file search + file read + optional Obsidian skill

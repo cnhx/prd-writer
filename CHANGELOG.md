@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.0
+- added platform-ready adapters for Codex, Claude Code, and OpenClaw
+- fixed README rendering by removing repo-specific frontmatter
+- added platform-specific invocation examples
+- added a repository validation script for adapter consistency
+
 ## 0.2.0
 - added example input, output, and invocation files
 - added platform-specific config examples for Claude Code, OpenClaw, and Hermes
