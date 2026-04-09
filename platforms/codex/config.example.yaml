@@ -1,3 +1,7 @@
+# PRD Writer config for Codex
+# After copying to your project, update paths below to match your layout.
+# The defaults assume:  .prd/prd-workflow.md  and  .prd/opus-prd-polish.md
+
 agent:
   name: prd-writer
   platform: codex
@@ -23,12 +27,11 @@ publish:
 
 paths:
   output_dir: ./docs/prd
-  template_dir: ./templates
+  workflow_file: .prd/prd-workflow.md
+  polish_file: .prd/opus-prd-polish.md
 
 platform_mapping:
   codex:
     instruction_file: AGENTS.md
-    workflow_file: platforms/codex/prd-workflow.md
-    polish_file: platforms/codex/opus-prd-polish.md
     context_loader: local_files_and_workspace_docs
     git_publisher: git_cli_if_repo_exists

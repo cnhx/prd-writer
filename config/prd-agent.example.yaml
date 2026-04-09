@@ -21,18 +21,15 @@ publish:
   suggest_commit_message_when_disabled: true
 
 paths:
-  output_dir: ./outputs
-  template_dir: ./templates
+  output_dir: ./docs/prd
+  workflow_file: skills/prd-workflow.md
+  polish_file: skills/opus-prd-polish.md
 
 platform_mapping:
   codex:
     context_loader: local_files_and_workspace_docs
     opus_polisher: final_review_prompt_or_best_available_model
     git_publisher: git_cli_if_repo_exists
-  hermes:
-    context_loader: file_tools_plus_optional_obsidian
-    opus_polisher: subagent_or_model_override
-    git_publisher: git_cli
   openclaw:
     context_loader: file_tools_plus_optional_obsidian
     opus_polisher: model_override_or_review_pass

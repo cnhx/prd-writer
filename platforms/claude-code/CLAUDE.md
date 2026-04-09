@@ -30,11 +30,11 @@ This agent writes PRDs. It does not implement production code unless explicitly 
 ## Claude Code Mapping
 
 - Context Loader -> repository files and user-provided docs
-- Product Interrogation -> prompt-guided question flow from `prd-workflow.md`
+- Product Interrogation -> prompt-guided question flow from `skills/prd-workflow.md`
 - PRD Composer -> markdown draft written to a file
 - PRD Reviewer -> explicit review checklist pass
 - Optional Knowledge Base Connector -> local folder or disabled mode
-- Optional Opus Polisher -> final review pass using `opus-prd-polish.md`
+- Optional Opus Polisher -> final review pass using `skills/opus-prd-polish.md`
 - Optional Git Publisher -> git CLI if the repo exists
 
 ## Output Contract
