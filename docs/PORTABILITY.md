@@ -1,79 +1,45 @@
 # Portability Notes
 
+## Skill-Based Architecture
+
+prd-writer is a skill collection. On Claude Code, install via `git clone` into `~/.claude/skills/`. On other platforms, copy the skill markdown files and use them as prompt modules.
+
 ## What Is Portable
 
 Portable:
-- agent mission and rules
-- PRD workflow phases
-- review checklist
-- output contract
-- optional configuration model
+- PRD workflow phases and question themes
+- Review checklist
+- Drafting rules (English identifiers, art/design separation, uncertainty marking)
+- Skill content (standard markdown with YAML frontmatter)
 
 Platform-specific:
-- file search tools
-- knowledge base connectors
-- model invocation syntax
-- skill installation method
-- git command execution environment
-- workspace instruction file names and merge strategy
+- Installation method (clone + symlink vs. manual copy)
+- Tool names and invocation syntax
+- Skill discovery mechanism
+- Git execution environment
 
-## Canonical Files
+## Cross-Platform Usage
 
-The workflow and polish skills live in `skills/` and are shared by all platform adapters:
+### Claude Code
 
-- `skills/prd-workflow.md` — the 5-phase PRD workflow
-- `skills/opus-prd-polish.md` — optional final polish pass
+Clone to `~/.claude/skills/prd-writer/` and create symlinks. Skills are discovered automatically. See `README.md` for install commands.
 
-Platform adapters in `platforms/` contain only what is genuinely platform-specific:
-- instruction file (AGENTS.md, CLAUDE.md, or AGENT.md)
-- config example with platform-appropriate defaults
-- install guide with concrete copy commands
-- sample invocation with actual prompts
+### Codex
 
-## Platform-Ready Adapters
+Copy skill markdown files into your project as prompt modules. See `platforms/codex/INSTALL.md`.
 
-This repository ships platform-ready adapters under:
+### OpenClaw
 
-- `platforms/codex/`
-- `platforms/claude-code/`
-- `platforms/openclaw/`
+Copy skill markdown files into your agent workspace. See `platforms/openclaw/INSTALL.md`.
 
-Keep these parts aligned across all adapters:
+## YAML Frontmatter
 
-- mission and non-negotiable rules
-- workflow phases (referenced from `skills/`)
-- review checklist
-- output contract
-- fallback handling for missing knowledge base, polish, and git publish
-
-Adapt only the parts that are genuinely platform-specific:
-
-- file names such as `AGENTS.md` or `CLAUDE.md`
-- where the agent instructions live
-- whether workflow files are imported as skills or kept as prompt modules
-- how optional polish is triggered
-- how git commit is described in that environment
-
-## Minimal Cross-Platform Mode
-
-A valid minimal setup requires only:
-- one capable model
-- local file access or pasted context
-- markdown output
-
-Optional modules:
-- Obsidian vault access
-- Opus polish
-- git commit
+Each skill file starts with YAML frontmatter (`---name: ...---`). On Claude Code this is parsed for skill discovery. On other platforms it is harmless metadata that can be ignored or stripped.
 
 ## Release Checklist
 
-Before publishing this kit externally, verify:
-- no private file paths are hardcoded
-- Obsidian is optional
-- git commit is optional
-- Opus is optional or has fallback
-- examples do not expose internal company data
-- dependency names are abstract enough to remap
-- platform adapters do not contradict the portable core
-- workflow and polish files exist only in `skills/`, not duplicated in platform dirs
+Before publishing:
+- No private file paths are hardcoded
+- All optional dependencies degrade gracefully if missing
+- Examples do not expose internal company data
+- Skill content is written in English (output language not forced)

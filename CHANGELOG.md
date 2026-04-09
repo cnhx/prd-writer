@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.5.0
+- restructured as a skill collection (following gstack pattern)
+- each skill is a self-contained directory with SKILL.md and frontmatter
+- bundled grill-me as a sub-skill for idea stress-testing
+- added /write-prd skill with integrated grill-me optional step (Phase 0.5)
+- added /prd-refine and /opus-prd-polish as standalone skills
+- added dependency declaration via SKILL.md frontmatter (gstack as external dep)
+- added scripts/setup-dependencies.sh for installation verification
+- added docs/DEPENDENCIES.md documenting the dependency model
+- removed agent/PRD-AGENT.md (rules folded into individual skills)
+- removed config/ directory (skills are self-contained, no external config needed)
+- removed platforms/claude-code/ adapter (direct clone replaces it)
+- simplified platforms/codex/ and platforms/openclaw/ install guides
+- removed tests/ and assets/ directories
+
 ## 0.4.0
 - eliminated workflow and polish duplication: skills/ is now the single source of truth
 - rewrote all INSTALL.md files with concrete shell commands, directory trees, and invocation examples
