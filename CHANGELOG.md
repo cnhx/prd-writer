@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.4.0
+- eliminated workflow and polish duplication: skills/ is now the single source of truth
+- rewrote all INSTALL.md files with concrete shell commands, directory trees, and invocation examples
+- rewrote all sample-invocation.md files with actual copy-paste prompts
+- fixed config paths to work after copying to a target project
+- removed Hermes platform (no adapter existed)
+- removed redundant docs/INSTALL-*.md files (consolidated into platforms/*/INSTALL.md)
+- removed redundant config/claude-code.example.yaml and config/openclaw.example.yaml
+- removed CODE_OF_CONDUCT.md, SECURITY.md, and .github/ governance files
+- added Glossary section to README defining "prompt module"
+- added Fast Start section to README with actual shell commands
+- updated test script to verify new structure and catch regressions
+
 ## 0.3.0
 - added platform-ready adapters for Codex, Claude Code, and OpenClaw
 - fixed README rendering by removing repo-specific frontmatter

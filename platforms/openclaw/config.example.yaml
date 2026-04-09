@@ -1,3 +1,7 @@
+# PRD Writer config for OpenClaw
+# After copying to your project, update paths below to match your layout.
+# The defaults assume:  .prd/prd-workflow.md  and  .prd/opus-prd-polish.md
+
 agent:
   name: prd-writer
   platform: openclaw
@@ -23,12 +27,11 @@ publish:
 
 paths:
   output_dir: ./docs/prd
-  template_dir: ./templates
+  workflow_file: .prd/prd-workflow.md
+  polish_file: .prd/opus-prd-polish.md
 
 platform_mapping:
   openclaw:
     instruction_file: AGENT.md
-    workflow_file: platforms/openclaw/prd-workflow.md
-    polish_file: platforms/openclaw/opus-prd-polish.md
     context_loader: file_tools_plus_optional_knowledge_base
     git_publisher: git_cli

@@ -17,26 +17,31 @@ Platform-specific:
 - git command execution environment
 - workspace instruction file names and merge strategy
 
+## Canonical Files
+
+The workflow and polish skills live in `skills/` and are shared by all platform adapters:
+
+- `skills/prd-workflow.md` — the 5-phase PRD workflow
+- `skills/opus-prd-polish.md` — optional final polish pass
+
+Platform adapters in `platforms/` contain only what is genuinely platform-specific:
+- instruction file (AGENTS.md, CLAUDE.md, or AGENT.md)
+- config example with platform-appropriate defaults
+- install guide with concrete copy commands
+- sample invocation with actual prompts
+
 ## Platform-Ready Adapters
 
-This repository now ships platform-ready adapters under:
+This repository ships platform-ready adapters under:
 
 - `platforms/codex/`
 - `platforms/claude-code/`
 - `platforms/openclaw/`
 
-Each adapter should provide:
-
-- a platform-native agent instruction file
-- a PRD workflow prompt or skill file
-- an optional polish prompt
-- a platform-specific config example
-- an install guide that explains what to copy and what to merge
-
 Keep these parts aligned across all adapters:
 
 - mission and non-negotiable rules
-- workflow phases
+- workflow phases (referenced from `skills/`)
 - review checklist
 - output contract
 - fallback handling for missing knowledge base, polish, and git publish
@@ -71,3 +76,4 @@ Before publishing this kit externally, verify:
 - examples do not expose internal company data
 - dependency names are abstract enough to remap
 - platform adapters do not contradict the portable core
+- workflow and polish files exist only in `skills/`, not duplicated in platform dirs

@@ -10,10 +10,9 @@ It is built around three layers:
 2. workflow skills — question flow, PRD structure, review checklist, save/publish sequence
 3. config — knowledge base, polish mode, publish policy, platform mapping
 
-It supports two ways of using the kit:
+## Glossary
 
-1. portable core — start from the shared `agent/`, `skills/`, and `config/` files
-2. platform-ready adapters — copy the ready-made files from `platforms/`
+**Prompt module** — A markdown file that contains instructions for the agent. It is not installed as a software package. The agent reads the file and follows the instructions as part of its context window. If your platform has a formal skill registry, you can register the file there; otherwise reference it by path in your invocation or config.
 
 ## What this is for
 
@@ -41,56 +40,48 @@ Typical use cases:
 
 ## Repository structure
 
-- `agent/PRD-AGENT.md` — portable agent definition
-- `skills/prd-workflow.md` — main PRD workflow
-- `skills/opus-prd-polish.md` — final polish pass
-- `config/prd-agent.example.yaml` — base config example
-- `config/claude-code.example.yaml` — Claude Code-oriented config
-- `config/openclaw.example.yaml` — OpenClaw-oriented config
-- `config/hermes.example.yaml` — Hermes-oriented config
-- `platforms/codex/` — Codex-ready adapter files
-- `platforms/claude-code/` — Claude Code-ready adapter files
-- `platforms/openclaw/` — OpenClaw-ready adapter files
-- `scripts/verify-platform-adapters.sh` — adapter consistency verification
-- `tests/verify-platform-adapters.sh` — repository validation entrypoint
+- `agent/PRD-AGENT.md` — portable agent definition and output contract
+- `skills/prd-workflow.md` — main PRD workflow (canonical, used by all platforms)
+- `skills/opus-prd-polish.md` — final polish pass (canonical, used by all platforms)
+- `config/prd-agent.example.yaml` — base config for portable-core mode
+- `platforms/codex/` — Codex adapter (AGENTS.md, config, install guide, sample invocation)
+- `platforms/claude-code/` — Claude Code adapter (CLAUDE.md, config, install guide, sample invocation)
+- `platforms/openclaw/` — OpenClaw adapter (AGENT.md, config, install guide, sample invocation)
+- `examples/` — sample brief, sample PRD output, sample invocation
+- `scripts/verify-platform-adapters.sh` — adapter verification
+- `tests/verify-platform-adapters.sh` — test entrypoint
 - `docs/PORTABILITY.md` — portability boundaries and release checklist
-- `docs/INSTALL-CODEX.md` — Codex setup notes
-- `docs/INSTALL-CLAUDE-CODE.md` — Claude Code setup notes
-- `docs/INSTALL-OPENCLAW.md` — OpenClaw setup notes
-- `docs/INSTALL-HERMES.md` — Hermes setup notes
-- `examples/sample-input-brief.md` — sample brief
-- `examples/sample-output-prd.md` — sample PRD output
-- `examples/sample-invocation.md` — sample invocation prompt
 
-## Fast start
+## Fast start (Claude Code)
 
-### Platform-ready mode
+```sh
+git clone <repo-url> prd-writer
+mkdir -p my-project/.prd
+cp prd-writer/platforms/claude-code/CLAUDE.md my-project/
+cp prd-writer/skills/prd-workflow.md my-project/.prd/
+cp prd-writer/skills/opus-prd-polish.md my-project/.prd/
+cp prd-writer/platforms/claude-code/config.example.yaml my-project/.prd/config.yaml
+cp prd-writer/examples/sample-input-brief.md my-project/.prd/
+```
 
-1. Choose one platform:
-   - `platforms/codex/`
-   - `platforms/claude-code/`
-   - `platforms/openclaw/`
-2. Follow that directory's `INSTALL.md`
-3. Copy the adapter files into your target workspace
-4. Adjust `config.example.yaml` for your paths and publish policy
-5. Start from that platform's `sample-invocation.md`
-6. Run the workflow against `examples/sample-input-brief.md`
+```
+cd my-project
+claude "Read .prd/prd-workflow.md and .prd/config.yaml.
+Write a PRD for [your product]. Save to docs/prd/my-prd.md."
+```
 
-### Portable core mode
+For other platforms:
+- `platforms/codex/INSTALL.md`
+- `platforms/openclaw/INSTALL.md`
+
+## Portable core mode
+
+If you prefer to start from the shared core instead of a platform adapter:
 
 1. Copy `agent/PRD-AGENT.md` into your agent workspace
-2. Copy or translate the files under `skills/` into your platform's prompt or skill format
+2. Copy the files under `skills/` into your platform's prompt or skill format
 3. Start from `config/prd-agent.example.yaml`
-4. Decide whether to enable:
-   - knowledge base access
-   - Opus polish
-   - git commit
-5. Run the workflow against `examples/sample-input-brief.md`
-
-Platform-specific invocation examples:
-- `platforms/codex/sample-invocation.md`
-- `platforms/claude-code/sample-invocation.md`
-- `platforms/openclaw/sample-invocation.md`
+4. Decide whether to enable knowledge base access, Opus polish, and git commit
 
 ## Validation
 
@@ -163,12 +154,6 @@ If you plan to extend this repo, the best additions are:
 ## Contributing
 
 Read [`CONTRIBUTING.md`](CONTRIBUTING.md) before opening a pull request.
-
-## Project governance
-
-- [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md)
-- [`SECURITY.md`](SECURITY.md)
-- [`.github/release-template.md`](.github/release-template.md)
 
 ## License
 

@@ -41,12 +41,13 @@ The agent depends on capabilities, not platform-specific names:
 - Optional Opus Polisher -> final review prompt or best available model
 - Optional Git Publisher -> git CLI if repository available
 
-### Hermes / OpenClaw
+### OpenClaw
 
-- Context Loader -> file search + file read + optional Obsidian skill
+- Context Loader -> file search + file read + optional Obsidian connector
 - Product Interrogation -> PRD workflow skill phase questions
 - PRD Composer -> PRD workflow skill template
 - PRD Reviewer -> PRD workflow review checklist
+- Optional Knowledge Base Connector -> Obsidian vault or disabled mode
 - Optional Opus Polisher -> separate Opus subagent or model override
 - Optional Git Publisher -> local git CLI
 

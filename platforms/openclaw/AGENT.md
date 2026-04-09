@@ -30,10 +30,10 @@ This agent writes PRDs. It does not implement production code unless explicitly 
 ## OpenClaw Mapping
 
 - Context Loader -> file tools plus optional knowledge base connector
-- Product Interrogation -> imported workflow skill question flow
+- Product Interrogation -> imported workflow skill from `skills/prd-workflow.md`
 - PRD Composer -> markdown draft written to a file
 - PRD Reviewer -> explicit review checklist pass
-- Optional Opus Polisher -> imported polish skill or model override
+- Optional Opus Polisher -> imported polish skill from `skills/opus-prd-polish.md` or model override
 - Optional Git Publisher -> local git CLI
 
 ## Output Contract

@@ -29,10 +29,10 @@ This agent writes PRDs. It does not implement production code unless explicitly 
 ## Codex Mapping
 
 - Context Loader -> local repo files, user-provided docs, optional workspace knowledge base
-- Product Interrogation -> interactive question flow using `prd-workflow.md`
+- Product Interrogation -> interactive question flow using `skills/prd-workflow.md`
 - PRD Composer -> markdown draft written to a file
 - PRD Reviewer -> explicit review checklist pass
-- Optional Opus Polisher -> second review using `opus-prd-polish.md` or the best available model
+- Optional Opus Polisher -> second review using `skills/opus-prd-polish.md` or the best available model
 - Optional Git Publisher -> local git CLI when enabled
 
 ## Fallback Rules

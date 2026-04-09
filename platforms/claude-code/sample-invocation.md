@@ -1,14 +1,36 @@
-# Claude Code Sample Invocation
+# Claude Code: Sample Invocation
 
-Use the PRD agent in this Claude Code workspace to create a product requirements document from `examples/sample-input-brief.md`.
+## Quick start
 
-Execution requirements:
-- load the brief and any local repository documents that affect the PRD
-- ask one key question at a time when context is missing
-- write the PRD draft to a markdown file instead of returning the whole document in chat
-- do not force output language; follow the user's preference
-- keep all variables, states, events, and config fields in readable English identifiers
-- keep art and design requirements in a dedicated section
-- mark unknown math, compliance, and market facts explicitly
-- run the optional polish pass only if enabled in config
-- save the final PRD and return the output contract with publish status
+With `CLAUDE.md` and `.prd/` already set up in your project:
+
+```
+claude "Read .prd/prd-workflow.md and .prd/config.yaml.
+Then write a PRD for the product described in examples/sample-input-brief.md.
+Save the output to docs/prd/skyrush-prd.md."
+```
+
+## Minimal invocation (no brief file)
+
+```
+claude "Follow .prd/prd-workflow.md to write a PRD for a mobile crash game
+called SkyRush targeting Southeast Asia. Ask me questions one at a time.
+Save the result to docs/prd/skyrush-prd.md."
+```
+
+## With polish enabled
+
+```
+claude "Read .prd/prd-workflow.md and .prd/config.yaml.
+Write a PRD for the product in my-brief.md.
+After the review checklist, run the polish pass from .prd/opus-prd-polish.md.
+Save to docs/prd/my-prd.md."
+```
+
+## With git commit
+
+```
+claude "Read .prd/prd-workflow.md and .prd/config.yaml.
+Write a PRD for the product in my-brief.md.
+Save to docs/prd/my-prd.md and commit the result."
+```

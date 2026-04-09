@@ -1,12 +1,28 @@
-# Sample Invocation
+# Sample Invocation (Platform-Agnostic)
 
-Use the PRD agent to create a product requirements document for the attached brief.
+These examples show the prompt text you would give your agent. Replace the command prefix with whatever your platform uses (`claude`, `codex`, or your OpenClaw invocation method).
 
-Requirements:
-- ask one key question at a time if context is missing
-- do not force output language; follow my preference
-- all variables and states must include readable English identifiers
-- keep art requirements in a dedicated section
-- mark unknown math and compliance details explicitly
-- run optional Opus polish if configured
-- save the final PRD and return publish status
+## From a brief file
+
+```
+Read .prd/prd-workflow.md and .prd/config.yaml.
+Write a PRD for the product described in examples/sample-input-brief.md.
+Save the output to docs/prd/skyrush-prd.md.
+```
+
+## From a verbal description
+
+```
+Follow .prd/prd-workflow.md to write a PRD for a mobile crash game
+called SkyRush targeting Southeast Asia. Ask me questions one at a time.
+Save the result to docs/prd/skyrush-prd.md.
+```
+
+## With polish and git commit
+
+```
+Read .prd/prd-workflow.md and .prd/config.yaml.
+Write a PRD for the product in my-brief.md.
+After the review checklist, run the polish pass from .prd/opus-prd-polish.md.
+Save to docs/prd/my-prd.md and commit the result.
+```

@@ -1,14 +1,34 @@
-# OpenClaw Sample Invocation
+# OpenClaw: Sample Invocation
 
-Use the PRD agent in this OpenClaw workspace to create a product requirements document from `examples/sample-input-brief.md`.
+## Quick start
 
-Execution requirements:
-- load the brief and any local project files that affect product scope
-- ask one key question at a time when context is missing
-- write the PRD draft to a markdown file instead of returning the full draft in chat
-- do not force output language; follow the user's preference
-- keep all variables, states, events, and config fields in readable English identifiers
-- keep art and design requirements in a dedicated section
-- mark unknown math, compliance, and market facts explicitly
-- run the optional polish pass only if enabled in config
-- save the final PRD and return the output contract with publish status
+With `AGENT.md` and `.prd/` already set up in your workspace:
+
+```
+Run the prd-workflow skill from .prd/prd-workflow.md against the brief
+in examples/sample-input-brief.md. Use the config at .prd/config.yaml.
+Save the PRD to docs/prd/skyrush-prd.md.
+```
+
+## Minimal invocation (no brief file)
+
+```
+Follow .prd/prd-workflow.md to write a PRD for a mobile crash game
+called SkyRush targeting Southeast Asia. Ask me questions one at a time.
+Save the result to docs/prd/skyrush-prd.md.
+```
+
+## With polish enabled
+
+```
+Run the prd-workflow skill from .prd/prd-workflow.md against my-brief.md.
+After the review checklist, run the polish pass from .prd/opus-prd-polish.md.
+Save to docs/prd/my-prd.md.
+```
+
+## With git commit
+
+```
+Run the prd-workflow skill from .prd/prd-workflow.md against my-brief.md.
+Save to docs/prd/my-prd.md and commit the result.
+```

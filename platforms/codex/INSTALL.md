@@ -1,32 +1,73 @@
-# Install the Codex Adapter
+# Install: Codex
 
-## Files to Copy
+## Prerequisites
 
-- `platforms/codex/AGENTS.md` -> `AGENTS.md`
-- `platforms/codex/prd-workflow.md` -> keep in the workspace
-- `platforms/codex/opus-prd-polish.md` -> keep in the workspace if polish is enabled
-- `platforms/codex/config.example.yaml` -> copy and rename for local use
-- `platforms/codex/sample-invocation.md` -> use as the first run prompt
+- Codex CLI or workspace environment
+- A project directory where you want PRD output
 
-## Recommended Setup
+## Step 1: Copy files to your project
 
-1. Merge `platforms/codex/AGENTS.md` into the workspace root instructions if `AGENTS.md` already exists.
-2. Keep the workflow and polish files in a stable path that the workspace can reference.
-3. Set the output directory before the first run.
-4. Disable git publish until the target repo policy is clear.
-5. Start from `platforms/codex/sample-invocation.md` and pair it with `examples/sample-input-brief.md`.
+Run from the prd-writer repo root:
 
-## Suggested Invocation
+```sh
+cp platforms/codex/AGENTS.md /path/to/your/project/
+mkdir -p /path/to/your/project/.prd
+cp skills/prd-workflow.md /path/to/your/project/.prd/
+cp skills/opus-prd-polish.md /path/to/your/project/.prd/
+cp platforms/codex/config.example.yaml /path/to/your/project/.prd/config.yaml
+cp examples/sample-input-brief.md /path/to/your/project/.prd/
+```
 
-- load the brief and local docs
-- run the question flow from `prd-workflow.md`
-- write the draft to a markdown file
-- run the review checklist
-- run the optional polish pass
-- save and optionally commit
+If your project already has an `AGENTS.md`, merge the PRD agent rules into it rather than replacing it.
 
-## Notes
+Your project should now look like:
 
-- Do not hardcode private vault paths.
-- Prefer local files over external assumptions.
-- Return `DONE_WITH_GAPS` when the PRD is usable but incomplete.
+```
+your-project/
+├── AGENTS.md
+└── .prd/
+    ├── config.yaml
+    ├── prd-workflow.md
+    ├── opus-prd-polish.md
+    └── sample-input-brief.md
+```
+
+## Step 2: Edit config.yaml
+
+Open `.prd/config.yaml` and update:
+
+- `paths.output_dir` — where PRDs should be saved (default: `./docs/prd`)
+- `polish.enabled` — `true` or `false`
+- `publish.git_commit` — `true` or `false`
+
+## Step 3: Run it
+
+```
+codex "Read .prd/prd-workflow.md and .prd/config.yaml.
+Then write a PRD for the product described in my-brief.md.
+Save the output to docs/prd/my-prd.md."
+```
+
+Or start with the included example brief:
+
+```
+codex "Read .prd/prd-workflow.md and .prd/config.yaml.
+Write a PRD for the product in .prd/sample-input-brief.md.
+Save to docs/prd/skyrush-prd.md."
+```
+
+See `sample-invocation.md` in this directory for more examples.
+
+## Minimum working mode
+
+Set in `.prd/config.yaml`:
+
+- `knowledge_base.enabled: false`
+- `publish.git_commit: false`
+- `polish.enabled: false`
+
+This gives you a working PRD workflow with just a model and file access.
+
+## What "prompt module" means
+
+This kit uses the term "prompt module" to mean a markdown file that contains instructions for the agent. It is not installed as a package. The agent reads the file content as part of its context window. If your setup has a formal skill registry, you can register the workflow file there instead of referencing it by path.
