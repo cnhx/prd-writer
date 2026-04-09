@@ -6,7 +6,7 @@ prd-writer uses a simple dependency model with two categories:
 
 ### Bundled
 
-Skills included in this repo. Installed automatically when you clone.
+Skills included in this repo. After cloning, create symlinks to expose them to Claude Code (see README for commands).
 
 | Skill | Purpose |
 |-------|---------|

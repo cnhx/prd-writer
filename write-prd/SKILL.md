@@ -105,6 +105,13 @@ Sequence:
 2. Optional: run `/opus-prd-polish` for a final polish pass
 3. Save file to user-specified path (default: `docs/prd/`)
 4. Optional: git commit
+5. Report completion status:
+   - `DONE` — all sections complete, no known gaps
+   - `DONE_WITH_GAPS` — usable draft but has unknowns (list them as `missing_info`)
+   - `BLOCKED` — cannot proceed, state what is blocking
+
+When the draft is usable but incomplete, always return `DONE_WITH_GAPS` rather than
+blocking or inventing data. Mark uncertain facts as `to_be_confirmed`.
 
 ## After Completion
 
