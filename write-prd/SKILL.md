@@ -62,7 +62,32 @@ If user skips, proceed to Phase 1.
 
 ## Phase 1 — Product Interrogation
 
-Ask one question at a time.
+### Phase 1.0 — Reverse-engineer the story (30 seconds, before forward questions)
+
+Before starting the forward 6-theme interrogation, ask the author to answer four
+reverse questions in one line each. These surface whether the PRD's core value
+proposition is clear *before* the forward questions dig into details.
+
+1. **Contribution** — what specific new capability / value does this PRD propose?
+   (One line. Not a feature list — a value statement.)
+2. **Insight** — what observation or shift makes this possible now? (Technology,
+   user behavior, market condition, internal capability — pick one.)
+3. **Challenge** — what does this address that existing options fail at? (A concrete
+   failure mode of the status quo, not "it's not optimized.")
+4. **Framing** — how should we describe the task category so a reader naturally
+   arrives at #3? (The framing sentence for §3 Market Strategy / §1 Summary.)
+
+If the author cannot answer #1, #2, or #3 crisply, stop here and recommend:
+- Run `/grill-me` to walk the decision tree, or
+- Go talk to stakeholders and come back.
+
+Record the four answers as the **Story Summary**. It is an artifact consumed by
+Phase 3 (Summary and Project Positioning sections).
+
+### Phase 1.x — Forward interrogation (6 themes)
+
+Now ask one question at a time across these themes. If a theme was already answered
+by the Rejection Letter or Story Summary, skip it.
 
 Required question themes:
 1. Market truth — is there real demand?
