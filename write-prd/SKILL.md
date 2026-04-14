@@ -101,7 +101,9 @@ Required sections:
 
 Drafting rules:
 - **Feature Trinity (applies to §5 Functional requirements)**: every user-facing
-  feature must include three elements. See `examples/sample-feature-trinity.md`.
+  feature must include three elements. See `../examples/sample-feature-trinity.md`
+  (relative to this file; the path resolves correctly in the repo and in any
+  install layout that preserves `examples/` as a sibling of the skill dirs).
   - **User job** — who is the user, in what situation, trying to accomplish what
     outcome? (Job-to-be-done framing, one sentence.)
   - **Mechanism** — how the feature does the job. (One observable sentence: what
