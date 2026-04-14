@@ -57,12 +57,16 @@ entire draft.
 
 **Steps:**
 
-1. List 5 stakeholders who will see this PRD. Typical set:
+1. Identify **3 to 5 stakeholders** who will actually review this PRD. Typical
+   candidates (pick the ones that apply — do not invent reviewers):
    - Leadership / business owner (ROI, strategic fit)
    - Engineering lead (effort, feasibility, tech debt)
    - Compliance / legal (regulatory, privacy, consent)
    - Finance (unit economics, budget)
    - GTM / existing product line owner (conflicts, cannibalization)
+
+   Fewer than 3 is acceptable for internal infra PRDs with a narrow audience;
+   more than 5 usually means scope is too broad — shrink the scope first.
 2. For each stakeholder, draft the single most likely rejection quote.
 3. For each rejection, draft a one-line **Mitigation** — the PRD section, evidence,
    or scope change that addresses it. If you cannot mitigate, mark it
@@ -73,7 +77,7 @@ entire draft.
 ```markdown
 # Rejection Letter Pre-empt — <PRD name>
 
-## Top 5 predicted rejection reasons
+## Top predicted rejection reasons (3–5 entries)
 
 1. **[Stakeholder]**: "[rejection quote]"
    - Mitigation: [PRD section / evidence / scope change]
@@ -81,11 +85,7 @@ entire draft.
 
 2. ...
 
-3. ...
-
-4. ...
-
-5. ...
+(continue for each real stakeholder; 3 to 5 total, not padded)
 ```
 
 See `../examples/sample-rejection-preempt.md` for a full example.
