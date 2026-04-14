@@ -41,6 +41,25 @@ Example in a Chinese PRD:
 > - 事件：`on_spin_start`、`on_reel_stop`
 > - 配置字段：`reel_count`、`rtp_target`
 
+## Artifact flow
+
+Explicit view of what each skill produces and consumes. Mirrors the handoff table
+convention used in EvoSkills.
+
+| Artifact | Produced by | Consumed by | Location |
+|---|---|---|---|
+| Rejection-preempt letter (5 predicted rejections + mitigations) | `/write-prd` Phase 0.5 Part A | `/write-prd` Phase 4.1 content check | `<prd-dir>/<name>-rejection-preempt.md`, linked from PRD |
+| Grill-me consensus log (resolved branches + open questions) | `/grill-me` (optional) | `/write-prd` Phase 1.x | Inline in conversation context |
+| Story summary (contribution / insight / challenge / framing) | `/write-prd` Phase 1.0 reverse-story | `/write-prd` Phase 3 §1 Summary + §2 Project positioning | Inline in conversation context |
+| Phase 2 premise output (3–5 assumptions + 2–3 options + recommendation) | `/write-prd` Phase 2 | `/write-prd` Phase 3 Drafting | Inline, see `examples/sample-phase2-premise.md` |
+| Feature Trinity rows (user job / mechanism / success signal per feature) | `/write-prd` Phase 3 §5 | `/write-prd` Phase 4 Trinity completeness check | Inline in PRD §5, see `examples/sample-feature-trinity.md` |
+| Full PRD draft | `/write-prd` Phase 3 | `/prd-refine`, `/opus-prd-polish` | `docs/prd/<name>.md` |
+| Polished PRD + edit list + unresolved gaps | `/opus-prd-polish` | human review / commit | Overwrites `docs/prd/<name>.md`; edit list inline |
+
+Sub-skills are composable: `/grill-me` can run standalone for any plan, not just
+PRDs. `/prd-refine` and `/opus-prd-polish` accept any PRD, not just ones produced
+by `/write-prd`.
+
 ## Dependencies
 
 **Bundled** (included in this repo):
