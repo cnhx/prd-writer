@@ -4,22 +4,48 @@ Skill collection for structured PRD authoring. 5-phase workflow, optional Opus p
 
 ## Install (Claude Code)
 
+Two install patterns are supported. Pick one.
+
+### Pattern A — clone directly into the skills directory
+
 ```sh
 cd ~/.claude/skills
 git clone <repo-url> prd-writer
 
-# 创建子 skill symlink
-ln -s prd-writer/write-prd write-prd
-ln -s prd-writer/prd-refine prd-refine
-ln -s prd-writer/grill-me grill-me
-ln -s prd-writer/opus-prd-polish opus-prd-polish
+# 子 skill symlink（绝对路径，和 setup 脚本保持一致）
+ln -s ~/.claude/skills/prd-writer/write-prd       ~/.claude/skills/write-prd
+ln -s ~/.claude/skills/prd-writer/prd-refine      ~/.claude/skills/prd-refine
+ln -s ~/.claude/skills/prd-writer/grill-me        ~/.claude/skills/grill-me
+ln -s ~/.claude/skills/prd-writer/opus-prd-polish ~/.claude/skills/opus-prd-polish
 ```
 
-Verify installation:
+### Pattern B — clone elsewhere, symlink into the skills directory
+
+```sh
+git clone <repo-url> ~/path/to/prd-writer
+
+ln -s ~/path/to/prd-writer                   ~/.claude/skills/prd-writer
+ln -s ~/path/to/prd-writer/write-prd         ~/.claude/skills/write-prd
+ln -s ~/path/to/prd-writer/prd-refine        ~/.claude/skills/prd-refine
+ln -s ~/path/to/prd-writer/grill-me          ~/.claude/skills/grill-me
+ln -s ~/path/to/prd-writer/opus-prd-polish   ~/.claude/skills/opus-prd-polish
+```
+
+### Verify
+
+For Pattern A (repo lives at `~/.claude/skills/prd-writer`):
 
 ```sh
 bash ~/.claude/skills/prd-writer/scripts/setup-dependencies.sh
 ```
+
+For Pattern B, substitute your actual clone path:
+
+```sh
+bash ~/path/to/prd-writer/scripts/setup-dependencies.sh
+```
+
+The script prints exact `ln -s` commands for anything missing — copy and run them.
 
 ## Install (Other Platforms)
 
