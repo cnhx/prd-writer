@@ -107,7 +107,27 @@ Drafting rules:
 
 ## Phase 4 — Review
 
-Review checklist:
+### Step 4.0 — Structural check (reverse outlining)
+
+Run this **before** the content checklist. Structure problems masquerade as content
+problems, and content fixes applied to broken structure waste effort.
+
+1. Extract each §N heading + one sentence summarizing what that section claims.
+2. Read the extracted outline top-to-bottom as standalone prose.
+3. It should read as a coherent story arc:
+
+   > Problem → why-now → approach → evidence → scope → risks
+
+4. Failure modes to catch:
+   - **Jumps** — §3 references a claim not established in §1 or §2
+   - **Repetition** — two sections make the same claim with different words
+   - **Missing connector** — the reader must guess why §5 follows §4
+   - **Buried lede** — the core contribution first appears in §6 instead of §1
+5. If any failure appears, fix structure before polishing words. Do not skip to
+   the content checklist hoping it will surface.
+
+### Step 4.1 — Content checklist
+
 - Is the core flow implementable without guesswork?
 - Are edge cases and state transitions explicit?
 - Are math assumptions separated from confirmed numbers?
@@ -115,6 +135,11 @@ Review checklist:
 - Are compliance and market facts sourced or marked as pending?
 - Are non-goals explicit?
 - Is the English naming consistent?
+- **Rejection Letter closure** — does every rejection reason in
+  `rejection-preempt.md` have either a Mitigation landed in the PRD, or an
+  explicit `known_gap` acceptance?
+- **Trinity completeness** — does every §5 functional requirement have User job,
+  Mechanism, and Success signal (or a valid `trinity_na`)?
 
 ## Phase 5 — Polish and Publish
 
