@@ -29,8 +29,9 @@ failure modes.
   - `examples/sample-rejection-preempt.md`
   - `examples/sample-feature-trinity.md`
 - **Platform sync**: `platforms/codex/INSTALL.md` and
-  `platforms/openclaw/INSTALL.md` now copy the full v0.6 skill + references +
-  examples set.
+  `platforms/openclaw/INSTALL.md` now install via a single `cp -R` that mirrors
+  the repo structure under `.prd/` — required so cross-file references
+  (`../examples/...`, `../references/...`) inside the skill files resolve.
 
 ### Changed
 - write-prd Phase 4 split into Step 4.0 (structural) + Step 4.1 (content). Step
