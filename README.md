@@ -1,6 +1,6 @@
 # PRD Writer
 
-Skill collection for structured PRD authoring. 5-phase workflow, optional Opus polish, optional idea stress-testing.
+Skill collection for structured PRD authoring. 5-phase workflow, optional top-tier polish pass, optional idea stress-testing.
 
 ## Install (Claude Code)
 
@@ -58,7 +58,7 @@ The script prints exact `ln -s` commands for anything missing — copy and run t
 |-------|---------|-------------|
 | `/write-prd` | "write a PRD", "create product requirements" | Full 5-phase PRD workflow |
 | `/prd-refine` | "refine this PRD", "polish the PRD" | Quick edit pass, preserves detail |
-| `/opus-prd-polish` | "opus polish", "final polish" | Opus-grade clarity and structure pass |
+| `/opus-prd-polish` | "opus polish", "final polish" | Top-tier clarity and structure pass (uses highest-reasoning model available) |
 | `/grill-me` | "grill me", "stress-test this" | Relentless interrogation of a plan or idea |
 
 ## Usage
@@ -74,7 +74,7 @@ The workflow will:
 4. Present assumptions and implementation options
 5. Draft a structured PRD with 14 sections
 6. Review against a quality checklist
-7. Optionally polish with Opus and commit
+7. Optionally run `/opus-prd-polish` (top-tier polish pass) and commit
 
 ## Dependencies
 

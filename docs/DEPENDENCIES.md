@@ -12,7 +12,7 @@ Skills included in this repo. After cloning, create symlinks to expose them to C
 |-------|---------|
 | write-prd | 5-phase PRD workflow |
 | prd-refine | Quick PRD editing |
-| opus-prd-polish | Final Opus-grade polish pass |
+| opus-prd-polish | Final top-tier polish pass (uses highest-reasoning model available) |
 | grill-me | Idea and plan stress-testing |
 
 ### External
@@ -39,3 +39,22 @@ Claude Code does not resolve these automatically. The `scripts/setup-dependencie
 1. Add the skill name to the `dependencies` list in `SKILL.md` frontmatter
 2. Add a check for it in `scripts/setup-dependencies.sh`
 3. Document it in this file
+
+## Model-Selection Frontmatter Keys (optional)
+
+Individual skill `SKILL.md` files may declare preferred models via two optional keys:
+
+```yaml
+preferred-tier: top-reasoning    # semantic tier — future-proof, preferred selector
+preferred-models:                # concrete IDs known to satisfy the tier today
+  - claude-opus-4-6
+  - claude-opus-4-5
+```
+
+- `preferred-tier` is the canonical selector. Harnesses that don't understand the tier
+  name should fall back to `preferred-models`.
+- Neither key is a hard dependency — they are hints. Any model in the stated tier is
+  acceptable. Skills that use these keys must also define a graceful fallback path
+  (see `opus-prd-polish/SKILL.md` for the reference implementation).
+- Defined tiers: `top-reasoning` (Opus-class / equivalent frontier). Add new tiers here
+  as the repo adopts them.
