@@ -26,11 +26,20 @@ Skill collection for structured PRD authoring.
 
 - Never invent RTP, odds, regulatory facts, or market data
 - Keep assumptions separate from confirmed facts
-- Every variable, state, event, config field gets a readable English identifier
 - Art/design requirements stay in their own section
 - Write long PRDs to file, not chat
 - Uncertain facts marked `to_be_confirmed` or `pending_math_table`
-- Output language follows user preference, not forced
+
+### Language policy (two-tier)
+
+1. **Prose + section titles** — follow user preference (中文 / English / other). Not forced.
+2. **Variables, states, events, config fields, API identifiers** — **always English**, regardless of prose language. This is non-negotiable; it keeps the PRD implementable across teams.
+
+Example in a Chinese PRD:
+> ## 功能需求
+> - 状态机：`idle` → `spinning` → `settling` → `payout`
+> - 事件：`on_spin_start`、`on_reel_stop`
+> - 配置字段：`reel_count`、`rtp_target`
 
 ## Dependencies
 
