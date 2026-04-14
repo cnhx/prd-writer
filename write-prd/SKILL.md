@@ -60,8 +60,10 @@ Required question themes:
 
 Produce:
 - 3 to 5 core assumptions to confirm
-- 2 to 3 implementation options
-- One recommendation with rationale
+- 2 to 3 implementation options (each with **scope**, **effort**, **risk**)
+- One recommendation with rationale that cites which assumptions drove the choice
+
+See `examples/sample-phase2-premise.md` for a concrete format reference.
 
 ## Phase 3 — PRD Drafting
 
