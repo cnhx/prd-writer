@@ -18,6 +18,22 @@ allowed-tools:
 
 Structured 5-phase PRD workflow. Accepts anything from a vague idea to a detailed brief.
 
+## When NOT to Use This Skill
+
+This workflow is designed for **new product or feature PRDs** that need structured market,
+scope, and math decisions. Do **not** use it for:
+
+- **One-page lite specs** (< 200 lines) — prefer a lightweight template or freeform doc.
+- **Bug-fix RFCs / technical design docs** — use an engineering design template; this
+  skill's market/business sections will be dead weight.
+- **Pure refinement of an existing PRD** — use `/prd-refine` instead; this skill will
+  re-interrogate ground already covered.
+- **Research / discovery notes** — no scope decision is being made yet.
+- **Post-launch retros or changelogs** — wrong workflow direction.
+
+If the user is in one of these cases, recommend the alternative and stop. Do not force
+the 5-phase workflow onto a shape it doesn't fit.
+
 ## Phase 0 — Context Loading
 
 Sources, in priority order:
