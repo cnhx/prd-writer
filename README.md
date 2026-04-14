@@ -33,8 +33,16 @@ ln -s ~/path/to/prd-writer/opus-prd-polish   ~/.claude/skills/opus-prd-polish
 
 ### Verify
 
+For Pattern A (repo lives at `~/.claude/skills/prd-writer`):
+
 ```sh
-bash <repo>/scripts/setup-dependencies.sh
+bash ~/.claude/skills/prd-writer/scripts/setup-dependencies.sh
+```
+
+For Pattern B, substitute your actual clone path:
+
+```sh
+bash ~/path/to/prd-writer/scripts/setup-dependencies.sh
 ```
 
 The script prints exact `ln -s` commands for anything missing — copy and run them.
