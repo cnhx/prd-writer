@@ -82,7 +82,7 @@ Required sections:
 14. Sources
 
 Drafting rules:
-- All variables and states get readable English names
+- **Language policy (two-tier)**: prose and section titles follow user preference (中文 / English / other); variables, states, events, config fields, and API identifiers are **always English** regardless of prose language.
 - Art/design requirements stay in their own section
 - Uncertain facts explicitly marked as `to_be_confirmed`
 - No vague placeholders like "optimize later" without owner or condition
