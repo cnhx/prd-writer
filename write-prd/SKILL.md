@@ -34,6 +34,22 @@ scope, and math decisions. Do **not** use it for:
 If the user is in one of these cases, recommend the alternative and stop. Do not force
 the 5-phase workflow onto a shape it doesn't fit.
 
+## Counterintuitive rules (apply early)
+
+Before entering the forward 5-phase flow, keep these in mind — they shape every phase:
+
+1. **Rejection Letter first** — see Phase 0.5 below; this is now mandatory.
+2. **Narrow MVP before broad vision** — scope the smallest verifiable slice; mark
+   every future expansion `conditional_on_phase_1_learnings`.
+3. **Kill criteria before features** — if a feature cannot be cleanly cut, its value
+   claim is weak.
+4. **Budget decisive evidence, not polish** — one crude proof-of-hypothesis > three
+   polished features that avoid the core assumption.
+5. **Predefine fallback narrative** — name the secondary value before writing, so
+   an underperforming primary KPI does not retroactively doom the project.
+
+See `../references/counterintuitive-prd.md` for before/after examples.
+
 ## Phase 0 — Context Loading
 
 Sources, in priority order:

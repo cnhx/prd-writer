@@ -13,6 +13,28 @@ dependencies:
 
 Skill collection for structured PRD authoring.
 
+## Counterintuitive rules (prioritize before regular rules)
+
+These five rules, applied early, preempt the most common reasons PRDs get rejected in
+real review cycles. They override the temptation to jump straight into feature lists.
+
+1. **Write the Rejection Letter first.** Before drafting, list the top-5 reasons a
+   reasonable stakeholder (leadership, engineering lead, compliance, finance, GTM)
+   would reject this PRD. Design the PRD to address each one explicitly.
+2. **Narrow MVP claim before broad vision.** Define the smallest verifiable scope
+   first. Later phases are `conditional_on_phase_1_learnings`, not promises.
+3. **Design kill criteria before features.** If a feature cannot be cleanly cut
+   from scope without destroying the PRD's point, its value claim is probably weak.
+4. **Allocate engineering budget to decisive evidence, not polish.** One crude
+   prototype that answers "is our hypothesis true?" beats three finely-crafted
+   features that don't touch the core assumption.
+5. **Predefine a fallback narrative.** If the primary KPI underperforms, name the
+   secondary value (retention, cost reduction, learning) in advance, so the work is
+   not retroactively judged a failure.
+
+See [references/counterintuitive-prd.md](references/counterintuitive-prd.md) for
+before/after examples of each rule.
+
 ## Sub-skills
 
 | Skill | Description |
