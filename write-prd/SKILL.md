@@ -38,7 +38,7 @@ the 5-phase workflow onto a shape it doesn't fit.
 
 Before entering the forward 5-phase flow, keep these in mind — they shape every phase:
 
-1. **Rejection Letter first** — before drafting the PRD, list the top reasons stakeholders (leadership, engineering, compliance, finance, GTM) would reject it. Landed as Phase 0.5 Part A later in this v0.6 release; before that lands, run this exercise informally in the conversation.
+1. **Rejection Letter first** — before drafting the PRD, list the 3–5 reasons stakeholders (leadership, engineering, compliance, finance, GTM) would reject it. Operationalized in Phase 0.5 Part A below.
 2. **Narrow MVP before broad vision** — scope the smallest verifiable slice; mark
    every future expansion `conditional_on_phase_1_learnings`.
 3. **Kill criteria before features** — if a feature cannot be cleanly cut, its value

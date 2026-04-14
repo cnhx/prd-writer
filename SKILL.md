@@ -18,9 +18,10 @@ Skill collection for structured PRD authoring.
 These five rules, applied early, preempt the most common reasons PRDs get rejected in
 real review cycles. They override the temptation to jump straight into feature lists.
 
-1. **Write the Rejection Letter first.** Before drafting, list the top-5 reasons a
-   reasonable stakeholder (leadership, engineering lead, compliance, finance, GTM)
-   would reject this PRD. Design the PRD to address each one explicitly.
+1. **Write the Rejection Letter first.** Before drafting, list the 3–5 reasons
+   real stakeholders (leadership, engineering lead, compliance, finance, GTM)
+   would reject this PRD. Design the PRD to address each one explicitly. This is
+   operationalized in `/write-prd` Phase 0.5 Part A.
 2. **Narrow MVP claim before broad vision.** Define the smallest verifiable scope
    first. Later phases are `conditional_on_phase_1_learnings`, not promises.
 3. **Design kill criteria before features.** If a feature cannot be cleanly cut
