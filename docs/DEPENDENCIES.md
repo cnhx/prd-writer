@@ -12,7 +12,7 @@ Skills included in this repo. After cloning, create symlinks to expose them to C
 |-------|---------|
 | write-prd | 5-phase PRD workflow |
 | prd-refine | Quick PRD editing |
-| opus-prd-polish | Final Opus-grade polish pass |
+| opus-prd-polish | Final top-tier polish pass (uses highest-reasoning model available) |
 | grill-me | Idea and plan stress-testing |
 
 ### External

@@ -4,10 +4,10 @@ description: |
   Final polish pass for a PRD using the highest-reasoning model available.
   Improves clarity, structure, naming consistency, and readability without changing product facts.
   Use after PRD review and before publish.
+preferred-tier: top-reasoning
 preferred-models:
   - claude-opus-4-6
   - claude-opus-4-5
-  - any high-reasoning tier model
 ---
 
 # Final PRD Polish
@@ -21,7 +21,7 @@ Improve clarity, structure, naming consistency, and readability without changing
 ## Model Selection
 
 - Prefer the highest-reasoning model available in the current environment.
-- The `preferred-models` list in frontmatter is a hint, not a hard dependency — treat it as "top-tier Claude Opus or equivalent"; any model in that tier is acceptable.
+- `preferred-tier: top-reasoning` is the canonical selector. `preferred-models` lists known concrete IDs that satisfy the tier at time of writing — use any equivalent top-reasoning model when newer IDs exist.
 - If no top-tier model is available, run the same checklist with the best available model and note `polish_tier: fallback` in the output.
 
 > The skill name is retained as `opus-prd-polish` for backward compatibility. It refers to a polish *tier*, not a specific model version.

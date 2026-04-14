@@ -2,7 +2,7 @@
 name: prd-writer
 version: 0.5.0
 description: |
-  PRD writing toolkit. Structured 5-phase workflow, optional Opus polish, optional grill-me
+  PRD writing toolkit. Structured 5-phase workflow, optional top-tier polish, optional grill-me
   stress-test. Use to write new PRDs, refine existing ones, or pressure-test product ideas.
   Trigger: write PRD, PRD workflow, product requirements document, 写 PRD, 产品需求文档.
 dependencies:
@@ -19,7 +19,7 @@ Skill collection for structured PRD authoring.
 |-------|-------------|
 | `/write-prd` | 5-phase PRD workflow: context loading, product interrogation, premise check, drafting, review |
 | `/prd-refine` | Quick PRD polish — edit immediately, preserve detail, no planning |
-| `/opus-prd-polish` | Final Opus-grade polish pass before publish |
+| `/opus-prd-polish` | Final top-tier polish pass before publish (uses highest-reasoning model available) |
 | `/grill-me` | Stress-test a plan or idea via relentless interrogation |
 
 ## Design rules
