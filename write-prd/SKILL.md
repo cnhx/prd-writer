@@ -43,22 +43,77 @@ Sources, in priority order:
 
 Read all available context before asking questions.
 
-## Phase 0.5 (Optional) — Stress-Test the Idea with `/grill-me`
+## Phase 0.5 — Rejection Letter + Optional Grill
 
-**Trigger conditions** (offer when any is true):
+This phase has two parts. Part A is **mandatory** (a lightweight 10-minute exercise).
+Part B is optional (deeper interrogation via `/grill-me`).
+
+### Part A — Rejection Letter (mandatory)
+
+Before any Phase 1 interrogation, produce `rejection-preempt.md` as a sibling file
+to the planned PRD (same directory, e.g., `docs/prd/<name>-rejection-preempt.md`).
+PRDs typically fail review for predictable reasons; naming them up front shapes the
+entire draft.
+
+**Steps:**
+
+1. List 5 stakeholders who will see this PRD. Typical set:
+   - Leadership / business owner (ROI, strategic fit)
+   - Engineering lead (effort, feasibility, tech debt)
+   - Compliance / legal (regulatory, privacy, consent)
+   - Finance (unit economics, budget)
+   - GTM / existing product line owner (conflicts, cannibalization)
+2. For each stakeholder, draft the single most likely rejection quote.
+3. For each rejection, draft a one-line **Mitigation** — the PRD section, evidence,
+   or scope change that addresses it. If you cannot mitigate, mark it
+   `known_gap` and note the residual risk.
+
+**Format** (write to `rejection-preempt.md`):
+
+```markdown
+# Rejection Letter Pre-empt — <PRD name>
+
+## Top 5 predicted rejection reasons
+
+1. **[Stakeholder]**: "[rejection quote]"
+   - Mitigation: [PRD section / evidence / scope change]
+   - Residual risk: [what remains, or `to_be_confirmed by <owner> by <date>`]
+
+2. ...
+
+3. ...
+
+4. ...
+
+5. ...
+```
+
+See `../examples/sample-rejection-preempt.md` for a full example.
+
+**Link from the PRD.** In the PRD's final Sources / Appendix section, include:
+`Related: [rejection-preempt.md](./<prd-name>-rejection-preempt.md)`.
+
+**Phase 4 review ties back.** In Phase 4, verify every rejection reason has either
+a Mitigation landed in the PRD or is explicitly accepted as `known_gap`.
+
+### Part B — Optional Grill
+
+Trigger conditions (offer when any is true):
 - User input is a vague idea (e.g., "we should do something about X")
 - User explicitly requests grill (e.g., "先帮我想清楚", "grill me first")
 - Input lacks a clear user problem, target user, or success metric
+- Part A rejection letter uncovered gaps the user cannot immediately close
 
-**How to offer**: "This idea is still forming. Want to run `/grill-me` first? I'll challenge each key decision before we start the formal PRD."
+How to offer: "This idea still has open branches. Want to run `/grill-me` before
+Phase 1? I'll challenge each key decision and walk the decision tree."
 
 If user accepts:
 - Invoke the `/grill-me` skill
-- Walk the design decision tree one question at a time, each with a recommended answer
+- Walk the decision tree one question at a time, each with a recommended answer
 - Focus on: pain point validity, solution necessity, scope boundaries, key tradeoffs
 - After grill completes, organize consensus into structured context for Phase 1
 
-If user skips, proceed to Phase 1.
+If user skips, proceed to Phase 1 with the rejection letter in hand.
 
 ## Phase 1 — Product Interrogation
 
