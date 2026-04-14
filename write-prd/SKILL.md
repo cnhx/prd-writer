@@ -77,6 +77,25 @@ Items marked OUT must not appear as concrete prescription in the PRD; if
 relevant, describe them only at semantic-contract level. This is the single
 biggest cause of first-draft rejection.
 
+**Persistence (mandatory)**: record the user's choices into the PRD itself so
+`/prd-score` and later reviewers can enforce the boundary. At the top of the
+PRD file, immediately after the H1 title, insert a fenced YAML block:
+
+```yaml
+out_of_scope:
+  - tech_stack             # one line per category the user marked OUT
+  - payment_channels
+  - infra_deployment
+  # ...
+```
+
+Use the category slugs from the checklist (`tech_stack`, `payment_channels`,
+`distributor_specs`, `licensing_jurisdiction`, `infra_deployment`, `pricing`,
+`org_staffing`, `analytics_bi`). Include categories the user explicitly kept
+IN by omitting them — the block lists OUT items only. If the user marked none
+out, emit `out_of_scope: []` so the scoring skill has an unambiguous signal
+that the scan ran.
+
 ## Phase 0.5 — Rejection Letter + Optional Stress-Test
 
 ### Part A: Rejection Letter (mandatory)
@@ -215,12 +234,25 @@ Self-review on your own draft is confirmation bias. Instead:
 
 ### 4.1 Mandatory grill rounds
 
-Run `/grill-me` on the draft for **at least 2 rounds** (3 if the PRD is > 300
-lines or touches compliance / money). Each round:
+Invoke `/grill-me` in **Review mode** on the draft file. Explicit prompt:
 
-1. Read the PRD as if you are the harshest reviewer for that domain
-2. Find 2–3 concrete weaknesses (not "this could be clearer" — name the line)
-3. Propose a remediation and apply it before closing the round
+> "Run `/grill-me` in review mode on `<path-to-PRD>` for N rounds. Rotate
+> reviewer hats (engineering → finance → compliance → GTM → leadership).
+> Apply fixes directly via Edit or Write; only escalate to the user for
+> `blocking_unknown` items."
+
+Round count:
+
+- **N = 2** for PRDs ≤ 300 lines and no compliance / money topics.
+- **N = 3** for PRDs > 300 lines, or that touch compliance, money, or
+  jurisdictional risk.
+
+Review mode applies remediations autonomously per round (see `grill-me/SKILL.md`
+Review mode). Any unresolved items come back as `to_be_confirmed` markers for
+the user to answer in Phase 5.
+
+Do **not** invoke Interview mode here — it will re-interview the author and
+waste cycles on decisions the PRD has already made.
 
 ### 4.2 Targeted grill angles
 
