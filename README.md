@@ -48,7 +48,7 @@ The workflow will:
 4. Present assumptions and implementation options
 5. Draft a structured PRD with 14 sections
 6. Review against a quality checklist
-7. Optionally polish with Opus and commit
+7. Optionally run `/opus-prd-polish` (top-tier polish pass) and commit
 
 ## Dependencies
 
