@@ -100,6 +100,22 @@ Required sections:
 14. Sources
 
 Drafting rules:
+- **Feature Trinity (applies to §5 Functional requirements)**: every user-facing
+  feature must include three elements. See `examples/sample-feature-trinity.md`.
+  - **User job** — who is the user, in what situation, trying to accomplish what
+    outcome? (Job-to-be-done framing, one sentence.)
+  - **Mechanism** — how the feature does the job. (One observable sentence: what
+    input → what the system does → what output the user sees.)
+  - **Success signal** — one observable indicator the feature is working, at the
+    feature level (distinct from project-level KPI).
+
+  A feature missing any element is a draft, not a spec. Mark it
+  `trinity_incomplete` until filled.
+
+  **Exception**: pure infrastructure / internal refactor PRDs (no direct end-user)
+  may mark a requirement `trinity_na` with a one-line reason (e.g., "internal
+  service migration, no user-visible behavior change"). Do not abuse this —
+  anything touching an API consumer, internal tool user, or operator is user-facing.
 - **Language policy (two-tier)**: prose and section titles follow user preference (中文 / English / other); variables, states, events, config fields, and API identifiers are **always English** regardless of prose language.
 - Art/design requirements stay in their own section
 - Uncertain facts explicitly marked as `to_be_confirmed`
