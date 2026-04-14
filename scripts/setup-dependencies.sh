@@ -19,7 +19,7 @@ else
 fi
 
 # 检查子 skill symlink
-for skill in write-prd prd-refine grill-me opus-prd-polish; do
+for skill in write-prd prd-refine grill-me opus-prd-polish prd-score; do
   if [ -d "${SKILLS_DIR}/${skill}" ] || [ -L "${SKILLS_DIR}/${skill}" ]; then
     echo "[OK] ${skill} symlink exists"
   else

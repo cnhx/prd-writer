@@ -17,6 +17,7 @@ ln -s ~/.claude/skills/prd-writer/write-prd       ~/.claude/skills/write-prd
 ln -s ~/.claude/skills/prd-writer/prd-refine      ~/.claude/skills/prd-refine
 ln -s ~/.claude/skills/prd-writer/grill-me        ~/.claude/skills/grill-me
 ln -s ~/.claude/skills/prd-writer/opus-prd-polish ~/.claude/skills/opus-prd-polish
+ln -s ~/.claude/skills/prd-writer/prd-score       ~/.claude/skills/prd-score
 ```
 
 ### Pattern B — clone elsewhere, symlink into the skills directory
@@ -29,6 +30,7 @@ ln -s ~/path/to/prd-writer/write-prd         ~/.claude/skills/write-prd
 ln -s ~/path/to/prd-writer/prd-refine        ~/.claude/skills/prd-refine
 ln -s ~/path/to/prd-writer/grill-me          ~/.claude/skills/grill-me
 ln -s ~/path/to/prd-writer/opus-prd-polish   ~/.claude/skills/opus-prd-polish
+ln -s ~/path/to/prd-writer/prd-score         ~/.claude/skills/prd-score
 ```
 
 ### Verify

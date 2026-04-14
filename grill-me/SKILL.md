@@ -38,6 +38,20 @@ Stop grilling when any of these is true:
    internal tool, existing contract). Record as `blocking_unknown` and stop that branch;
    continue other branches if any.
 
+## Editing rule: batch, don't dribble
+
+When the user's answer to a grill round requires changes to an existing
+document (e.g. a PRD under review):
+
+- If the changes touch **≤ 3 distinct locations**, use `Edit` per location.
+- If the changes touch **> 3 locations**, or span an entire section, **re-read
+  the file and rewrite the affected section(s) with `Write`** instead of
+  chaining many `Edit` calls.
+
+Rationale: many small edits compound the risk of broken context (stale
+line references, duplicated passes, inconsistent tone). A single rewrite per
+section after a grill round is safer and clearer to the reviewer.
+
 ## Output on Stop
 
 When stopping, produce:

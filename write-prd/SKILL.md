@@ -18,45 +18,99 @@ allowed-tools:
 
 Structured 5-phase PRD workflow. Accepts anything from a vague idea to a detailed brief.
 
-## When NOT to Use This Skill
-
-This workflow is designed for **new product or feature PRDs** that need structured market,
-scope, and math decisions. Do **not** use it for:
-
-- **One-page lite specs** (< 200 lines) — prefer a lightweight template or freeform doc.
-- **Bug-fix RFCs / technical design docs** — use an engineering design template; this
-  skill's market/business sections will be dead weight.
-- **Pure refinement of an existing PRD** — use `/prd-refine` instead; this skill will
-  re-interrogate ground already covered.
-- **Research / discovery notes** — no scope decision is being made yet.
-- **Post-launch retros or changelogs** — wrong workflow direction.
-
-If the user is in one of these cases, recommend the alternative and stop. Do not force
-the 5-phase workflow onto a shape it doesn't fit.
-
 ## Phase 0 — Context Loading
 
 Sources, in priority order:
+
 1. Task-specific files supplied by user
-2. Local project documents
-3. User answers
+2. Local project documents (`docs/`, `references/`, sibling PRDs)
+3. Memory / knowledge base (if available in the environment)
+4. User answers
 
-Read all available context before asking questions.
+### 0.1 Mandatory history alignment
 
-## Phase 0.5 (Optional) — Stress-Test the Idea with `/grill-me`
+**Before asking any question**, sweep for prior context:
+
+```bash
+# Sibling PRDs in the repo
+ls docs/prd/ 2>/dev/null
+
+# Memory store (if nmem or equivalent is available in the environment)
+nmem --json m search "<product name>" 2>/dev/null
+nmem --json m search "<product series / code>" 2>/dev/null
+```
+
+Goal: never ask the user what the system already knows. Skip this step only if
+the product is genuinely new and no similar work exists.
+
+### 0.2 Product code / series anchor
+
+If the codebase uses internal product codes (e.g. `SS0-*`, `CG01`, `Project Alpha`),
+ask early for:
+
+- Product code naming rule for this project
+- Which series / product line this belongs to
+- Pointer to the series' past PRDs or internal wiki (if any)
+
+Do not invent placeholders like `PRD-001` without confirming the naming rule.
+
+### 0.3 Out-of-Scope boundary scan (MANDATORY)
+
+**Before Phase 1**, run a one-shot checklist to fence off owner-overreach. Ask
+the user to explicitly mark which categories are **not** in this PRD's decision
+scope:
+
+```
+Which of the following are OUT of this PRD's scope? (mark all that apply)
+
+□ Tech-stack selection (engine, framework, protocol, perf thresholds)
+□ Payment / deposit / withdrawal channels
+□ Distributor / aggregator / partner-specific integration specs
+□ Licensing & regulatory jurisdiction
+□ Deployment architecture & infra
+□ Pricing / commercial terms
+□ Org / staffing / vendor selection
+□ Analytics / BI dashboard implementation
+```
+
+Items marked OUT must not appear as concrete prescription in the PRD; if
+relevant, describe them only at semantic-contract level. This is the single
+biggest cause of first-draft rejection.
+
+## Phase 0.5 — Rejection Letter + Optional Stress-Test
+
+### Part A: Rejection Letter (mandatory)
+
+Before Phase 1 ends, list the 3–5 reasons this PRD would realistically be
+rejected by senior stakeholders. Draft each bullet as if you were the reviewer.
+
+Each bullet needs a **concrete preemption** the PRD will implement. Save in
+`rejection-preempt.md` next to the PRD (or inline as Section 11 if lightweight).
+
+Common reviewers and rejection axes:
+
+- **Engineering lead**: scope, effort, technical debt
+- **Finance**: ROI, cost model
+- **Legal / Compliance**: PII, consent, jurisdictional risk
+- **GTM / Marketing**: positioning, launch readiness
+- **Leadership**: strategic fit, opportunity cost
+
+This is Counterintuitive Rule 1 — see `references/counterintuitive-prd.md`.
+
+### Part B (optional): grill the idea with `/grill-me`
 
 **Trigger conditions** (offer when any is true):
+
 - User input is a vague idea (e.g., "we should do something about X")
 - User explicitly requests grill (e.g., "先帮我想清楚", "grill me first")
 - Input lacks a clear user problem, target user, or success metric
 
-**How to offer**: "This idea is still forming. Want to run `/grill-me` first? I'll challenge each key decision before we start the formal PRD."
+**How to offer**: "This idea is still forming. Want to run `/grill-me` first? I'll
+challenge each key decision before we start the formal PRD."
 
-If user accepts:
-- Invoke the `/grill-me` skill
-- Walk the design decision tree one question at a time, each with a recommended answer
-- Focus on: pain point validity, solution necessity, scope boundaries, key tradeoffs
-- After grill completes, organize consensus into structured context for Phase 1
+If user accepts, invoke `/grill-me`, walk the decision tree one question at a
+time, each with a recommended answer. Focus on pain validity, solution
+necessity, scope boundaries, key tradeoffs.
 
 If user skips, proceed to Phase 1.
 
@@ -65,6 +119,7 @@ If user skips, proceed to Phase 1.
 Ask one question at a time.
 
 Required question themes:
+
 1. Market truth — is there real demand?
 2. Current alternatives — what do users do today?
 3. Target player/user profile — who exactly?
@@ -75,15 +130,26 @@ Required question themes:
 ## Phase 2 — Premise Check and Option Selection
 
 Produce:
-- 3 to 5 core assumptions to confirm
-- 2 to 3 implementation options (each with **scope**, **effort**, **risk**)
-- One recommendation with rationale that cites which assumptions drove the choice
 
-See `examples/sample-phase2-premise.md` for a concrete format reference.
+- 3 to 5 core assumptions to confirm
+- 2 to 3 implementation options
+- One recommendation with rationale
+
+### 2.1 Re-apply counterintuitive rules here
+
+Before recommending options, run:
+
+- **Rule 2 narrow MVP**: does the recommendation define the smallest verifiable
+  scope? If it sprawls, trim.
+- **Rule 3 kill criteria**: for each feature, name the kill condition. If a
+  feature cannot be cut cleanly, rethink.
+- **Rule 4 decisive evidence**: does the recommendation spend budget on
+  answering the hypothesis, or on polish? Reallocate if polish-heavy.
 
 ## Phase 3 — PRD Drafting
 
 Required sections:
+
 1. Summary
 2. Project positioning
 3. Market strategy
@@ -99,15 +165,67 @@ Required sections:
 13. Non-goals
 14. Sources
 
-Drafting rules:
-- **Language policy (two-tier)**: prose and section titles follow user preference (中文 / English / other); variables, states, events, config fields, and API identifiers are **always English** regardless of prose language.
+### 3.1 Drafting rules
+
+- All variables and states get readable English names (see Language Policy in root SKILL.md)
 - Art/design requirements stay in their own section
 - Uncertain facts explicitly marked as `to_be_confirmed`
 - No vague placeholders like "optimize later" without owner or condition
 
-## Phase 4 — Review
+### 3.2 Terminology-with-example rule (MANDATORY)
 
-Review checklist:
+Any non-standard term, self-coined method, or evaluation framework introduced
+in the PRD **must be paired with a concrete example at first use**. Preferably:
+
+- One **failure scenario** (what it looks like when the thing goes wrong)
+- One **remediation path** (what to do about it)
+
+Reviewers cannot evaluate abstract processes. A 2-line example beats a
+paragraph of definition. Example:
+
+> **Visual-Math Weight Alignment Evaluation**: verify each symbol's culturally
+> perceived value rank matches its mathematical pay tier.
+>
+> *Failure example*: in a Filipino reskin of a slot game, the highest-paying
+> symbol maps to a 1-peso coin while a lower-paying symbol maps to a whole
+> roasted pig (Lechon — a fiesta centerpiece). Players hit Lechon ×3, expect
+> the biggest win, receive a mid payout, feel cheated.
+>
+> *Remediation*: swap the mapping, OR visually exaggerate the rare symbol with
+> particle effects and a bespoke jingle, OR give the high-pay symbol a
+> dedicated Big Win voiceover.
+
+Apply to: evaluation procedures, named workflows, scoring criteria,
+internal-jargon tools. Do NOT apply to industry-standard terms (RTP, Volatility,
+Jackpot Wheel).
+
+### 3.3 Assumption vs Open Question (distinct)
+
+| Type | Meaning | Owner duty |
+|---|---|---|
+| **Assumption** | "We *choose to assume* X is true" (active stance) | Confirm or reject within 48h; sign off |
+| **Open Question** | "X is unresolved; we need external input" (passive dependency) | Supply the answer or escalate |
+
+If a line reads like "we don't know yet", it's an Open Question, not an
+Assumption. Mixing them makes cleanup harder at publish time.
+
+## Phase 4 — Review (Grill-driven, not self-review)
+
+Self-review on your own draft is confirmation bias. Instead:
+
+### 4.1 Mandatory grill rounds
+
+Run `/grill-me` on the draft for **at least 2 rounds** (3 if the PRD is > 300
+lines or touches compliance / money). Each round:
+
+1. Read the PRD as if you are the harshest reviewer for that domain
+2. Find 2–3 concrete weaknesses (not "this could be clearer" — name the line)
+3. Propose a remediation and apply it before closing the round
+
+### 4.2 Targeted grill angles
+
+Use these as directed grill prompts, not as a sign-off checklist:
+
 - Is the core flow implementable without guesswork?
 - Are edge cases and state transitions explicit?
 - Are math assumptions separated from confirmed numbers?
@@ -115,35 +233,44 @@ Review checklist:
 - Are compliance and market facts sourced or marked as pending?
 - Are non-goals explicit?
 - Is the English naming consistent?
+- Did any section sneak across the out-of-scope boundaries from Phase 0.3?
+- Does every self-coined term have the example required by §3.2?
+- Are Assumptions and Open Questions cleanly separated per §3.3?
 
 ## Phase 5 — Polish and Publish
 
 Sequence:
-1. Review draft against Phase 4 checklist
+
+1. Resolve any open issues surfaced in Phase 4 grill rounds
 2. Optional: run `/opus-prd-polish` for a final polish pass
-3. Save file to user-specified path (default: `docs/prd/`)
-4. Optional: git commit
-5. Report completion status:
+3. Optional: run `/prd-score` to quantify Ready-to-Dev status
+4. Save file to user-specified path (default: `docs/prd/`)
+5. Optional: git commit
+6. Report completion status:
    - `DONE` — all sections complete, no known gaps
    - `DONE_WITH_GAPS` — usable draft but has unknowns (list them as `missing_info`)
    - `BLOCKED` — cannot proceed, state what is blocking
 
-When the draft is usable but incomplete, always return `DONE_WITH_GAPS` rather than
-blocking or inventing data. Mark uncertain facts as `to_be_confirmed`.
+When the draft is usable but incomplete, always return `DONE_WITH_GAPS` rather
+than blocking or inventing data. Mark uncertain facts as `to_be_confirmed`.
 
 ## After Completion
 
 Offer:
+
 - "Want me to **tighten the scope**? I can challenge which items should really be deferred."
 - "Should I **run a pre-mortem** on this PRD?"
 - "Want me to **break this into user stories** for engineering?"
-- "Feeling uncertain? Run `/grill-me` to **pressure-test the PRD assumptions**."
+- "Run `/grill-me` again to **pressure-test the PRD assumptions**."
+- "Run `/prd-score` to quantify Ready-to-Dev readiness."
 
 ## Notes
 
 - Be opinionated about scope — a tight PRD beats an expansive vague one
 - If the idea is too big, proactively suggest phasing and spec only Phase 1
 - Non-goals are as important as goals — they prevent scope creep
-- Success metrics must be specific: "improve NPS" is bad, "increase NPS from 32 to 45 within 90 days of launch" is good
+- Success metrics must be specific: "improve NPS" is bad, "increase NPS from 32
+  to 45 within 90 days of launch" is good
 - Open questions should be genuinely unresolved
-- If the user provides research, weave insights into the Background section with attribution
+- If the user provides research, weave insights into the Background section with
+  attribution
