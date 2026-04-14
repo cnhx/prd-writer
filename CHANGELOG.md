@@ -1,5 +1,47 @@
 # Changelog
 
+## 0.6.0 — EvoSkills-inspired flow upgrades
+
+Inspired by [EvoScientist/EvoSkills](https://github.com/EvoScientist/EvoSkills)'s
+paper-planning and paper-writing workflows. Non-academic; adapted to PRD review
+failure modes.
+
+### Added
+- **Counterintuitive rules** (root SKILL.md + write-prd/SKILL.md). Five rules:
+  (1) Rejection Letter first, (2) narrow MVP before vision, (3) kill criteria
+  before features, (4) budget decisive evidence over polish, (5) predefine
+  fallback narrative. References: `references/counterintuitive-prd.md`.
+- **Phase 0.5 Part A — mandatory Rejection Letter** (write-prd). Produces
+  `rejection-preempt.md` as a sibling file to the PRD. Sample:
+  `examples/sample-rejection-preempt.md`. Part B (`/grill-me`) remains optional.
+- **Phase 1.0 reverse-story** (write-prd). Four reverse questions
+  (Contribution / Insight / Challenge / Framing) before the forward 6 themes.
+  Stops Phase 1 if author cannot answer the first three crisply.
+- **Feature Trinity** (write-prd Phase 3 §5). Each user-facing feature requires
+  User job + Mechanism + Success signal. `trinity_na` allowed for pure infra
+  requirements with reason. Sample: `examples/sample-feature-trinity.md`.
+- **Reverse-outlining structural check** (write-prd Phase 4.0). Runs before
+  content checklist; catches jumps, repetition, missing connectors, buried lede.
+- **Artifact Flow table** (root SKILL.md). Explicit what-produces-what across
+  the four sub-skills.
+- **New files**:
+  - `references/counterintuitive-prd.md` (before/after for all 5 rules)
+  - `examples/sample-rejection-preempt.md`
+  - `examples/sample-feature-trinity.md`
+- **Platform sync**: `platforms/codex/INSTALL.md` and
+  `platforms/openclaw/INSTALL.md` now copy the full v0.6 skill + references +
+  examples set.
+
+### Changed
+- write-prd Phase 4 split into Step 4.0 (structural) + Step 4.1 (content). Step
+  4.1 adds Rejection Letter closure check and Trinity completeness check.
+
+### Not changed (intentional, v0.7 candidates)
+- `/write-prd` remains a single skill covering both planning and writing.
+  Splitting into `/prd-planning` + `/prd-writing` deferred to v0.7.
+- No timeline / N-day countdown template (PRD deadlines too heterogeneous).
+- No mandatory pipeline-figure sketch (tool chains vary too much).
+
 ## 0.5.0
 - restructured as a skill collection (following gstack pattern)
 - each skill is a self-contained directory with SKILL.md and frontmatter

@@ -11,9 +11,20 @@ Run from the prd-writer repo root:
 
 ```sh
 mkdir -p /path/to/your/project/.prd
+# Core skill files
 cp write-prd/SKILL.md /path/to/your/project/.prd/prd-workflow.md
 cp opus-prd-polish/SKILL.md /path/to/your/project/.prd/opus-prd-polish.md
+cp grill-me/SKILL.md /path/to/your/project/.prd/grill-me.md
+cp prd-refine/SKILL.md /path/to/your/project/.prd/prd-refine.md
+# Root overview + references (v0.6: Counterintuitive Rules live here)
+cp SKILL.md /path/to/your/project/.prd/prd-overview.md
+cp -R references /path/to/your/project/.prd/
+# Example artifacts (v0.6 references these by name)
 cp examples/sample-input-brief.md /path/to/your/project/.prd/
+cp examples/sample-output-prd.md /path/to/your/project/.prd/
+cp examples/sample-phase2-premise.md /path/to/your/project/.prd/
+cp examples/sample-rejection-preempt.md /path/to/your/project/.prd/
+cp examples/sample-feature-trinity.md /path/to/your/project/.prd/
 ```
 
 ## Step 2: Run it

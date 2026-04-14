@@ -1,6 +1,6 @@
 ---
 name: prd-writer
-version: 0.5.0
+version: 0.6.0
 description: |
   PRD writing toolkit. Structured 5-phase workflow, optional top-tier polish, optional grill-me
   stress-test. Use to write new PRDs, refine existing ones, or pressure-test product ideas.
