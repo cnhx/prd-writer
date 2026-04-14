@@ -4,3 +4,5 @@
 *.tmp
 *.log
 outputs/
+# PRDs generated while dogfooding the skill — keep out of the repo
+docs/prd/

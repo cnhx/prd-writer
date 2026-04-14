@@ -1,9 +1,11 @@
 ---
 name: prd-writer
-version: 0.5.0
+version: 0.6.0
 description: |
-  PRD writing toolkit. Structured 5-phase workflow, optional top-tier polish, optional grill-me
-  stress-test. Use to write new PRDs, refine existing ones, or pressure-test product ideas.
+  PRD writing toolkit. Structured 5-phase workflow with mandatory out-of-scope boundary scan,
+  history alignment, terminology-with-example rule, grill-driven review, and a scoring skill
+  for Ready-to-Dev readiness. Use to write new PRDs, refine existing ones, or pressure-test
+  product ideas.
   Trigger: write PRD, PRD workflow, product requirements document, 写 PRD, 产品需求文档.
 dependencies:
   - gstack
@@ -40,10 +42,11 @@ before/after examples of each rule.
 
 | Skill | Description |
 |-------|-------------|
-| `/write-prd` | 5-phase PRD workflow: context loading, product interrogation, premise check, drafting, review |
+| `/write-prd` | 5-phase PRD workflow: context loading (with history + boundary scan), product interrogation, premise check, drafting, grill-driven review |
 | `/prd-refine` | Quick PRD polish — edit immediately, preserve detail, no planning |
 | `/opus-prd-polish` | Final top-tier polish pass before publish (uses highest-reasoning model available) |
 | `/grill-me` | Stress-test a plan or idea via relentless interrogation |
+| `/prd-score` | Score a PRD against Ready-to-Dev rubric (Structure, Owner Closure, Open Questions, verdict Green / Yellow / Red) |
 
 ## Design rules
 
@@ -67,7 +70,7 @@ Example in a Chinese PRD:
 ## Dependencies
 
 **Bundled** (included in this repo):
-- write-prd, prd-refine, opus-prd-polish, grill-me
+- write-prd, prd-refine, opus-prd-polish, grill-me, prd-score
 
 **External** (install separately):
 - [gstack](https://github.com/gstackio/gstack) — headless browser QA, design review, deployment verification

@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.6.0
+- added Phase 0.1 mandatory history alignment (scan `docs/prd/` + memory store before interrogation)
+- added Phase 0.2 product code / series anchor (no invented placeholders)
+- added Phase 0.3 Out-of-Scope boundary scan (checklist of owner-overreach categories)
+- added §3.2 terminology-with-example rule (every self-coined term pairs with failure + remediation example at first use)
+- added §3.3 Assumption vs Open Question distinction (active stance vs passive dependency)
+- replaced Phase 4 self-review with mandatory grill-driven review (≥ 2 rounds)
+- added grill-me "batch, don't dribble" editing rule (>3 edits → re-read + Write section)
+- added /prd-score sub-skill: Structure Completeness %, Owner Closure %, Open-Question residue, Green/Yellow/Red verdict
+- bumped root skill version to 0.6.0
+- kept v0.6 counterintuitive rules (Rejection Letter / narrow MVP / kill criteria / decisive evidence / fallback narrative) from prior iteration
+
 ## 0.5.0
 - restructured as a skill collection (following gstack pattern)
 - each skill is a self-contained directory with SKILL.md and frontmatter
