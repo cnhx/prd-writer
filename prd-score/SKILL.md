@@ -66,8 +66,25 @@ blockers force Yellow / Red.
 
 ### 4. Out-of-Scope compliance (pass/fail)
 
-Scan for language that prescribes items marked OUT in Phase 0.3 (if the
-`out_of_scope` note exists near the top of the PRD). Fail if found.
+Look for a fenced YAML block at the top of the PRD (immediately after the H1)
+shaped like:
+
+```yaml
+out_of_scope:
+  - tech_stack
+  - payment_channels
+```
+
+Behavior:
+
+- **Block missing** → fail this dimension with reason `boundary_scan_not_run`.
+  `/write-prd` Phase 0.3 is mandatory; a missing block means the scan was
+  skipped and the PRD's scope is undefined.
+- **Block present, `[]`** → pass; record `boundary_scan_empty`.
+- **Block present with entries** → scan the rest of the PRD for prescriptive
+  language that violates each OUT category (e.g. specific payment SDK names if
+  `payment_channels` is OUT). Report each violation with file:line. Fail if
+  any found.
 
 ### 5. Terminology-with-example compliance (pass/fail)
 
