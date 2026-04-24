@@ -12,13 +12,9 @@ out_of_scope:
 ```yaml
 diagrams_generated:
   - section: 4
-    type: mermaid
     subtype: stateDiagram
-    location: inline
   - section: 6
-    type: excalidraw
-    subtype: wireframe
-    location: "skyrush-wireframe-main.md"
+    subtype: block-beta
 ```
 
 ## Summary
@@ -55,7 +51,19 @@ stateDiagram-v2
 
 ### Main Screen Wireframe
 
-![[skyrush-wireframe-main]]
+```mermaid
+block-beta
+  columns 1
+  header["Top Bar · balance · settings"]
+  stage["Multiplier Stage · 2.48x (climbing)"]
+  block:controls
+    columns 2
+    bet["Bet Amount Input"]
+    auto["Auto-Cashout Toggle"]
+  end
+  cta["Cash Out Button (primary CTA)"]
+  history["Recent Rounds Ticker"]
+```
 
 ## Known Gaps
 - RTP pending math table

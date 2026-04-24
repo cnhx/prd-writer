@@ -12,7 +12,6 @@ allowed-tools:
   - Grep
   - Bash
   - AskUserQuestion
-  - Skill
 ---
 
 # Write PRD
@@ -235,6 +234,11 @@ After Phase 3 produces the text draft, assess whether visual diagrams would
 strengthen the PRD. This phase is optional — skip for lightweight, policy, or
 pricing PRDs that have no multi-state flows or UI layouts.
 
+**All diagrams are inline Mermaid**, written directly into the PRD as
+` ```mermaid ` code fences. Mermaid renders natively in GitHub, Obsidian,
+and VS Code, so no external skill, rendering server, or companion file is
+required. Raw Mermaid syntax is also diffable, which keeps PRDs reviewable.
+
 ### Trigger conditions (offer when any is true)
 
 - §4 describes a multi-state flow with 3+ states or decision branches
@@ -245,58 +249,63 @@ pricing PRDs that have no multi-state flows or UI layouts.
 ### How to offer
 
 > "The draft has [a multi-state product flow / UI layout descriptions / a
-> multi-component architecture]. Want me to generate visual diagrams? I'll
-> create inline Mermaid flowcharts for the product flow and Excalidraw
-> wireframes for the UI. Type `skip` to proceed without diagrams."
+> multi-component architecture]. Want me to generate inline Mermaid diagrams?
+> Type `skip` to proceed without diagrams."
 
 ### Diagram routing
 
-| PRD section | Diagram type | Tool | Embedding |
-|---|---|---|---|
-| §4 Product / gameplay flow | State diagram, flowchart, user journey | `/mermaid-visualizer` | Inline ` ```mermaid ` code fence in the section |
-| §5 Functional requirements (if interaction sequences) | Sequence diagram | `/mermaid-visualizer` | Inline |
-| §6 Art / design requirements (if UI layout) | Wireframe, screen layout | `/excalidraw-diagram` | Companion file + `![[embed]]` |
-| §9 Technical considerations (if multi-component) | Architecture diagram | `/mermaid-visualizer` | Inline |
+| PRD section | Diagram intent | Mermaid syntax |
+|---|---|---|
+| §4 Product / gameplay flow | State machine or user journey | `stateDiagram-v2`, `journey`, or `flowchart` |
+| §5 Functional requirements | Interaction / API sequence | `sequenceDiagram` |
+| §6 Art / design requirements | UI layout / screen wireframe | `block-beta` (preferred) or `flowchart` with subgraphs |
+| §9 Technical considerations | System architecture | `flowchart LR` / `graph` with subgraphs |
 
-**Mermaid** (structured flows): insert the ` ```mermaid ` code block directly
-into the relevant PRD section. Renders natively in GitHub, Obsidian, VS Code.
+All go in ` ```mermaid ` code fences inline in the relevant section.
 
-**Excalidraw** (spatial wireframes): generate a companion `.md` file in
-Obsidian Excalidraw format. Save it alongside the PRD as
-`<prd-name>-wireframe-<screen>.md`. Insert an Obsidian embed link
-`![[<prd-name>-wireframe-<screen>]]` into §6. Do **not** inline the
-Excalidraw JSON — it is 500–2000 lines of coordinates and makes the PRD
-unreadable and undiffable.
+### Wireframe guidance (§6)
+
+`block-beta` is the cleanest Mermaid syntax for screen layouts. Use `columns`
+to define a grid, nest `block:` groups to represent areas (header, content,
+footer, FAB). Label blocks with the UI element name plus one line of state
+or copy. Keep to 8–15 blocks per screen — anything more should be split into
+sub-wireframes or described in prose.
+
+When `block-beta` cannot express the layout (e.g. free-positioned overlays),
+fall back to `flowchart TB` with labeled subgraphs. Do not attempt to simulate
+pixel layout in Mermaid — the goal is intent, not fidelity.
 
 ### Execution steps
 
-1. Present a diagram plan listing each proposed diagram, its target section,
-   and tool. Wait for user confirmation (all / partial / skip).
-2. For each accepted diagram, invoke the corresponding skill.
-3. Insert Mermaid code blocks into their sections via `Edit`.
-4. Save Excalidraw companion files via the skill, then insert `![[embed]]`
-   links into §6 via `Edit`.
-5. Record generated diagrams in the PRD metadata (after the `out_of_scope`
+1. Present a diagram plan: one line per proposed diagram with target section
+   and Mermaid subtype. Wait for user confirmation (all / partial / skip).
+2. For each accepted diagram, write the Mermaid source directly inline in the
+   target section via `Edit`.
+3. Record generated diagrams in the PRD metadata (after the `out_of_scope`
    block):
 
 ```yaml
 diagrams_generated:
   - section: 4
-    type: mermaid
     subtype: stateDiagram
-    location: inline
   - section: 6
-    type: excalidraw
-    subtype: wireframe
-    location: "<prd-name>-wireframe-main.md"
+    subtype: block-beta
+  - section: 9
+    subtype: flowchart
 ```
 
-### Graceful degradation
+All entries are inline Mermaid, so no `location` or `type` field is needed.
 
-If `/mermaid-visualizer` or `/excalidraw-diagram` is not available in the
-environment, skip the corresponding diagram type and note it:
-`diagrams: <tool>_not_available`. Raw Mermaid syntax can be generated
-directly as a fallback without the skill.
+### When Mermaid is not enough
+
+For wireframes too complex for `block-beta` (free-positioned overlays,
+pixel-exact mockups, detailed visual mocks), **do not invent an external
+dependency**. Instead:
+
+- Reduce the wireframe to a simplified block layout that captures intent
+- Describe visual details in prose next to the Mermaid block
+- Note `wireframe_fidelity: intent_only` in the `diagrams_generated` entry so
+  reviewers know a higher-fidelity mock is still needed later
 
 ## Phase 4 — Review (Grill-driven, not self-review)
 

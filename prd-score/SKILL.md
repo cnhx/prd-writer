@@ -104,12 +104,9 @@ Check for a `diagrams_generated` YAML block near the top of the PRD.
 
 - **Block absent** → report `diagrams: skipped` (no penalty — diagrams are
   optional per `/write-prd` Phase 3.5).
-- **Block present** → for each entry:
-  - `type: mermaid` + `location: inline` → verify a ` ```mermaid ` code fence
-    exists in the stated section.
-  - `type: excalidraw` → verify the companion file at the stated `location`
-    path exists relative to the PRD directory.
-  - Report each missing diagram or broken reference.
+- **Block present** → for each entry, verify a ` ```mermaid ` code fence
+  exists in the stated section (all Phase 3.5 diagrams are inline Mermaid).
+  Report each section claimed in the metadata but missing its fence.
 
 ## Verdict
 
@@ -133,7 +130,7 @@ Check for a `diagrams_generated` YAML block near the top of the PRD.
 - Out-of-Scope compliance: pass / fail (<reason if fail>)
 - Terminology-with-example: pass / fail (<terms lacking examples>)
 - Rejection-Letter compliance: pass / fail / N/A
-- Diagram integrity: pass / skipped / fail (<missing files or broken refs>)
+- Diagram integrity: pass / skipped / fail (<sections missing mermaid fences>)
 
 ### Top 3 remediation items
 1. …

@@ -4,14 +4,11 @@ version: 0.7.0
 description: |
   PRD writing toolkit. Structured 5-phase workflow with mandatory out-of-scope boundary scan,
   history alignment, terminology-with-example rule, grill-driven review, optional inline
-  diagrams (Mermaid + Excalidraw wireframes), and a scoring skill for Ready-to-Dev readiness.
-  Use to write new PRDs, refine existing ones, or pressure-test product ideas.
+  Mermaid diagrams (flows, sequences, wireframes, architecture), and a scoring skill for
+  Ready-to-Dev readiness. Use to write new PRDs, refine existing ones, or pressure-test ideas.
   Trigger: write PRD, PRD workflow, product requirements document, 写 PRD, 产品需求文档.
 dependencies:
   - gstack
-optional-dependencies:
-  - excalidraw-diagram
-  - mermaid-visualizer
 ---
 
 # PRD Writer
@@ -58,7 +55,7 @@ before/after examples of each rule.
 - Art/design requirements stay in their own section
 - Write long PRDs to file, not chat
 - Uncertain facts marked `to_be_confirmed` or `pending_math_table`
-- Diagrams follow tool routing: Mermaid for structured flows (inline code fence), Excalidraw for spatial wireframes (companion file + `![[embed]]`)
+- Diagrams are inline Mermaid only — flows/sequences/wireframes/architecture all go in ` ```mermaid ` code fences; no external diagram tools required
 
 ### Language policy (two-tier)
 
@@ -79,6 +76,5 @@ Example in a Chinese PRD:
 **External** (install separately):
 - [gstack](https://github.com/gstackio/gstack) — headless browser QA, design review, deployment verification
 
-**External, optional** (enhance diagram generation in Phase 3.5):
-- excalidraw-diagram — UI wireframe generation in Obsidian Excalidraw format
-- mermaid-visualizer — syntax-validated Mermaid diagram generation
+Phase 3.5 diagrams use only inline Mermaid (rendered natively by GitHub, Obsidian,
+and VS Code). No external diagram skill is required.
