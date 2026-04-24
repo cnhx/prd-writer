@@ -23,6 +23,9 @@ Skills that live in separate repos. Install them independently.
 |-------|---------|-----------|
 | gstack | Headless browser QA, design review, deployment verification | Optional |
 
+Phase 3.5 diagrams use only inline Mermaid code fences, which render natively
+in GitHub, Obsidian, and VS Code. No external diagram skill is required.
+
 ## How Dependencies Are Declared
 
 The root `SKILL.md` frontmatter includes a `dependencies` field listing external skill names. This follows the same convention used by gstack and other Claude Code skill projects.

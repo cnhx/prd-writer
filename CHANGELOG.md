@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.7.0
+- added Phase 3.5 optional inline-Mermaid diagram generation (zero external dependencies)
+- diagram routing: §4 product flow → `stateDiagram-v2`, §5 interactions → `sequenceDiagram`, §6 UI → `block-beta` (fallback `flowchart`), §9 architecture → `flowchart`/`graph`
+- all diagrams inline in ` ```mermaid ` code fences — no companion files, no external renderer
+- added `diagrams_generated` YAML metadata block in PRD for traceability
+- added prd-score §7 Diagram integrity (informational, does not affect verdict)
+- expanded sample-output-prd.md with inline Mermaid stateDiagram and block-beta wireframe examples
+
 ## 0.6.0
 - added Phase 0.1 mandatory history alignment (scan `docs/prd/` + memory store before interrogation)
 - added Phase 0.2 product code / series anchor (no invented placeholders)

@@ -2,8 +2,40 @@
 
 Status: DONE_WITH_GAPS
 
+```yaml
+out_of_scope:
+  - tech_stack
+  - payment_channels
+  - infra_deployment
+```
+
+```yaml
+diagrams_generated:
+  - section: 4
+    subtype: stateDiagram-v2
+  - section: 6
+    subtype: block-beta
+```
+
 ## Summary
 SkyRush is a mobile-first crash game designed to convert short-session traffic into repeat betting behavior. The MVP prioritizes fast entry, low-friction betting, and visible cash-out tension.
+
+## Gameplay Flow
+
+### Core Game Loop
+
+```mermaid
+stateDiagram-v2
+    [*] --> idle
+    idle --> betting : round_start
+    betting --> countdown : bets_locked
+    countdown --> climbing : countdown_end
+    climbing --> crashed : boom_event
+    climbing --> cashed_out : player_cashout
+    crashed --> settling : settle_start
+    cashed_out --> settling : settle_start
+    settling --> idle : settle_done
+```
 
 ## Functional Requirements
 - `bet_amount`: player stake entered before round start
@@ -16,6 +48,22 @@ SkyRush is a mobile-first crash game designed to convert short-session traffic i
 - clear multiplier focus at center stage
 - separate animation treatment for countdown, climb, and crash
 - win/loss audio layers kept distinct from core game logic requirements
+
+### Main Screen Wireframe
+
+```mermaid
+block-beta
+  columns 1
+  header["Top Bar · balance · settings"]
+  stage["Multiplier Stage · 2.48x (climbing)"]
+  block:controls
+    columns 2
+    bet["Bet Amount Input"]
+    auto["Auto-Cashout Toggle"]
+  end
+  cta["Cash Out Button (primary CTA)"]
+  history["Recent Rounds Ticker"]
+```
 
 ## Known Gaps
 - RTP pending math table

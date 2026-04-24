@@ -228,6 +228,85 @@ Jackpot Wheel).
 If a line reads like "we don't know yet", it's an Open Question, not an
 Assumption. Mixing them makes cleanup harder at publish time.
 
+## Phase 3.5 — Diagram Generation (optional)
+
+After Phase 3 produces the text draft, assess whether visual diagrams would
+strengthen the PRD. This phase is optional — skip for lightweight, policy, or
+pricing PRDs that have no multi-state flows or UI layouts.
+
+**All diagrams are inline Mermaid**, written directly into the PRD as
+` ```mermaid ` code fences. Mermaid renders natively in GitHub, Obsidian,
+and VS Code, so no external skill, rendering server, or companion file is
+required. Raw Mermaid syntax is also diffable, which keeps PRDs reviewable.
+
+### Trigger conditions (offer when any is true)
+
+- §4 describes a multi-state flow with 3+ states or decision branches
+- §6 describes a UI layout, screen structure, or spatial arrangement
+- §9 describes a multi-component system architecture
+- User explicitly requests diagrams ("加流程图", "generate wireframes", "画线框图")
+
+### How to offer
+
+> "The draft has [a multi-state product flow / UI layout descriptions / a
+> multi-component architecture]. Want me to generate inline Mermaid diagrams?
+> Type `skip` to proceed without diagrams."
+
+### Diagram routing
+
+| PRD section | Diagram intent | Mermaid syntax |
+|---|---|---|
+| §4 Product / gameplay flow | State machine or user journey | `stateDiagram-v2`, `journey`, or `flowchart` |
+| §5 Functional requirements | Interaction / API sequence | `sequenceDiagram` |
+| §6 Art / design requirements | UI layout / screen wireframe | `block-beta` (preferred) or `flowchart` with subgraphs |
+| §9 Technical considerations | System architecture | `flowchart LR` / `graph` with subgraphs |
+
+All go in ` ```mermaid ` code fences inline in the relevant section.
+
+### Wireframe guidance (§6)
+
+`block-beta` is the cleanest Mermaid syntax for screen layouts. Use `columns`
+to define a grid, nest `block:` groups to represent areas (header, content,
+footer, FAB). Label blocks with the UI element name plus one line of state
+or copy. Keep to 8–15 blocks per screen — anything more should be split into
+sub-wireframes or described in prose.
+
+When `block-beta` cannot express the layout (e.g. free-positioned overlays),
+fall back to `flowchart TB` with labeled subgraphs. Do not attempt to simulate
+pixel layout in Mermaid — the goal is intent, not fidelity.
+
+### Execution steps
+
+1. Present a diagram plan: one line per proposed diagram with target section
+   and Mermaid subtype. Wait for user confirmation (all / partial / skip).
+2. For each accepted diagram, write the Mermaid source directly inline in the
+   target section via `Edit`.
+3. Record generated diagrams in the PRD metadata (after the `out_of_scope`
+   block):
+
+```yaml
+diagrams_generated:
+  - section: 4
+    subtype: stateDiagram-v2
+  - section: 6
+    subtype: block-beta
+  - section: 9
+    subtype: flowchart
+```
+
+All entries are inline Mermaid, so no `location` or `type` field is needed.
+
+### When Mermaid is not enough
+
+For wireframes too complex for `block-beta` (free-positioned overlays,
+pixel-exact mockups, detailed visual mocks), **do not invent an external
+dependency**. Instead:
+
+- Reduce the wireframe to a simplified block layout that captures intent
+- Describe visual details in prose next to the Mermaid block
+- Note `wireframe_fidelity: intent_only` in the `diagrams_generated` entry so
+  reviewers know a higher-fidelity mock is still needed later
+
 ## Phase 4 — Review (Grill-driven, not self-review)
 
 Self-review on your own draft is confirmation bias. Instead:

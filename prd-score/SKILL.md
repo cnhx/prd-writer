@@ -98,6 +98,16 @@ If the project uses `rejection-preempt.md` or an inline rejection-preempt
 section, verify 3–5 rejection bullets exist, each with a concrete preemption.
 Fail if missing or vague ("we will monitor").
 
+### 7. Diagram integrity (informational, does not affect verdict)
+
+Check for a `diagrams_generated` YAML block near the top of the PRD.
+
+- **Block absent** → report `diagrams: skipped` (no penalty — diagrams are
+  optional per `/write-prd` Phase 3.5).
+- **Block present** → for each entry, verify a ` ```mermaid ` code fence
+  exists in the stated section (all Phase 3.5 diagrams are inline Mermaid).
+  Report each section claimed in the metadata but missing its fence.
+
 ## Verdict
 
 - **Green (Ready to Dev)**: Structure ≥ 90%, Owner Closure ≥ 80%, no P0 Open
@@ -120,6 +130,7 @@ Fail if missing or vague ("we will monitor").
 - Out-of-Scope compliance: pass / fail (<reason if fail>)
 - Terminology-with-example: pass / fail (<terms lacking examples>)
 - Rejection-Letter compliance: pass / fail / N/A
+- Diagram integrity: present / skipped / missing-fences (<sections missing mermaid fences>) — informational only, not part of the pass/fail aggregate
 
 ### Top 3 remediation items
 1. …
