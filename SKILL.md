@@ -7,6 +7,7 @@ description: |
   Mermaid diagrams (flows, sequences, wireframes, architecture), and a scoring skill for
   Ready-to-Dev readiness. Use to write new PRDs, refine existing ones, or pressure-test ideas.
   Trigger: write PRD, PRD workflow, product requirements document, 写 PRD, 产品需求文档.
+  Compatible with Claude Code (skills) and Claude Cowork (plugin).
 dependencies:
   - gstack
 ---

@@ -2,7 +2,7 @@
 
 ## Skill-Based Architecture
 
-prd-writer is a skill collection. On Claude Code, install via `git clone` into `~/.claude/skills/`. On other platforms, copy the skill markdown files and use them as prompt modules.
+prd-writer is a skill collection and Cowork-compatible plugin. On Claude Code, install via `git clone` into `~/.claude/skills/`. On Claude Cowork, install as a plugin from the Customize menu. On other platforms, copy the skill markdown files and use them as prompt modules.
 
 ## What Is Portable
 
@@ -23,6 +23,10 @@ Platform-specific:
 ### Claude Code
 
 Clone to `~/.claude/skills/prd-writer/` and create symlinks. Skills are discovered automatically. See `README.md` for install commands.
+
+### Claude Cowork
+
+Install as a plugin via Claude Desktop → Cowork → Customize → Add plugin. The repo includes `.claude-plugin/plugin.json` for plugin discovery and `commands/` for Cowork slash commands. Skills and commands share the same SKILL.md files — no duplication. See `platforms/cowork/INSTALL.md`.
 
 ### Codex
 

@@ -49,8 +49,13 @@ bash ~/path/to/prd-writer/scripts/setup-dependencies.sh
 
 The script prints exact `ln -s` commands for anything missing — copy and run them.
 
+## Install (Claude Cowork)
+
+Install as a plugin in Claude Desktop → Cowork → Customize → Add plugin → From GitHub. All commands are registered automatically. See `platforms/cowork/INSTALL.md` for details.
+
 ## Install (Other Platforms)
 
+- Claude Cowork: see `platforms/cowork/INSTALL.md`
 - Codex: see `platforms/codex/INSTALL.md`
 - OpenClaw: see `platforms/openclaw/INSTALL.md`
 
