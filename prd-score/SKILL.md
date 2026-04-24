@@ -130,7 +130,7 @@ Check for a `diagrams_generated` YAML block near the top of the PRD.
 - Out-of-Scope compliance: pass / fail (<reason if fail>)
 - Terminology-with-example: pass / fail (<terms lacking examples>)
 - Rejection-Letter compliance: pass / fail / N/A
-- Diagram integrity: pass / skipped / fail (<sections missing mermaid fences>)
+- Diagram integrity: present / skipped / missing-fences (<sections missing mermaid fences>) — informational only, not part of the pass/fail aggregate
 
 ### Top 3 remediation items
 1. …

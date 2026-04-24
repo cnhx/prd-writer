@@ -12,7 +12,7 @@ out_of_scope:
 ```yaml
 diagrams_generated:
   - section: 4
-    subtype: stateDiagram
+    subtype: stateDiagram-v2
   - section: 6
     subtype: block-beta
 ```
