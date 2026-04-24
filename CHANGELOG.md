@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.7.0
+- added Phase 3.5 optional diagram generation (Mermaid inline for flows, Excalidraw companion files for wireframes)
+- diagram routing: §4 product flow → Mermaid stateDiagram, §5 interactions → Mermaid sequence, §6 UI → Excalidraw wireframe, §9 architecture → Mermaid graph
+- added `diagrams_generated` YAML metadata block in PRD for traceability
+- added prd-score §7 Diagram integrity (informational, does not affect verdict)
+- added `Skill` to write-prd allowed-tools for sub-skill invocation
+- added optional-dependencies: excalidraw-diagram, mermaid-visualizer
+- expanded sample-output-prd.md with Mermaid and Excalidraw embed examples
+- bumped root skill version to 0.7.0
+
 ## 0.6.0
 - added Phase 0.1 mandatory history alignment (scan `docs/prd/` + memory store before interrogation)
 - added Phase 0.2 product code / series anchor (no invented placeholders)

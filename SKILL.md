@@ -1,14 +1,17 @@
 ---
 name: prd-writer
-version: 0.6.0
+version: 0.7.0
 description: |
   PRD writing toolkit. Structured 5-phase workflow with mandatory out-of-scope boundary scan,
-  history alignment, terminology-with-example rule, grill-driven review, and a scoring skill
-  for Ready-to-Dev readiness. Use to write new PRDs, refine existing ones, or pressure-test
-  product ideas.
+  history alignment, terminology-with-example rule, grill-driven review, optional inline
+  diagrams (Mermaid + Excalidraw wireframes), and a scoring skill for Ready-to-Dev readiness.
+  Use to write new PRDs, refine existing ones, or pressure-test product ideas.
   Trigger: write PRD, PRD workflow, product requirements document, 写 PRD, 产品需求文档.
 dependencies:
   - gstack
+optional-dependencies:
+  - excalidraw-diagram
+  - mermaid-visualizer
 ---
 
 # PRD Writer
@@ -42,7 +45,7 @@ before/after examples of each rule.
 
 | Skill | Description |
 |-------|-------------|
-| `/write-prd` | 5-phase PRD workflow: context loading (with history + boundary scan), product interrogation, premise check, drafting, grill-driven review |
+| `/write-prd` | 5-phase PRD workflow: context loading, interrogation, premise check, drafting (with optional inline diagrams), grill-driven review |
 | `/prd-refine` | Quick PRD polish — edit immediately, preserve detail, no planning |
 | `/opus-prd-polish` | Final top-tier polish pass before publish (uses highest-reasoning model available) |
 | `/grill-me` | Stress-test a plan or idea via relentless interrogation |
@@ -55,6 +58,7 @@ before/after examples of each rule.
 - Art/design requirements stay in their own section
 - Write long PRDs to file, not chat
 - Uncertain facts marked `to_be_confirmed` or `pending_math_table`
+- Diagrams follow tool routing: Mermaid for structured flows (inline code fence), Excalidraw for spatial wireframes (companion file + `![[embed]]`)
 
 ### Language policy (two-tier)
 
@@ -74,3 +78,7 @@ Example in a Chinese PRD:
 
 **External** (install separately):
 - [gstack](https://github.com/gstackio/gstack) — headless browser QA, design review, deployment verification
+
+**External, optional** (enhance diagram generation in Phase 3.5):
+- excalidraw-diagram — UI wireframe generation in Obsidian Excalidraw format
+- mermaid-visualizer — syntax-validated Mermaid diagram generation

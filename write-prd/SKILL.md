@@ -12,6 +12,7 @@ allowed-tools:
   - Grep
   - Bash
   - AskUserQuestion
+  - Skill
 ---
 
 # Write PRD
@@ -227,6 +228,75 @@ Jackpot Wheel).
 
 If a line reads like "we don't know yet", it's an Open Question, not an
 Assumption. Mixing them makes cleanup harder at publish time.
+
+## Phase 3.5 — Diagram Generation (optional)
+
+After Phase 3 produces the text draft, assess whether visual diagrams would
+strengthen the PRD. This phase is optional — skip for lightweight, policy, or
+pricing PRDs that have no multi-state flows or UI layouts.
+
+### Trigger conditions (offer when any is true)
+
+- §4 describes a multi-state flow with 3+ states or decision branches
+- §6 describes a UI layout, screen structure, or spatial arrangement
+- §9 describes a multi-component system architecture
+- User explicitly requests diagrams ("加流程图", "generate wireframes", "画线框图")
+
+### How to offer
+
+> "The draft has [a multi-state product flow / UI layout descriptions / a
+> multi-component architecture]. Want me to generate visual diagrams? I'll
+> create inline Mermaid flowcharts for the product flow and Excalidraw
+> wireframes for the UI. Type `skip` to proceed without diagrams."
+
+### Diagram routing
+
+| PRD section | Diagram type | Tool | Embedding |
+|---|---|---|---|
+| §4 Product / gameplay flow | State diagram, flowchart, user journey | `/mermaid-visualizer` | Inline ` ```mermaid ` code fence in the section |
+| §5 Functional requirements (if interaction sequences) | Sequence diagram | `/mermaid-visualizer` | Inline |
+| §6 Art / design requirements (if UI layout) | Wireframe, screen layout | `/excalidraw-diagram` | Companion file + `![[embed]]` |
+| §9 Technical considerations (if multi-component) | Architecture diagram | `/mermaid-visualizer` | Inline |
+
+**Mermaid** (structured flows): insert the ` ```mermaid ` code block directly
+into the relevant PRD section. Renders natively in GitHub, Obsidian, VS Code.
+
+**Excalidraw** (spatial wireframes): generate a companion `.md` file in
+Obsidian Excalidraw format. Save it alongside the PRD as
+`<prd-name>-wireframe-<screen>.md`. Insert an Obsidian embed link
+`![[<prd-name>-wireframe-<screen>]]` into §6. Do **not** inline the
+Excalidraw JSON — it is 500–2000 lines of coordinates and makes the PRD
+unreadable and undiffable.
+
+### Execution steps
+
+1. Present a diagram plan listing each proposed diagram, its target section,
+   and tool. Wait for user confirmation (all / partial / skip).
+2. For each accepted diagram, invoke the corresponding skill.
+3. Insert Mermaid code blocks into their sections via `Edit`.
+4. Save Excalidraw companion files via the skill, then insert `![[embed]]`
+   links into §6 via `Edit`.
+5. Record generated diagrams in the PRD metadata (after the `out_of_scope`
+   block):
+
+```yaml
+diagrams_generated:
+  - section: 4
+    type: mermaid
+    subtype: stateDiagram
+    location: inline
+  - section: 6
+    type: excalidraw
+    subtype: wireframe
+    location: "<prd-name>-wireframe-main.md"
+```
+
+### Graceful degradation
+
+If `/mermaid-visualizer` or `/excalidraw-diagram` is not available in the
+environment, skip the corresponding diagram type and note it:
+`diagrams: <tool>_not_available`. Raw Mermaid syntax can be generated
+directly as a fallback without the skill.
 
 ## Phase 4 — Review (Grill-driven, not self-review)
 

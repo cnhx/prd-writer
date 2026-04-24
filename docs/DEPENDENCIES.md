@@ -22,6 +22,8 @@ Skills that live in separate repos. Install them independently.
 | Skill | Purpose | Required? |
 |-------|---------|-----------|
 | gstack | Headless browser QA, design review, deployment verification | Optional |
+| excalidraw-diagram | UI wireframe generation in Obsidian Excalidraw format (Phase 3.5) | Optional |
+| mermaid-visualizer | Syntax-validated Mermaid diagram generation (Phase 3.5) | Optional |
 
 ## How Dependencies Are Declared
 
@@ -30,6 +32,9 @@ The root `SKILL.md` frontmatter includes a `dependencies` field listing external
 ```yaml
 dependencies:
   - gstack
+optional-dependencies:
+  - excalidraw-diagram
+  - mermaid-visualizer
 ```
 
 Claude Code does not resolve these automatically. The `scripts/setup-dependencies.sh` script checks whether dependencies are installed and prints fix commands for anything missing.
