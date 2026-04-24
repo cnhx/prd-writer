@@ -5,14 +5,11 @@ argument-hint: "<path to PRD>"
 
 # /opus-prd-polish
 
-Final polish pass using the highest-reasoning model available. Improves clarity, structure, naming consistency, and readability without changing product facts.
+Read the skill file at `skills:opus-prd-polish` (located at `opus-prd-polish/SKILL.md`
+relative to this plugin's root) and follow its instructions exactly. The skill performs
+a final polish pass using the highest-reasoning model available, improving clarity,
+structure, naming consistency, and readability without changing product facts.
 
-## Usage
+Pass `$ARGUMENTS` as the path to the PRD file.
 
-```
-/opus-prd-polish $ARGUMENTS
-```
-
-## When to use
-
-After PRD review and before publish. This is the last step before a PRD is considered ready to share.
+If `$ARGUMENTS` is empty, ask the user which PRD file to polish.

@@ -5,16 +5,11 @@ argument-hint: "<plan, idea, or design to stress-test>"
 
 # /grill-me
 
-Relentless interrogation of a plan, design, or idea. Resolves each branch of the decision tree until shared understanding is reached.
+Read the skill file at `skills:grill-me` (located at `grill-me/SKILL.md` relative to
+this plugin's root) and follow its instructions exactly. The skill runs relentless
+interrogation of a plan, design, or idea, resolving each branch of the decision tree
+until shared understanding is reached.
 
-## Usage
+Pass `$ARGUMENTS` as the topic to stress-test.
 
-```
-/grill-me $ARGUMENTS
-```
-
-## When to use
-
-- Before writing a PRD, to sharpen a vague idea
-- After a draft, to find gaps and weak assumptions
-- Any time you want your thinking pressure-tested
+If `$ARGUMENTS` is empty, ask the user what they want to stress-test.

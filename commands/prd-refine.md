@@ -5,17 +5,11 @@ argument-hint: "<path to existing PRD>"
 
 # /prd-refine
 
-Quick PRD polish. Edits immediately without planning or confirmation unless the instruction is truly ambiguous.
+Read the skill file at `skills:prd-refine` (located at `prd-refine/SKILL.md` relative to
+this plugin's root) and follow its instructions exactly. The skill performs immediate
+edits to an existing PRD without planning or confirmation, preserving all existing
+details and depth.
 
-## Usage
+Pass `$ARGUMENTS` as the path to the PRD file to refine.
 
-```
-/prd-refine $ARGUMENTS
-```
-
-## Behavior
-
-- Preserves all existing details and depth
-- Never fabricates external URLs
-- Uses correct product codes per project mapping
-- Shows a brief change summary after editing
+If `$ARGUMENTS` is empty, ask the user which PRD file to refine.
