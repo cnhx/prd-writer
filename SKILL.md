@@ -1,6 +1,6 @@
 ---
 name: prd-writer
-version: 0.7.0
+version: 0.8.0
 description: |
   PRD writing toolkit. Structured 5-phase workflow with mandatory out-of-scope boundary scan,
   history alignment, terminology-with-example rule, grill-driven review, optional inline
@@ -48,6 +48,7 @@ before/after examples of each rule.
 | `/opus-prd-polish` | Final top-tier polish pass before publish (uses highest-reasoning model available) |
 | `/grill-me` | Stress-test a plan or idea via relentless interrogation |
 | `/prd-score` | Score a PRD against Ready-to-Dev rubric (Structure, Owner Closure, Open Questions, verdict Green / Yellow / Red) |
+| `/prd-split` | Split a PRD into discipline-specific requirement documents (GDD, TDD, Art & Audio, BD & Marketing) with structured requirements tables |
 
 ## Design rules
 

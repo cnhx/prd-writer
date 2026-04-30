@@ -14,6 +14,7 @@ Skills included in this repo. After cloning, create symlinks to expose them to C
 | prd-refine | Quick PRD editing |
 | opus-prd-polish | Final top-tier polish pass (uses highest-reasoning model available) |
 | grill-me | Idea and plan stress-testing |
+| prd-split | Discipline-specific requirement document generation |
 
 ### External
 
