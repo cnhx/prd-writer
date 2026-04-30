@@ -96,6 +96,26 @@ IN by omitting them — the block lists OUT items only. If the user marked none
 out, emit `out_of_scope: []` so the scoring skill has an unambiguous signal
 that the scan ran.
 
+### 0.4 Discipline split configuration (default: ON)
+
+After Phase 0.3 concludes, confirm discipline split preferences. By default,
+the PRD will auto-generate four discipline documents (GDD / TDD / Art & Audio /
+BD & Marketing) in Phase 5.5.
+
+> "PRD 完成后默认生成 Discipline 拆分文档（GDD / TDD / Art & Audio / BD &
+> Marketing）。需要调整吗？输入 `skip` 跳过拆分，或指定要生成的 discipline。"
+
+Record the user's choice into the PRD metadata (after the `out_of_scope` block):
+
+```yaml
+discipline_split:
+  enabled: true
+  disciplines: [gdd, tdd, art_audio, bd_marketing]
+```
+
+If user says `skip`, set `enabled: false`. If user selects a subset, list only
+the chosen disciplines. If user confirms default, emit the full list above.
+
 ## Phase 0.5 — Rejection Letter + Optional Stress-Test
 
 ### Part A: Rejection Letter (mandatory)
@@ -365,6 +385,17 @@ Sequence:
 When the draft is usable but incomplete, always return `DONE_WITH_GAPS` rather
 than blocking or inventing data. Mark uncertain facts as `to_be_confirmed`.
 
+### 5.5 Discipline split generation (if enabled)
+
+If Phase 0.4 set `discipline_split.enabled: true`, auto-invoke `/prd-split`
+on the saved PRD file. Pass the stored config (selected disciplines, output
+directory) so `/prd-split` skips interactive prompts and executes directly.
+
+Output directory: `disciplines/` subdirectory next to the saved PRD.
+
+If the split produces `to_be_confirmed` items, include them in the Phase 5
+completion report alongside any existing `DONE_WITH_GAPS` markers.
+
 ## After Completion
 
 Offer:
@@ -374,6 +405,7 @@ Offer:
 - "Want me to **break this into user stories** for engineering?"
 - "Run `/grill-me` again to **pressure-test the PRD assumptions**."
 - "Run `/prd-score` to quantify Ready-to-Dev readiness."
+- "Want me to **split this PRD into discipline documents**? `/prd-split` generates GDD, TDD, Art & Audio, and BD & Marketing files with requirements tables."
 
 ## Notes
 

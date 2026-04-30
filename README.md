@@ -18,6 +18,7 @@ ln -s ~/.claude/skills/prd-writer/prd-refine      ~/.claude/skills/prd-refine
 ln -s ~/.claude/skills/prd-writer/grill-me        ~/.claude/skills/grill-me
 ln -s ~/.claude/skills/prd-writer/opus-prd-polish ~/.claude/skills/opus-prd-polish
 ln -s ~/.claude/skills/prd-writer/prd-score       ~/.claude/skills/prd-score
+ln -s ~/.claude/skills/prd-writer/prd-split       ~/.claude/skills/prd-split
 ```
 
 ### Pattern B — clone elsewhere, symlink into the skills directory
@@ -31,6 +32,7 @@ ln -s ~/path/to/prd-writer/prd-refine        ~/.claude/skills/prd-refine
 ln -s ~/path/to/prd-writer/grill-me          ~/.claude/skills/grill-me
 ln -s ~/path/to/prd-writer/opus-prd-polish   ~/.claude/skills/opus-prd-polish
 ln -s ~/path/to/prd-writer/prd-score         ~/.claude/skills/prd-score
+ln -s ~/path/to/prd-writer/prd-split         ~/.claude/skills/prd-split
 ```
 
 ### Verify
@@ -67,6 +69,8 @@ Install as a plugin in Claude Desktop → Cowork → Customize → Add plugin �
 | `/prd-refine` | "refine this PRD", "polish the PRD" | Quick edit pass, preserves detail |
 | `/opus-prd-polish` | "opus polish", "final polish" | Top-tier clarity and structure pass (uses highest-reasoning model available) |
 | `/grill-me` | "grill me", "stress-test this" | Relentless interrogation of a plan or idea |
+| `/prd-score` | "score this PRD", "readiness check" | Score a PRD against Ready-to-Dev rubric (Green / Yellow / Red) |
+| `/prd-split` | "split PRD", "generate GDD", "discipline docs" | Split PRD into discipline-specific requirement documents (GDD, TDD, Art & Audio, BD & Marketing) |
 
 ## Usage
 
@@ -85,7 +89,7 @@ The workflow will:
 
 ## Dependencies
 
-**Bundled**: write-prd, prd-refine, opus-prd-polish, grill-me
+**Bundled**: write-prd, prd-refine, opus-prd-polish, grill-me, prd-score, prd-split
 
 **External (optional)**: [gstack](https://github.com/gstackio/gstack) — for QA, design review, deployment verification
 

@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.8.0
+- added `/prd-split` sub-skill: split a unified PRD into discipline-specific requirement documents (GDD, TDD, Art & Audio, BD & Marketing) with structured requirements tables and INDEX.md summary
+- added Phase 0.4 Discipline split configuration (default: ON) in `/write-prd` — user confirms discipline selection before interrogation
+- added Phase 5.5 auto-generation of discipline documents after PRD save
+- discipline mapping: 14 PRD sections classified as primary, secondary, or crosscutting per discipline
+- requirements extraction: paragraph/key-point granularity with auto-assigned IDs (`GDD-4-001`), priority inference, and `to_be_confirmed` flagging
+- added sample GDD output in `examples/sample-split-gdd.md`
+
 ## 0.7.0
 - added Phase 3.5 optional inline-Mermaid diagram generation (zero external dependencies)
 - diagram routing: §4 product flow → `stateDiagram-v2`, §5 interactions → `sequenceDiagram`, §6 UI → `block-beta` (fallback `flowchart`), §9 architecture → `flowchart`/`graph`
