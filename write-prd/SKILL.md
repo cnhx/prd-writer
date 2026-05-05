@@ -1,8 +1,9 @@
 ---
 name: write-prd
 description: |
-  5-phase PRD writing workflow: context loading, product interrogation, premise check,
-  PRD drafting, review and publish. Optionally integrates /grill-me for idea stress-testing.
+  5-phase PRD writing workflow: context loading, product-type routing, research pack,
+  product interrogation, premise check, PRD drafting, diagram studio, export-profile
+  hygiene, review and publish. Optionally integrates /grill-me for idea stress-testing.
   Use when asked to write a PRD, create product requirements, or draft a product spec.
 allowed-tools:
   - Read
@@ -27,6 +28,45 @@ Sources, in priority order:
 3. Memory / knowledge base (if available in the environment)
 4. User answers
 
+### 0.0 Product type and output profile
+
+Before detailed interrogation, classify the PRD so later questions and split
+documents fit the product. If the brief clearly indicates a type, state the
+classification and ask only for correction. If unclear, ask one concise
+question with the closest 2–3 options.
+
+Supported `product_type` values:
+
+| product_type | Use for | Watch closely |
+|---|---|---|
+| `game_interactive` | games, gambling-like loops, interactive entertainment | math model, player flow, art/audio, compliance |
+| `ai_agent` | assistants, internal agents, automation, retrieval, code/design/support agents | autonomy boundary, tools, evals, human review, audit logs |
+| `b2b_saas_ops` | CRM, approval flows, admin consoles, workflow tools | roles, permissions, repeated tasks, state transitions, support |
+| `data_analytics` | dashboards, reports, experiments, monitoring, decision support | metric definitions, freshness, quality, decision loop |
+| `platform_marketplace` | APIs, plugins, partner networks, marketplace, B2B2C | actor incentives, onboarding, trust, compatibility |
+| `consumer_growth` | apps, communities, lifecycle, referrals, memberships | activation, retention, notification boundaries, experiments |
+| `content_learning` | courses, knowledge bases, AI tutors, training | outcomes, content quality, learner levels, feedback |
+| `mixed` | genuinely spans 2+ types | name primary and secondary type; do not ask every pack's questions |
+
+Also record the target `output_profile`:
+
+| output_profile | Use when | Formatting rules |
+|---|---|---|
+| `obsidian_md` | User works in Obsidian or a markdown vault | relative links; optional wiki links only if requested; Mermaid inline |
+| `word_docx` | User needs Word review or stakeholder comments | strict heading levels; simple tables; captions for diagrams; no HTML-only layout |
+| `pdf` | User needs a frozen review/share artifact | page-friendly tables; diagram titles; keep Mermaid source if rendering is unavailable |
+| `confluence` | User needs a Confluence page/import artifact | H1-H3 headings; simple tables; explicit links; diagram image attachment note plus Mermaid source |
+| `multi` | User needs more than one target | optimize Markdown first, then add Word/PDF export notes |
+
+Persist both near the top of the PRD, immediately after the H1 title and before
+other metadata blocks:
+
+```yaml
+product_type: ai_agent
+secondary_product_type: null
+output_profile: multi
+```
+
 ### 0.1 Mandatory history alignment
 
 **Before asking any question**, sweep for prior context:
@@ -42,6 +82,34 @@ nmem --json m search "<product series / code>" 2>/dev/null
 
 Goal: never ask the user what the system already knows. Skip this step only if
 the product is genuinely new and no similar work exists.
+
+### 0.1.5 Research pack
+
+If the user supplies research, notes, screenshots, tickets, analytics, Confluence,
+Jira, Slack, interview quotes, competitor pages, or market reports, turn them
+into a small evidence table before drafting. If no research exists, record
+`research_pack: []` and proceed; do not fabricate evidence.
+
+Use this metadata shape near the top of the PRD:
+
+```yaml
+research_pack:
+  - evidence_type: interview
+    source_ref: docs/research/user-call-2026-05-02.md
+    freshness: 2026-05
+    confidence: medium
+    product_decision_link: onboarding_scope
+```
+
+Allowed `evidence_type` values: `interview`, `support_ticket`, `sales_call`,
+`competitor_page`, `analytics`, `market_report`, `internal_note`,
+`user_feedback`, `screenshot`, `other`.
+
+Every material PRD decision should be labeled in prose as one of:
+
+- **Evidence-backed**: source in `research_pack`
+- **Assumption-backed**: explicit assumption with owner/deadline
+- **Stakeholder request**: named requester or role
 
 ### 0.2 Product code / series anchor
 
@@ -96,25 +164,39 @@ IN by omitting them — the block lists OUT items only. If the user marked none
 out, emit `out_of_scope: []` so the scoring skill has an unambiguous signal
 that the scan ran.
 
-### 0.4 Discipline split configuration (default: ON)
+### 0.4 Audience split configuration (default: ON)
 
-After Phase 0.3 concludes, confirm discipline split preferences. By default,
-the PRD will auto-generate four discipline documents (GDD / TDD / Art & Audio /
-BD & Marketing) in Phase 5.5.
+After Phase 0.3 concludes, confirm audience split preferences. By default,
+the PRD will auto-generate an audience pack in Phase 5.5 based on `product_type`.
+For `game_interactive`, the default stays GDD / TDD / Art & Audio / BD &
+Marketing. For other types, use the product-type defaults below.
 
-> "PRD 完成后默认生成 Discipline 拆分文档（GDD / TDD / Art & Audio / BD &
-> Marketing）。需要调整吗？输入 `skip` 跳过拆分，或指定要生成的 discipline。"
+> "PRD 完成后默认生成受众拆分文档。当前产品类型是 `<product_type>`，默认输出
+> `<pack list>`。需要调整吗？输入 `skip` 跳过拆分，或指定要生成的文档。"
+
+Default packs:
+
+| product_type | audience_split default |
+|---|---|
+| `game_interactive` | `gdd`, `tdd`, `art_audio`, `bd_marketing` |
+| `ai_agent` | `agent_behavior_spec`, `eval_plan`, `human_review_playbook`, `risk_brief` |
+| `b2b_saas_ops` | `workflow_spec`, `permission_matrix`, `support_runbook`, `release_brief` |
+| `data_analytics` | `metric_dictionary`, `decision_guide`, `data_quality_checklist` |
+| `platform_marketplace` | `partner_brief`, `api_contract_summary`, `trust_safety_brief` |
+| `consumer_growth` | `experiment_brief`, `lifecycle_messaging_brief`, `design_brief` |
+| `content_learning` | `learning_outcome_map`, `content_rubric`, `feedback_loop_spec` |
 
 Record the user's choice into the PRD metadata (after the `out_of_scope` block):
 
 ```yaml
-discipline_split:
+audience_split:
   enabled: true
-  disciplines: [gdd, tdd, art_audio, bd_marketing]
+  packs: [agent_behavior_spec, eval_plan, human_review_playbook, risk_brief]
 ```
 
-If user says `skip`, set `enabled: false`. If user selects a subset, list only
-the chosen disciplines. If user confirms default, emit the full list above.
+For backward compatibility, `/prd-split` also accepts older `discipline_split`
+blocks. New PRDs should write `audience_split`. If user says `skip`, set
+`enabled: false`. If user selects a subset, list only chosen packs.
 
 ## Phase 0.5 — Rejection Letter + Optional Stress-Test
 
@@ -166,6 +248,31 @@ Required question themes:
 5. Business and math intuition — how does this make money or create value?
 6. Differentiation and defensibility — why us, why now?
 
+Then ask only the relevant product-type questions:
+
+| product_type | Add these questions |
+|---|---|
+| `ai_agent` | What decisions can the agent make alone? Which actions need human confirmation? What tools/data can it access? What failure examples define a bad answer or bad action? What eval set proves readiness? |
+| `b2b_saas_ops` | Which roles repeat this workflow? What permissions differ by role? What state changes matter? What exceptions and support paths happen weekly? |
+| `data_analytics` | What decision will change after seeing the data? Which metric definitions are canonical? What freshness and data-quality limits must be visible? |
+| `platform_marketplace` | Who are the supply, demand, partner, and platform actors? What incentives keep each actor participating? What trust/safety and compatibility rules are non-negotiable? |
+| `consumer_growth` | What is the activation moment? What loop brings users back? What notification/share/referral limits prevent user fatigue? What experiments prove lift? |
+| `content_learning` | What outcome should learners reach? How is content quality judged? How does the flow adapt for different skill levels? What feedback proves transfer to real work? |
+
+### 1.5 Concept Lab (when the idea is still broad)
+
+If the idea has no clear target user, activation moment, or MVP boundary, run a
+short Concept Lab before Phase 2. Produce 3 candidate directions, each with:
+
+- Product promise
+- First "this is useful" moment
+- One counterintuitive design choice
+- Kill criteria
+- Cheapest validation
+
+Ask the user to pick one direction or merge two. Do not draft a full PRD from
+all three directions.
+
 ## Phase 2 — Premise Check and Option Selection
 
 Produce:
@@ -203,6 +310,11 @@ Required sections:
 12. Assumptions
 13. Non-goals
 14. Sources
+
+Section naming may adapt to the product type. Keep the 14-section shape for
+scoring, but use natural headings when the source product is not a game. For
+example, §4 may be "Product Flow", "Agent Workflow", "Decision Loop", or
+"Learning Journey". Do not force "Gameplay" into non-game PRDs.
 
 ### 3.1 Drafting rules
 
@@ -248,7 +360,19 @@ Jackpot Wheel).
 If a line reads like "we don't know yet", it's an Open Question, not an
 Assumption. Mixing them makes cleanup harder at publish time.
 
-## Phase 3.5 — Diagram Generation (optional)
+### 3.4 Format hygiene
+
+Apply the chosen `output_profile` while drafting:
+
+| output_profile | Drafting requirements |
+|---|---|
+| `obsidian_md` | Use Markdown links to local files when possible. Use wiki links only if the user asks for Obsidian-specific linking. Keep Mermaid inline. Avoid raw HTML. |
+| `word_docx` | Use H1/H2/H3 only unless deeper levels are necessary. Keep tables narrow. Add captions before diagrams. Avoid callouts that depend on Markdown renderer extensions. |
+| `pdf` | Keep tables page-friendly. Put long metadata blocks near the top but not between a heading and its first paragraph. Add diagram titles and short alt summaries. |
+| `confluence` | Avoid Obsidian wiki links and raw HTML. Keep tables narrow. Use explicit URLs or Confluence page titles for references. For every Mermaid diagram, add an export note naming the intended attachment image, then keep the Mermaid source for review. |
+| `multi` | Follow Obsidian-safe Markdown first; add Word/PDF/Confluence export notes in an appendix if needed. |
+
+## Phase 3.5 — Diagram Studio (optional)
 
 After Phase 3 produces the text draft, assess whether visual diagrams would
 strengthen the PRD. This phase is optional — skip for lightweight, policy, or
@@ -276,12 +400,48 @@ required. Raw Mermaid syntax is also diffable, which keeps PRDs reviewable.
 
 | PRD section | Diagram intent | Mermaid syntax |
 |---|---|---|
-| §4 Product / gameplay flow | State machine or user journey | `stateDiagram-v2`, `journey`, or `flowchart` |
-| §5 Functional requirements | Interaction / API sequence | `sequenceDiagram` |
+| §4 Product / gameplay flow | State machine, user journey, decision loop, learning path | `stateDiagram-v2`, `journey`, or `flowchart` |
+| §5 Functional requirements | Interaction, API, agent-tool sequence | `sequenceDiagram` |
 | §6 Art / design requirements | UI layout / screen wireframe | `block-beta` (preferred) or `flowchart` with subgraphs |
+| §7 Math / business model | Growth loop, marketplace loop, value exchange, metric tree | `flowchart LR`, `graph`, or `mindmap` |
+| §8 Compliance and risk | Human review, approval, trust/safety, escalation | `flowchart` or `stateDiagram-v2` |
 | §9 Technical considerations | System architecture | `flowchart LR` / `graph` with subgraphs |
 
+Product-type diagram defaults:
+
+| product_type | Useful diagrams |
+|---|---|
+| `game_interactive` | core loop state diagram, screen block wireframe, payout/risk flow |
+| `ai_agent` | agent autonomy boundary, tool-call sequence, eval loop, human review escalation |
+| `b2b_saas_ops` | workflow state map, role/permission matrix, exception path |
+| `data_analytics` | metric tree, data pipeline, decision loop, alert triage |
+| `platform_marketplace` | actor incentive map, partner onboarding flow, trust/safety escalation |
+| `consumer_growth` | onboarding path, growth loop, experiment funnel |
+| `content_learning` | learning path, feedback loop, content lifecycle |
+
 All go in ` ```mermaid ` code fences inline in the relevant section.
+
+### Mermaid quality bar
+
+- Start every diagram with a short title in prose before the fence.
+- Prefer left-to-right (`LR`) for systems and loops; top-to-bottom (`TB`) for
+  journeys and screen layouts.
+- Use short labels: noun + state/action, not full sentences.
+- Group related nodes with `subgraph` when the diagram has 7+ nodes.
+- Keep one diagram to one idea. Split if it needs more than 15 nodes.
+- Use stable English identifiers for node IDs; labels may follow the PRD language.
+- Use `classDef` only when it clarifies status or ownership. Choose colors that
+  stay legible in PDF export:
+
+```mermaid
+flowchart LR
+  user[User] --> agent[Agent]
+  agent --> review{Needs human review?}
+  review -->|yes| human[Reviewer]
+  review -->|no| action[Execute action]
+  classDef risk fill:#fff3cd,stroke:#b58105,color:#3d2c00
+  class review risk
+```
 
 ### Wireframe guidance (§6)
 
@@ -308,13 +468,18 @@ pixel layout in Mermaid — the goal is intent, not fidelity.
 diagrams_generated:
   - section: 4
     subtype: stateDiagram-v2
+    purpose: product_flow
   - section: 6
     subtype: block-beta
+    purpose: screen_wireframe
   - section: 9
     subtype: flowchart
+    purpose: architecture
+    export_note: keep_mermaid_source_for_word_pdf_confluence
 ```
 
-All entries are inline Mermaid, so no `location` or `type` field is needed.
+All entries are inline Mermaid. Do not add companion files unless the user
+explicitly asks for rendered images.
 
 ### When Mermaid is not enough
 
@@ -385,13 +550,15 @@ Sequence:
 When the draft is usable but incomplete, always return `DONE_WITH_GAPS` rather
 than blocking or inventing data. Mark uncertain facts as `to_be_confirmed`.
 
-### 5.5 Discipline split generation (if enabled)
+### 5.5 Audience split generation (if enabled)
 
-If Phase 0.4 set `discipline_split.enabled: true`, auto-invoke `/prd-split`
-on the saved PRD file. Pass the stored config (selected disciplines, output
+If Phase 0.4 set `audience_split.enabled: true`, auto-invoke `/prd-split`
+on the saved PRD file. Pass the stored config (selected packs, output
 directory) so `/prd-split` skips interactive prompts and executes directly.
 
-Output directory: `disciplines/` subdirectory next to the saved PRD.
+Output directory: `audience/` subdirectory next to the saved PRD. Older
+game-only projects may keep using `disciplines/` if the repo already has that
+convention.
 
 If the split produces `to_be_confirmed` items, include them in the Phase 5
 completion report alongside any existing `DONE_WITH_GAPS` markers.
@@ -405,7 +572,7 @@ Offer:
 - "Want me to **break this into user stories** for engineering?"
 - "Run `/grill-me` again to **pressure-test the PRD assumptions**."
 - "Run `/prd-score` to quantify Ready-to-Dev readiness."
-- "Want me to **split this PRD into discipline documents**? `/prd-split` generates GDD, TDD, Art & Audio, and BD & Marketing files with requirements tables."
+- "Want me to **split this PRD into audience documents**? `/prd-split` generates product-type-specific docs with requirements tables."
 
 ## Notes
 

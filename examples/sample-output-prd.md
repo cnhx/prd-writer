@@ -3,6 +3,16 @@
 Status: DONE_WITH_GAPS
 
 ```yaml
+product_type: game_interactive
+secondary_product_type: null
+output_profile: confluence
+```
+
+```yaml
+research_pack: []
+```
+
+```yaml
 out_of_scope:
   - tech_stack
   - payment_channels
@@ -13,8 +23,12 @@ out_of_scope:
 diagrams_generated:
   - section: 4
     subtype: stateDiagram-v2
+    purpose: core_game_loop
+    export_note: attach_skyrush-core-loop.png_and_keep_mermaid_source
   - section: 6
     subtype: block-beta
+    purpose: main_screen_wireframe
+    export_note: attach_skyrush-main-screen.png_and_keep_mermaid_source
 ```
 
 ## Summary

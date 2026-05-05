@@ -14,7 +14,7 @@ Skills included in this repo. After cloning, create symlinks to expose them to C
 | prd-refine | Quick PRD editing |
 | opus-prd-polish | Final top-tier polish pass (uses highest-reasoning model available) |
 | grill-me | Idea and plan stress-testing |
-| prd-split | Discipline-specific requirement document generation |
+| prd-split | Audience-specific requirement document generation |
 
 ### External
 
@@ -25,7 +25,23 @@ Skills that live in separate repos. Install them independently.
 | gstack | Headless browser QA, design review, deployment verification | Optional |
 
 Phase 3.5 diagrams use only inline Mermaid code fences, which render natively
-in GitHub, Obsidian, and VS Code. No external diagram skill is required.
+in GitHub, Obsidian, and VS Code. No external diagram skill is required. Word,
+PDF, and Confluence workflows should export from the Markdown source and keep
+Mermaid source near any rendered image or attachment.
+
+## Format and Agent Dependencies
+
+Codex, OpenClaw, and Hermes support does not add runtime dependencies. They read
+the same Markdown prompt modules:
+
+- `write-prd/SKILL.md`
+- `grill-me/SKILL.md`
+- `opus-prd-polish/SKILL.md`
+- `prd-score/SKILL.md`
+- `prd-split/SKILL.md`
+
+The `output_profile` field changes formatting rules only. It does not require a
+Word, PDF, Obsidian, or Confluence dependency inside prd-writer.
 
 ## How Dependencies Are Declared
 

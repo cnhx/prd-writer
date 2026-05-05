@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.9.0
+- added product-type routing for `game_interactive`, `ai_agent`, `b2b_saas_ops`, `data_analytics`, `platform_marketplace`, `consumer_growth`, `content_learning`, and `mixed`
+- added `output_profile` support for `obsidian_md`, `word_docx`, `pdf`, `confluence`, and `multi`
+- added `research_pack` metadata and evidence labels for evidence-backed, assumption-backed, and stakeholder-request decisions
+- expanded Phase 3.5 into Diagram Studio with product-type diagram defaults and Mermaid quality rules
+- expanded `/prd-split` from game-only discipline documents into audience packs for AI agents, SaaS/Ops, data products, platform products, growth products, and learning products
+- added Evidence Score and export readiness checks to `/prd-score`
+- added Hermes installation guide and refreshed Codex/OpenClaw prompt-module guides
+- added AI agent and SaaS/Ops sample PRDs with Mermaid diagrams and export metadata
+
 ## 0.8.0
 - added `/prd-split` sub-skill: split a unified PRD into discipline-specific requirement documents (GDD, TDD, Art & Audio, BD & Marketing) with structured requirements tables and INDEX.md summary
 - added Phase 0.4 Discipline split configuration (default: ON) in `/write-prd` — user confirms discipline selection before interrogation

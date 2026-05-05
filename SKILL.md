@@ -1,13 +1,15 @@
 ---
 name: prd-writer
-version: 0.8.0
+version: 0.9.0
 description: |
-  PRD writing toolkit. Structured 5-phase workflow with mandatory out-of-scope boundary scan,
-  history alignment, terminology-with-example rule, grill-driven review, optional inline
-  Mermaid diagrams (flows, sequences, wireframes, architecture), and a scoring skill for
-  Ready-to-Dev readiness. Use to write new PRDs, refine existing ones, or pressure-test ideas.
+  PRD writing toolkit for games, AI agents, SaaS/Ops tools, data products, platform products,
+  growth products, and learning/content products. Structured workflow with mandatory
+  out-of-scope boundary scan, product-type router, research evidence pack, terminology-with-example
+  rule, grill-driven review, inline Mermaid diagram studio, export profiles for Obsidian MD /
+  Word / PDF, and a scoring skill for Ready-to-Dev readiness.
+  Use to write new PRDs, refine existing ones, split audience-specific docs, or pressure-test ideas.
   Trigger: write PRD, PRD workflow, product requirements document, 写 PRD, 产品需求文档.
-  Compatible with Claude Code (skills) and Claude Cowork (plugin).
+  Compatible with Claude Code, Claude Cowork, Codex, OpenClaw, and Hermes prompt-module workflows.
 dependencies:
   - gstack
 ---
@@ -43,12 +45,12 @@ before/after examples of each rule.
 
 | Skill | Description |
 |-------|-------------|
-| `/write-prd` | 5-phase PRD workflow: context loading, interrogation, premise check, drafting (with optional inline diagrams), grill-driven review |
+| `/write-prd` | 5-phase PRD workflow: context loading, product-type routing, evidence pack, interrogation, premise check, drafting (with inline diagrams and export profile), grill-driven review |
 | `/prd-refine` | Quick PRD polish — edit immediately, preserve detail, no planning |
 | `/opus-prd-polish` | Final top-tier polish pass before publish (uses highest-reasoning model available) |
 | `/grill-me` | Stress-test a plan or idea via relentless interrogation |
-| `/prd-score` | Score a PRD against Ready-to-Dev rubric (Structure, Owner Closure, Open Questions, verdict Green / Yellow / Red) |
-| `/prd-split` | Split a PRD into discipline-specific requirement documents (GDD, TDD, Art & Audio, BD & Marketing) with structured requirements tables |
+| `/prd-score` | Score a PRD against Ready-to-Dev rubric, evidence coverage, diagram integrity, and export readiness |
+| `/prd-split` | Split a PRD into audience-specific requirement documents. Game projects can use GDD/TDD/Art/BD; non-game projects use packs such as Agent Spec, Eval Plan, Workflow Spec, Permission Matrix, Metric Dictionary, API Contract Summary, or Experiment Brief |
 
 ## Design rules
 
@@ -57,7 +59,17 @@ before/after examples of each rule.
 - Art/design requirements stay in their own section
 - Write long PRDs to file, not chat
 - Uncertain facts marked `to_be_confirmed` or `pending_math_table`
-- Diagrams are inline Mermaid only — flows/sequences/wireframes/architecture all go in ` ```mermaid ` code fences; no external diagram tools required
+- Detect and record `product_type` before drafting. Supported first-class types:
+  `game_interactive`, `ai_agent`, `b2b_saas_ops`, `data_analytics`,
+  `platform_marketplace`, `consumer_growth`, `content_learning`, and `mixed`.
+- Record a `research_pack` when the user supplies interviews, tickets, analytics,
+  market notes, competitor pages, screenshots, Confluence/Jira/Slack refs, or other evidence.
+- Diagrams are inline Mermaid only. Flows, sequences, wireframes, architectures,
+  journey maps, permission maps, decision loops, evaluation loops, and growth loops
+  all go in ` ```mermaid ` code fences; no external diagram tools required.
+- Record `output_profile` as `obsidian_md`, `word_docx`, `pdf`, `confluence`,
+  or `multi`. Markdown remains the source of truth; exports must preserve
+  headings, tables, Mermaid source blocks, and source references.
 
 ### Language policy (two-tier)
 
@@ -79,4 +91,6 @@ Example in a Chinese PRD:
 - [gstack](https://github.com/gstackio/gstack) — headless browser QA, design review, deployment verification
 
 Phase 3.5 diagrams use only inline Mermaid (rendered natively by GitHub, Obsidian,
-and VS Code). No external diagram skill is required.
+and VS Code). Word/PDF/Confluence users can export rendered diagrams from
+Obsidian or keep the Mermaid source next to exported static images. No external
+diagram skill is required.

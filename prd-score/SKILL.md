@@ -2,7 +2,8 @@
 name: prd-score
 description: |
   Score a PRD against a Ready-to-Dev rubric. Produces Structure Completeness %,
-  Owner Closure %, Open-Question residue, and a Green / Yellow / Red verdict.
+  Owner Closure %, Open-Question residue, Evidence Score, export readiness,
+  and a Green / Yellow / Red verdict.
   Use after /write-prd completes, or on any existing PRD before submitting for review.
 allowed-tools:
   - Read
@@ -46,6 +47,10 @@ Required sections present and non-empty. Weighted:
 A section counts as present only if it contains substantive content (more than
 a header + placeholder). A section marked "N/A — not applicable" with a brief
 justification counts as present.
+
+Also read `product_type` near the top of the PRD. If it is missing, flag
+`product_type_missing`. If a non-game PRD uses game-only headings without a
+clear reason, list that under remediation.
 
 ### 2. Owner Closure (0–100%)
 
@@ -98,7 +103,23 @@ If the project uses `rejection-preempt.md` or an inline rejection-preempt
 section, verify 3–5 rejection bullets exist, each with a concrete preemption.
 Fail if missing or vague ("we will monitor").
 
-### 7. Diagram integrity (informational, does not affect verdict)
+### 7. Evidence Score (0–100%, informational unless evidence is claimed)
+
+Check for a `research_pack` YAML block near the top of the PRD.
+
+- **Block absent** → report `evidence: not_recorded`.
+- **Block present as `[]`** → report `evidence: none_supplied`; no penalty if
+  the PRD clearly marks decisions as assumptions or stakeholder requests.
+- **Block present with entries** → score:
+  - coverage: key decisions linked to evidence (40)
+  - freshness: evidence has a usable time range/date (20)
+  - confidence: each entry has high/medium/low (20)
+  - contradiction handling: conflicting evidence is named or marked absent (20)
+
+If a PRD says a decision is evidence-backed but no research entry supports it,
+flag `unsupported_evidence_claim`.
+
+### 8. Diagram integrity (informational, does not affect verdict)
 
 Check for a `diagrams_generated` YAML block near the top of the PRD.
 
@@ -107,6 +128,23 @@ Check for a `diagrams_generated` YAML block near the top of the PRD.
 - **Block present** → for each entry, verify a ` ```mermaid ` code fence
   exists in the stated section (all Phase 3.5 diagrams are inline Mermaid).
   Report each section claimed in the metadata but missing its fence.
+
+### 9. Export readiness (informational, does not affect verdict)
+
+Check for an `output_profile` value: `obsidian_md`, `word_docx`, `pdf`,
+`confluence`, or `multi`.
+
+- `obsidian_md`: links should be relative when they point to local files;
+  Mermaid fences should remain inline.
+- `word_docx`: headings should not skip levels; wide tables should be called out
+  for cleanup; diagrams need captions or short titles.
+- `pdf`: long tables need review; diagrams need titles; unresolved Mermaid
+  rendering should be preserved as source in an appendix or nearby block.
+- `confluence`: links should be explicit; tables should be narrow; diagrams
+  should have a named attachment/export note plus the Mermaid source block.
+- `multi`: apply all relevant checks above.
+
+Report `export_profile_missing` if no profile is recorded.
 
 ## Verdict
 
@@ -131,6 +169,8 @@ Check for a `diagrams_generated` YAML block near the top of the PRD.
 - Terminology-with-example: pass / fail (<terms lacking examples>)
 - Rejection-Letter compliance: pass / fail / N/A
 - Diagram integrity: present / skipped / missing-fences (<sections missing mermaid fences>) — informational only, not part of the pass/fail aggregate
+- Evidence Score: NN% / not_recorded / none_supplied (<key issues>)
+- Export readiness: pass / warning / missing-profile (<target profile>)
 
 ### Top 3 remediation items
 1. …

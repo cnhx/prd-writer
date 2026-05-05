@@ -2,14 +2,23 @@
 
 ## Skill-Based Architecture
 
-prd-writer is a skill collection and Cowork-compatible plugin. On Claude Code, install via `git clone` into `~/.claude/skills/`. On Claude Cowork, install as a plugin from the Customize menu. On other platforms, copy the skill markdown files and use them as prompt modules.
+prd-writer is a skill collection and Cowork-compatible plugin. On Claude Code,
+install via `git clone` into `~/.claude/skills/`. On Claude Cowork, install as a
+plugin from the Customize menu. On Codex, OpenClaw, Hermes, and similar agents,
+copy the skill markdown files and use them as prompt modules.
 
 ## What Is Portable
 
 Portable:
 - PRD workflow phases and question themes
+- Product-type router (`game_interactive`, `ai_agent`, `b2b_saas_ops`,
+  `data_analytics`, `platform_marketplace`, `consumer_growth`, `content_learning`)
+- Research pack metadata and evidence labels
 - Review checklist
 - Drafting rules (English identifiers, art/design separation, uncertainty marking)
+- Inline Mermaid diagram source
+- Audience split pack definitions
+- Output profile rules for Obsidian MD, Word, and PDF
 - Skill content (standard markdown with YAML frontmatter)
 
 Platform-specific:
@@ -36,6 +45,24 @@ Copy skill markdown files into your project as prompt modules. See `platforms/co
 
 Copy skill markdown files into your agent workspace. See `platforms/openclaw/INSTALL.md`.
 
+### Hermes
+
+Copy skill markdown files into your Hermes workspace as prompt modules. See
+`platforms/hermes/INSTALL.md`.
+
+## Format Portability
+
+Markdown stays the canonical artifact. Use `output_profile` to tune the same PRD
+for downstream review:
+
+| output_profile | Portable behavior |
+|---|---|
+| `obsidian_md` | Relative links, inline Mermaid, no raw HTML dependency |
+| `word_docx` | Strict heading levels, narrow tables, diagram captions |
+| `pdf` | Page-friendly tables, titled diagrams, Mermaid source kept if rendering is unavailable |
+| `confluence` | H1-H3 headings, simple tables, explicit links, diagram attachment notes plus Mermaid source |
+| `multi` | Markdown first, with Word/PDF/Confluence export notes where needed |
+
 ## YAML Frontmatter
 
 Each skill file starts with YAML frontmatter (`---name: ...---`). On Claude Code this is parsed for skill discovery. On other platforms it is harmless metadata that can be ignored or stripped.
@@ -47,3 +74,4 @@ Before publishing:
 - All optional dependencies degrade gracefully if missing
 - Examples do not expose internal company data
 - Skill content is written in English (output language not forced)
+- Product-type, evidence, diagram, and export-profile metadata are present in samples

@@ -1,7 +1,7 @@
 {
   "name": "prd-writer",
-  "version": "0.8.0",
-  "description": "Structured PRD authoring toolkit. 5-phase workflow with mandatory out-of-scope boundary scan, history alignment, grill-driven review, optional inline Mermaid diagrams, and a scoring skill for Ready-to-Dev readiness. Write new PRDs, refine existing ones, or pressure-test ideas.",
+  "version": "0.9.0",
+  "description": "Structured PRD authoring toolkit for games, AI agents, SaaS/Ops tools, data products, platform products, growth products, and learning products. Includes product-type routing, evidence metadata, inline Mermaid diagrams, audience splits, and Obsidian/Word/PDF/Confluence export profiles.",
   "author": {
     "name": "cnhx"
   }

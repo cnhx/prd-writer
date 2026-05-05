@@ -14,11 +14,12 @@ Cowork will install the plugin and register all commands automatically.
 
 | Command | Description |
 |---------|-------------|
-| `/write-prd` | Full 5-phase PRD workflow |
+| `/write-prd` | PRD workflow with product-type routing, evidence metadata, diagrams, and export profile |
 | `/prd-refine` | Quick edit pass, preserves detail |
 | `/opus-prd-polish` | Top-tier clarity and structure pass |
 | `/grill-me` | Stress-test a plan or idea |
-| `/prd-score` | Score PRD readiness (Green / Yellow / Red) |
+| `/prd-score` | Score PRD readiness, evidence coverage, diagrams, and export readiness |
+| `/prd-split` | Generate audience-specific docs from a unified PRD |
 
 Type `/` in the Cowork input to see all available commands from your installed plugins.
 
@@ -45,4 +46,5 @@ Cowork needs read/write access to the directories where you want PRDs saved. Whe
 - No terminal or symlinks required — Cowork handles plugin discovery automatically
 - No external connectors (`.mcp.json`) needed — prd-writer is self-contained
 - Diagrams use inline Mermaid code fences, rendered natively in the Cowork output
+- Use `output_profile: obsidian_md`, `word_docx`, `pdf`, `confluence`, or `multi` to tune the same Markdown source for downstream review
 - The optional `/opus-prd-polish` command works best with Opus-class models; it degrades gracefully on other tiers
