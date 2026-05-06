@@ -164,9 +164,47 @@ IN by omitting them — the block lists OUT items only. If the user marked none
 out, emit `out_of_scope: []` so the scoring skill has an unambiguous signal
 that the scan ran.
 
+### 0.3.5 Implementation detail policy (MANDATORY)
+
+Before Phase 1, set the PRD's implementation detail level. Default to
+`semantic_contract_only` unless the user explicitly asks for an engineering
+design document and confirms that implementation details belong in this PRD.
+
+Persist the policy near the top of the PRD, immediately after `out_of_scope`:
+
+```yaml
+implementation_detail_level: semantic_contract_only
+technical_detail_policy:
+  forbidden_by_default:
+    - tech_stack
+    - database_schema
+    - cache_queue_design
+    - deployment_topology
+    - internal_task_breakdown
+    - atomic_implementation_language
+  allowed:
+    - user_visible_behavior
+    - business_rules
+    - acceptance_criteria
+    - semantic_integration_contract
+    - product_facing_nonfunctional_requirement
+    - engineering_follow_up_question
+```
+
+This PRD is a product contract, not a technical design. Do not prescribe Redis,
+database tables, indexes, queues, services, framework choices, SDK choices,
+cloud topology, cron jobs, or internal task decomposition. If a source document
+mentions existing technical constraints, keep them as `Known Existing
+Constraints` or `Engineering Follow-up Questions`; do not turn them into new
+product requirements.
+
+Avoid "atomic" implementation language unless it describes a user-visible
+product unit. For example, write "the approval action completes in one visible
+step" instead of "build an atomic approval service".
+
 ### 0.4 Audience split configuration (default: ON)
 
-After Phase 0.3 concludes, confirm audience split preferences. By default,
+After Phase 0.3.5 concludes, confirm audience split preferences. By default,
 the PRD will auto-generate an audience pack in Phase 5.5 based on `product_type`.
 For `game_interactive`, the default stays GDD / TDD / Art & Audio / BD &
 Marketing. For other types, use the product-type defaults below.
@@ -186,7 +224,8 @@ Default packs:
 | `consumer_growth` | `experiment_brief`, `lifecycle_messaging_brief`, `design_brief` |
 | `content_learning` | `learning_outcome_map`, `content_rubric`, `feedback_loop_spec` |
 
-Record the user's choice into the PRD metadata (after the `out_of_scope` block):
+Record the user's choice into the PRD metadata (after the implementation detail
+policy block):
 
 ```yaml
 audience_split:
@@ -278,8 +317,9 @@ all three directions.
 Produce:
 
 - 3 to 5 core assumptions to confirm
-- 2 to 3 implementation options
+- 2 to 3 product solution options
 - One recommendation with rationale
+- Engineering follow-up questions for unknown implementation constraints
 
 ### 2.1 Re-apply counterintuitive rules here
 
@@ -291,6 +331,14 @@ Before recommending options, run:
   feature cannot be cut cleanly, rethink.
 - **Rule 4 decisive evidence**: does the recommendation spend budget on
   answering the hypothesis, or on polish? Reallocate if polish-heavy.
+
+### 2.2 Product options, not technical designs
+
+Options must compare product behavior, scope, user impact, business tradeoffs,
+and validation cost. Do not compare Redis vs database, framework A vs framework
+B, queue topology, service boundaries, or table schema. If implementation
+uncertainty affects feasibility, record it as an engineering follow-up question
+with owner and decision deadline.
 
 ## Phase 3 — PRD Drafting
 
@@ -322,6 +370,63 @@ example, §4 may be "Product Flow", "Agent Workflow", "Decision Loop", or
 - Art/design requirements stay in their own section
 - Uncertain facts explicitly marked as `to_be_confirmed`
 - No vague placeholders like "optimize later" without owner or condition
+- Technical considerations describe product-facing constraints and engineering
+  questions only. They do not prescribe implementation unless
+  `implementation_detail_level` explicitly allows it.
+
+### 3.1.5 Implementation detail downgrade rule (MANDATORY)
+
+When a draft sentence prescribes implementation, downgrade it into a product
+contract before publishing:
+
+| Implementation-heavy draft | PRD-safe rewrite |
+|---|---|
+| "Use Redis to prevent duplicate reward claims." | "The system must prevent duplicate reward claims within the defined claim window; duplicate attempts show the already-claimed state." |
+| "Create a `reward_claims` table with these fields." | "The product must retain enough claim history for user support, audit, and duplicate prevention; exact storage design is engineering-owned." |
+| "Run a queue job every five minutes." | "Background processing may be delayed; users must see pending, success, and failed states with a retry path." |
+| "Build an atomic approval module." | "The approval action appears to the user as one complete step; partial approval states and recovery behavior are defined in the exception table." |
+
+If the exact technology is truly a hard constraint from an existing system,
+label it as `Known Existing Constraint`, cite the source, and keep the product
+requirement focused on externally visible behavior.
+
+### 3.1.6 Condition normalization rule (MANDATORY)
+
+Do not scatter decision logic across paragraphs and nested bullets. If a
+requirement has more than two nested bullet levels, or three or more conditional
+terms such as `if`, `when`, `unless`, `except`, `only after`, `otherwise`,
+`当`, `如果`, `否则`, or `除非`, convert it into a decision table:
+
+| Scenario | Trigger | Preconditions | Decision rule | Normal result | Exception result | Priority |
+|---|---|---|---|---|---|---|
+
+One table should own one decision area. Do not repeat the same rule in multiple
+sections; cross-reference the table instead.
+
+### 3.1.7 Exception flow coverage (MANDATORY)
+
+Every core flow named in §4 or §5 needs normal and exception paths. At minimum,
+check the relevant cases below:
+
+- Permission denied
+- Missing or invalid input
+- Duplicate submission
+- User cancellation
+- Dependency unavailable
+- Timeout
+- State conflict
+- Partial success
+- Rollback or recovery path
+- User-visible message or next action
+
+Use a compact table when possible:
+
+| Flow | Normal path | Exception | User-visible result | Recovery / owner |
+|---|---|---|---|---|
+
+If an exception path cannot be answered from available context, add it to Open
+Questions with owner and deadline. A PRD missing exception coverage must finish
+as `DONE_WITH_GAPS`, not `DONE`.
 
 ### 3.2 Terminology-with-example rule (MANDATORY)
 
@@ -461,8 +566,8 @@ pixel layout in Mermaid — the goal is intent, not fidelity.
    and Mermaid subtype. Wait for user confirmation (all / partial / skip).
 2. For each accepted diagram, write the Mermaid source directly inline in the
    target section via `Edit`.
-3. Record generated diagrams in the PRD metadata (after the `out_of_scope`
-   block):
+3. Record generated diagrams in the PRD metadata (after the top metadata
+   blocks):
 
 ```yaml
 diagrams_generated:
@@ -518,12 +623,32 @@ the user to answer in Phase 5.
 Do **not** invoke Interview mode here — it will re-interview the author and
 waste cycles on decisions the PRD has already made.
 
-### 4.2 Targeted grill angles
+### 4.2 Mandatory product-readiness cleanup passes
+
+Before general reviewer-hat grill prompts, run these cleanup passes against the
+draft and edit directly:
+
+1. **Tech Leakage Pass** — delete or downgrade prescriptions for tech stack,
+   Redis/cache/database schema, queues, services, deployment, framework, SDK,
+   and internal task decomposition. Keep only semantic contracts and engineering
+   follow-up questions.
+2. **Condition Consolidation Pass** — merge scattered judgment logic into the
+   decision tables required by §3.1.6. Remove duplicated condition statements
+   after the table becomes source of truth.
+3. **Exception Coverage Pass** — for each core flow, verify §3.1.7 normal and
+   exception coverage. Add missing cases as requirements or Open Questions with
+   owner and deadline.
+
+### 4.3 Targeted grill angles
 
 Use these as directed grill prompts, not as a sign-off checklist:
 
 - Is the core flow implementable without guesswork?
 - Are edge cases and state transitions explicit?
+- Did the draft prescribe implementation details that belong in engineering design?
+- Did any requirement create unnecessary atomic / component-level development pressure?
+- Are complex conditions consolidated into one decision table per decision area?
+- Does every core flow include normal, failure, recovery, and user-message paths?
 - Are math assumptions separated from confirmed numbers?
 - Are art requirements isolated from logic requirements?
 - Are compliance and market facts sourced or marked as pending?

@@ -1,12 +1,13 @@
 ---
 name: prd-writer
-version: 0.9.0
+version: 0.10.0
 description: |
   PRD writing toolkit for games, AI agents, SaaS/Ops tools, data products, platform products,
   growth products, and learning/content products. Structured workflow with mandatory
-  out-of-scope boundary scan, product-type router, research evidence pack, terminology-with-example
-  rule, grill-driven review, inline Mermaid diagram studio, export profiles for Obsidian MD /
-  Word / PDF, and a scoring skill for Ready-to-Dev readiness.
+  out-of-scope boundary scan, implementation-detail boundary, product-type router, research
+  evidence pack, condition consolidation, exception coverage, terminology-with-example rule,
+  grill-driven review, inline Mermaid diagram studio, export profiles for Obsidian MD / Word /
+  PDF, and a scoring skill for Ready-to-Dev readiness.
   Use to write new PRDs, refine existing ones, split audience-specific docs, or pressure-test ideas.
   Trigger: write PRD, PRD workflow, product requirements document, 写 PRD, 产品需求文档.
   Compatible with Claude Code, Claude Cowork, Codex, OpenClaw, and Hermes prompt-module workflows.
@@ -45,11 +46,11 @@ before/after examples of each rule.
 
 | Skill | Description |
 |-------|-------------|
-| `/write-prd` | 5-phase PRD workflow: context loading, product-type routing, evidence pack, interrogation, premise check, drafting (with inline diagrams and export profile), grill-driven review |
+| `/write-prd` | 5-phase PRD workflow: context loading, product-type routing, evidence pack, implementation-detail boundary, interrogation, premise check, drafting (with condition tables, exception coverage, inline diagrams, and export profile), grill-driven review |
 | `/prd-refine` | Quick PRD polish — edit immediately, preserve detail, no planning |
 | `/opus-prd-polish` | Final top-tier polish pass before publish (uses highest-reasoning model available) |
 | `/grill-me` | Stress-test a plan or idea via relentless interrogation |
-| `/prd-score` | Score a PRD against Ready-to-Dev rubric, evidence coverage, diagram integrity, and export readiness |
+| `/prd-score` | Score a PRD against Ready-to-Dev rubric, implementation leakage, atomic pressure, condition consolidation, exception coverage, evidence coverage, diagram integrity, and export readiness |
 | `/prd-split` | Split a PRD into audience-specific requirement documents. Game projects can use GDD/TDD/Art/BD; non-game projects use packs such as Agent Spec, Eval Plan, Workflow Spec, Permission Matrix, Metric Dictionary, API Contract Summary, or Experiment Brief |
 
 ## Design rules
@@ -59,6 +60,17 @@ before/after examples of each rule.
 - Art/design requirements stay in their own section
 - Write long PRDs to file, not chat
 - Uncertain facts marked `to_be_confirmed` or `pending_math_table`
+- PRDs describe product contracts, not implementation designs. Default to
+  `semantic_contract_only`; avoid Redis, database schema, cache/queue design,
+  service boundaries, framework choices, SDK choices, and deployment topology
+  unless the user explicitly confirms they belong in this artifact.
+- Avoid atomic implementation language. Describe the user-visible outcome,
+  decision rule, or acceptance criterion instead of forcing internal task
+  decomposition.
+- Consolidate complex judgment logic into decision tables. Do not scatter the
+  same condition across nested bullets or multiple sections.
+- Every core flow needs normal and exception paths, including failure, recovery,
+  and user-visible messaging.
 - Detect and record `product_type` before drafting. Supported first-class types:
   `game_interactive`, `ai_agent`, `b2b_saas_ops`, `data_analytics`,
   `platform_marketplace`, `consumer_growth`, `content_learning`, and `mixed`.

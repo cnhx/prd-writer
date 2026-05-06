@@ -66,11 +66,11 @@ Install as a plugin in Claude Desktop → Cowork → Customize → Add plugin �
 
 | Skill | Trigger | Description |
 |-------|---------|-------------|
-| `/write-prd` | "write a PRD", "create product requirements" | Full PRD workflow with product-type router, evidence pack, diagrams, and export profile |
+| `/write-prd` | "write a PRD", "create product requirements" | Full PRD workflow with product-type router, evidence pack, implementation-detail boundary, exception coverage, diagrams, and export profile |
 | `/prd-refine` | "refine this PRD", "polish the PRD" | Quick edit pass, preserves detail |
 | `/opus-prd-polish` | "opus polish", "final polish" | Top-tier clarity and structure pass (uses highest-reasoning model available) |
 | `/grill-me` | "grill me", "stress-test this" | Relentless interrogation of a plan or idea |
-| `/prd-score` | "score this PRD", "readiness check" | Score structure, owner closure, scope boundaries, diagrams, evidence, and export readiness |
+| `/prd-score` | "score this PRD", "readiness check" | Score structure, owner closure, scope boundaries, implementation leakage, condition consolidation, exception coverage, evidence, diagrams, and export readiness |
 | `/prd-split` | "split PRD", "generate GDD", "audience docs" | Split PRD into audience-specific docs. Game projects use GDD/TDD/Art/BD; non-game projects use product-type packs |
 
 ## Supported Product Types
@@ -97,7 +97,7 @@ The workflow will:
 3. Build a research pack when evidence is supplied
 4. Optionally offer `/grill-me` or a short Concept Lab if the idea is vague
 5. Ask one question at a time about market, users, scope, business model, risk, and product-type specifics
-6. Draft a structured PRD with inline Mermaid diagrams when useful
+6. Draft a structured PRD with implementation details downgraded to product contracts, complex conditions consolidated into tables, exception paths covered, and inline Mermaid diagrams when useful
 7. Review against a quality checklist, then optionally run `/opus-prd-polish`, `/prd-score`, and `/prd-split`
 
 ## Format Support
@@ -128,6 +128,10 @@ See `docs/DEPENDENCIES.md` for details.
 - Every variable/state/event/config field gets a readable English identifier
 - Art/design requirements stay in a dedicated section
 - Product type and output profile must be recorded near the top of every generated PRD
+- PRDs default to `semantic_contract_only`; do not prescribe Redis, database schema, cache/queue design, service boundaries, framework choices, SDK choices, or deployment topology unless explicitly requested
+- Avoid atomic implementation language; describe user-visible outcomes and acceptance criteria instead
+- Complex decision logic belongs in decision tables, not scattered nested bullets
+- Every core flow needs normal and exception paths with recovery and user-visible messaging
 - Output language follows user preference
 
 ## Contributing

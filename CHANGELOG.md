@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.10.0
+- added mandatory implementation-detail policy in `/write-prd`; new PRDs default to `semantic_contract_only`
+- downgraded technical implementation details into product contracts by default, including Redis, database schema, cache/queue design, service boundaries, framework choices, SDK choices, and deployment topology
+- changed Phase 2 option selection from implementation options to product solution options, with engineering follow-up questions for feasibility unknowns
+- added condition normalization rules so complex decision logic is consolidated into decision tables instead of scattered nested bullets
+- added mandatory exception flow coverage for core flows, including failure, recovery, and user-visible messaging
+- added Phase 4 cleanup passes for tech leakage, condition consolidation, and exception coverage
+- expanded `/prd-score` with implementation leakage, atomic pressure, condition consolidation, and exception coverage pass/fail gates
+- updated README and root skill rules to make product-contract-only PRD writing the default behavior
+
 ## 0.9.0
 - added product-type routing for `game_interactive`, `ai_agent`, `b2b_saas_ops`, `data_analytics`, `platform_marketplace`, `consumer_growth`, `content_learning`, and `mixed`
 - added `output_profile` support for `obsidian_md`, `word_docx`, `pdf`, `confluence`, and `multi`
