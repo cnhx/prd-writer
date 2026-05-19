@@ -1,5 +1,5 @@
 ---
-description: Write a structured PRD with product-type routing, evidence metadata, diagrams, and export profile
+description: Write a structured PRD with product-type routing, evidence metadata, diagrams, export profile, optional HTML export, and optional HTML mockup wireframe
 argument-hint: "<brief file path or product topic>"
 ---
 
@@ -9,7 +9,8 @@ Read the skill file at `skills:write-prd` (located at `write-prd/SKILL.md` relat
 this plugin's root) and follow its instructions exactly. The skill defines a PRD
 workflow: context loading, product-type routing, research pack, interrogation,
 premise check, PRD drafting with inline Mermaid diagrams, output profile hygiene,
-audience split configuration, and review/publish.
+audience split configuration, review/publish, optional HTML PRD export, and
+optional HTML mockup wireframe generation.
 
 Pass `$ARGUMENTS` as the user's input (brief file path or product topic).
 

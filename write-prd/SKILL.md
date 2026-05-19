@@ -688,6 +688,89 @@ convention.
 If the split produces `to_be_confirmed` items, include them in the Phase 5
 completion report alongside any existing `DONE_WITH_GAPS` markers.
 
+### 5.6 HTML PRD Export (optional, user-triggered)
+
+Generate a self-contained `.html` version of the PRD for browser viewing.
+
+**Trigger**: offer in the "After Completion" menu:
+> "Want me to generate an **HTML version** of this PRD? Opens directly in any browser."
+
+**Generation rules**:
+
+1. Read the saved Markdown PRD file end-to-end.
+2. Output `{prd-name}.html` in the same directory as the source PRD.
+3. The HTML file must be **self-contained** — all CSS inlined in a `<style>` block,
+   no external CSS framework (Bootstrap, Tailwind, etc.).
+4. **Mermaid rendering**: include a `<script>` tag loading mermaid.js from CDN
+   (`https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js`), call
+   `mermaid.initialize({startOnLoad:true})` on page load. Convert Markdown
+   ` ```mermaid ` fences into `<pre class="mermaid">` blocks.
+5. **YAML metadata blocks** (product_type, out_of_scope, research_pack, etc.)
+   render as styled info cards with key-value layout — not raw code blocks.
+6. **Table of contents**: auto-generate from H2 headings as anchor links at the
+   top of the page.
+7. **Typography**: clean sans-serif font stack, heading hierarchy via
+   size/weight/margin, adequate `line-height` for readability.
+8. **Tables**: bordered, striped rows, horizontal scroll wrapper for narrow
+   viewports.
+9. **Code blocks**: monospace with subtle background shading.
+10. **Print-friendly**: add `@media print` rules for clean paper output.
+11. Must render correctly when opened as a local `file://` URL.
+12. Preserve **all** PRD content — no summarization or omission.
+
+After generation, report the file path.
+
+### 5.7 HTML Mockup Export (optional, user-triggered)
+
+Generate a wireframe-style `.html` file showing layout intent and flow
+navigation. This is **not** a visual design — it communicates structure,
+screen composition, and user path.
+
+**Precondition**: offer this option only when the PRD contains multi-screen or
+multi-state content in §4 (product flow), §5 (functional requirements), or §6
+(design requirements). If the PRD is purely strategic, data-oriented, or policy
+with no UI flows, do not offer this option.
+
+**Trigger** (in "After Completion" menu):
+> "This PRD describes multiple screens/states. Want me to generate an **HTML
+> mockup** showing layout wireframes and flow navigation?"
+
+**Pre-generation step**:
+
+1. Extract a screen/page/state list from §4, §5, §6.
+2. Present the list to the user for confirmation or amendment.
+3. Proceed only after the user confirms the screen list.
+
+**Generation rules**:
+
+1. Read PRD §4, §5, §6 to identify screens, layouts, and transitions.
+2. Output `{prd-name}-mockup.html` in the same directory as the source PRD.
+3. Self-contained: HTML + inlined CSS + vanilla JS. **Zero external
+   dependencies** — no JS framework, no CSS framework, no CDN.
+4. Must render correctly when opened as a local `file://` URL.
+
+**Content structure** — the mockup HTML has three integrated parts:
+
+| Part | Location | Content |
+|---|---|---|
+| Flow Overview | Page top | CSS-drawn flow nodes connected by arrows. Each node = one screen/state. Nodes are clickable, scrolling to the corresponding wireframe section. Shows core user path and state transitions. |
+| Screen Wireframes | Main body | One `<section>` per screen/page. Wireframe style: light gray blocks with dark borders representing layout areas (header, content, sidebar, footer, buttons, lists, forms). Each area labeled with name and key state text. Source annotation at top: "Source: PRD §N — [section name]". |
+| Inter-screen Navigation | Within wireframes | Buttons/links representing navigation actions are clickable anchor links to target screen sections. Active screen highlighted in the flow overview via lightweight scroll-spy (vanilla JS). |
+
+**Visual style**:
+
+- Wireframe aesthetic: white/light-gray background, black/dark-gray borders,
+  blue accent for interactive elements
+- No decorative styling (no rounded corners, shadows, gradients)
+- Clear visual message: "this is layout intent, not art direction"
+- Sans-serif labels for UI areas, monospace for state/variable names
+
+**Fallback**: if PRD screen descriptions are insufficient to construct
+wireframes, the agent lists what it found, asks the user to supplement, and
+only generates after confirmation.
+
+After generation, report the file path and number of screens included.
+
 ## After Completion
 
 Offer:
@@ -698,6 +781,8 @@ Offer:
 - "Run `/grill-me` again to **pressure-test the PRD assumptions**."
 - "Run `/prd-score` to quantify Ready-to-Dev readiness."
 - "Want me to **split this PRD into audience documents**? `/prd-split` generates product-type-specific docs with requirements tables."
+- "Want me to generate an **HTML version** of this PRD? Opens directly in any browser."
+- "Want me to generate an **HTML mockup** with wireframes and flow navigation?"
 
 ## Notes
 

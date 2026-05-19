@@ -7,7 +7,8 @@ description: |
   out-of-scope boundary scan, implementation-detail boundary, product-type router, research
   evidence pack, condition consolidation, exception coverage, terminology-with-example rule,
   grill-driven review, inline Mermaid diagram studio, export profiles for Obsidian MD / Word /
-  PDF, and a scoring skill for Ready-to-Dev readiness.
+  PDF, optional HTML PRD export with Mermaid rendering, optional HTML mockup wireframe
+  generation, and a scoring skill for Ready-to-Dev readiness.
   Use to write new PRDs, refine existing ones, split audience-specific docs, or pressure-test ideas.
   Trigger: write PRD, PRD workflow, product requirements document, 写 PRD, 产品需求文档.
   Compatible with Claude Code, Claude Cowork, Codex, OpenClaw, and Hermes prompt-module workflows.
@@ -46,7 +47,7 @@ before/after examples of each rule.
 
 | Skill | Description |
 |-------|-------------|
-| `/write-prd` | 5-phase PRD workflow: context loading, product-type routing, evidence pack, implementation-detail boundary, interrogation, premise check, drafting (with condition tables, exception coverage, inline diagrams, and export profile), grill-driven review |
+| `/write-prd` | 5-phase PRD workflow: context loading, product-type routing, evidence pack, implementation-detail boundary, interrogation, premise check, drafting (with condition tables, exception coverage, inline diagrams, and export profile), grill-driven review, optional HTML PRD export, optional HTML mockup wireframe |
 | `/prd-refine` | Quick PRD polish — edit immediately, preserve detail, no planning |
 | `/opus-prd-polish` | Final top-tier polish pass before publish (uses highest-reasoning model available) |
 | `/grill-me` | Stress-test a plan or idea via relentless interrogation |
