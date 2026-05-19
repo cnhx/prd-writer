@@ -733,35 +733,56 @@ completion report alongside any existing `DONE_WITH_GAPS` markers.
 
 ### 5.6 HTML PRD Export (optional, user-triggered)
 
-Generate a self-contained `.html` version of the PRD for browser viewing.
+Generate self-contained `.html` versions of PRD documents for browser viewing.
 
 **Trigger**: offer in the "After Completion" menu:
-> "Want me to generate an **HTML version** of this PRD? Opens directly in any browser."
+> "Want me to generate **HTML versions** of the PRD documents? Opens directly in any browser."
 
-**Generation rules**:
+**Scope — split-aware generation**:
 
-1. Read the saved Markdown PRD file end-to-end.
-2. Output `{prd-name}.html` in the same directory as the source PRD.
+If Phase 5.5 audience split ran and produced split documents, generate HTML for
+**each split document** plus the main PRD. If no split was performed, generate
+HTML for the main PRD only.
+
+| Scenario | HTML files generated |
+|---|---|
+| No audience split | `{prd-name}.html` |
+| Audience split enabled | `{prd-name}.html` + `{prd-name}-gdd.html` + `{prd-name}-tdd.html` + ... (one per split doc) |
+
+All HTML files go in the same directory as their Markdown source. The main PRD
+HTML includes a navigation section at the top linking to each split document's
+HTML file (relative links). Each split document HTML includes a "Back to main
+PRD" link.
+
+**Generation rules** (apply to every HTML file — main PRD and each split doc):
+
+1. Read the source Markdown file end-to-end.
+2. Output `{source-name}.html` in the same directory.
 3. The HTML file must be **self-contained** — all CSS inlined in a `<style>` block,
    no external CSS framework (Bootstrap, Tailwind, etc.).
 4. **Mermaid rendering**: include a `<script>` tag loading mermaid.js from CDN
    (`https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js`), call
    `mermaid.initialize({startOnLoad:true})` on page load. Convert Markdown
    ` ```mermaid ` fences into `<pre class="mermaid">` blocks.
-5. **YAML metadata blocks** (product_type, out_of_scope, research_pack, etc.)
-   render as styled info cards with key-value layout — not raw code blocks.
+5. **YAML metadata blocks** (product_type, out_of_scope, research_pack,
+   audience_split, etc.) render as styled info cards with key-value layout —
+   not raw code blocks.
 6. **Table of contents**: auto-generate from H2 headings as anchor links at the
    top of the page.
-7. **Typography**: clean sans-serif font stack, heading hierarchy via
-   size/weight/margin, adequate `line-height` for readability.
+7. **Typography**: clean sans-serif font stack (include Chinese fonts like
+   PingFang SC, Microsoft YaHei when language is Chinese), heading hierarchy
+   via size/weight/margin, adequate `line-height` for readability.
 8. **Tables**: bordered, striped rows, horizontal scroll wrapper for narrow
    viewports.
 9. **Code blocks**: monospace with subtle background shading.
 10. **Print-friendly**: add `@media print` rules for clean paper output.
 11. Must render correctly when opened as a local `file://` URL.
-12. Preserve **all** PRD content — no summarization or omission.
+12. Preserve **all** document content — no summarization or omission.
+13. **Language**: follow the `language` setting from `~/.prd-writer/config.json`.
+    Section titles, metadata labels, TOC heading, and all prose use the
+    configured language. Variable/state/event names stay in English.
 
-After generation, report the file path.
+After generation, report the list of all HTML files created.
 
 ### 5.7 HTML Mockup Export (optional, user-triggered)
 
