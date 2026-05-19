@@ -782,7 +782,7 @@ Offer:
 - "Run `/prd-score` to quantify Ready-to-Dev readiness."
 - "Want me to **split this PRD into audience documents**? `/prd-split` generates product-type-specific docs with requirements tables."
 - "Want me to generate an **HTML version** of this PRD? Opens directly in any browser."
-- "Want me to generate an **HTML mockup** with wireframes and flow navigation?"
+- (Only if PRD has multi-screen/multi-state content in §4/§5/§6) "Want me to generate an **HTML mockup** with wireframes and flow navigation?"
 
 ## Notes
 
