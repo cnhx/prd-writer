@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SkyRush — Interactive Mockup</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:#111;color:#fff;min-height:100vh}
+
+/* ═══ Tabs ═══ */
+.tab-bar{display:flex;justify-content:center;gap:2px;padding:16px 16px 0;position:sticky;top:0;z-index:100;background:#111}
+.tab{padding:8px 24px;font-size:.82rem;font-weight:600;border:none;border-radius:8px 8px 0 0;cursor:pointer;transition:all .15s}
+.tab.active{background:#1e1e30;color:#fff}
+.tab:not(.active){background:#0a0a15;color:#666}
+.tab:not(.active):hover{color:#999}
+
+/* ═══ Panels ═══ */
+.panel{display:none;padding:24px 16px 60px}
+.panel.active{display:block}
+
+/* ═══ INTERACTIVE PANEL ═══ */
+.interact-wrap{display:flex;flex-direction:column;align-items:center}
+.interact-title{font-size:1.2rem;font-weight:700;margin-bottom:4px}
+.interact-sub{font-size:.72rem;color:#666;margin-bottom:16px}
+
+/* Flow bar */
+.flow-bar{display:flex;align-items:center;gap:4px;margin-bottom:16px;flex-wrap:wrap;justify-content:center}
+.fb-n{padding:4px 10px;border-radius:4px;font-size:.68rem;font-weight:600;color:#555;background:#1e1e30;border:1.5px solid #2a2a40;cursor:pointer;transition:all .15s}
+.fb-n.act{background:#2563eb;border-color:#2563eb;color:#fff}
+.fb-n:hover{border-color:#4a4a65}
+.fb-a{color:#444;font-size:.7rem}
+
+/* Phone */
+.phone{width:340px;height:600px;border:3px solid #444;border-radius:36px;background:#111;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.notch{width:100px;height:22px;background:#111;border-radius:0 0 14px 14px;margin:0 auto}
+.sbar{display:flex;justify-content:space-between;padding:2px 20px 4px;font-size:.6rem;color:#888}
+.sc-wrap{flex:1;position:relative;overflow:hidden;background:#111}
+.sc{position:absolute;inset:0;display:flex;flex-direction:column;opacity:0;pointer-events:none;transition:opacity .25s}
+.sc.vis{opacity:1;pointer-events:auto}
+.tbar{display:flex;justify-content:space-between;align-items:center;padding:8px 18px;flex-shrink:0}
+.bal{font-size:.85rem;font-weight:700;color:#fff}
+.bal.wn{color:#4ade80}
+.gear{width:30px;height:30px;border-radius:50%;border:1.5px solid #333;display:flex;align-items:center;justify-content:center;font-size:.75rem;color:#666;cursor:pointer}
+.stg{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative}
+.mult{font-size:3.2rem;font-weight:800;color:#fff;letter-spacing:-.03em;transition:color .3s}
+.mult.clb{color:#4ade80}.mult.cra{color:#ef4444}.mult.won{color:#60a5fa}
+.stg-lbl{font-size:.78rem;color:#888;margin-top:4px}
+.curve{width:75%;height:50px;border:1px solid #2a2a40;border-radius:8px;margin-top:16px;display:flex;align-items:center;justify-content:center;font-size:.65rem;color:#444;overflow:hidden;position:relative}
+.curve-ln{position:absolute;bottom:0;left:0;width:0;height:2px;background:#4ade80;transition:width 2s linear}
+.res{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s}
+.res.sh{opacity:1;pointer-events:auto}
+.res-bg{position:absolute;inset:0}
+.res-bg.wbg{background:radial-gradient(circle,rgba(74,222,128,.15),transparent 70%)}
+.res-bg.lbg{background:radial-gradient(circle,rgba(239,68,68,.15),transparent 70%)}
+.res-ic{font-size:3rem;position:relative;z-index:1}
+.res-am{font-size:1.6rem;font-weight:800;position:relative;z-index:1;margin-top:4px}
+.res-dt{font-size:.78rem;color:#888;position:relative;z-index:1;margin-top:2px}
+.ctrl{padding:10px 18px 6px;flex-shrink:0}
+.cr{display:flex;gap:8px;margin-bottom:8px}
+.ci{flex:1;height:38px;border:1.5px solid #333;border-radius:8px;display:flex;align-items:center;padding:0 12px;font-size:.8rem;color:#999;background:#1a1a2e}
+.ci.af{border-color:#2563eb;color:#fff}
+.ci.lk{border-color:#222;color:#555;background:#151525}
+.cl{font-size:.58rem;color:#666;margin-right:6px;text-transform:uppercase}
+.tw{display:flex;align-items:center;gap:6px;font-size:.75rem;color:#888}
+.tg{width:34px;height:20px;border-radius:10px;background:#333;position:relative;cursor:pointer;transition:background .2s}
+.tg.on{background:#2563eb}
+.tk{width:16px;height:16px;border-radius:50%;background:#fff;position:absolute;top:2px;left:2px;transition:left .2s}
+.tg.on .tk{left:16px}
+.cta{display:block;width:100%;padding:14px;border:none;border-radius:10px;font-size:1rem;font-weight:700;text-align:center;cursor:pointer;transition:all .15s;margin-top:4px;color:#fff}
+.cta.pr{background:#2563eb}.cta.pr:hover{background:#1d4ed8}
+.cta.co{background:#16a34a}.cta.co:hover{background:#15803d}
+.cta.ds{background:#222;color:#555;cursor:default}
+.cta.wb{background:#1a3a1a;color:#4ade80;cursor:default}
+.cta.lb{background:#3a1a1a;color:#ef4444;cursor:default}
+.tick{display:flex;gap:6px;padding:8px 18px;align-items:center;flex-shrink:0;overflow:hidden}
+.td{display:flex;align-items:center;gap:3px;font-size:.65rem;color:#666}
+.tdot{width:5px;height:5px;border-radius:50%}
+.tdot.w{background:#4ade80}.tdot.l{background:#ef4444}
+.hbar{width:100px;height:4px;background:#444;border-radius:2px;margin:6px auto 8px}
+
+/* Info panel */
+.info{width:340px;margin-top:12px;padding:10px 16px;background:#1e1e30;border-radius:10px;border:1px solid #2a2a40}
+.info-r{display:flex;justify-content:space-between;align-items:center}
+.info-l{font-size:.7rem;color:#666}
+.st{display:inline-block;font-size:.62rem;padding:2px 8px;border-radius:3px;font-weight:600}
+.st.si{background:#2a2a40;color:#888}.st.sb{background:#1e3a5f;color:#60a5fa}.st.sc{background:#3a2f1e;color:#fbbf24}
+.st.sa{background:#1a3a1a;color:#4ade80}.st.sk{background:#1a3a1a;color:#4ade80}.st.sr{background:#3a1a1a;color:#ef4444}.st.ss{background:#2a2a40;color:#888}
+.src{font-size:.62rem;color:#555;margin-top:4px}
+.hint{font-size:.65rem;color:#444;margin-top:6px;text-align:center}
+@keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.15)}100%{transform:scale(1)}}
+.cd-num{animation:pulse .8s ease-in-out infinite}
+
+/* ═══ OVERVIEW PANEL ═══ */
+.ov-title{text-align:center;font-size:1.2rem;font-weight:700;margin-bottom:4px}
+.ov-sub{text-align:center;font-size:.72rem;color:#666;margin-bottom:24px}
+.ov-flow{display:flex;align-items:center;gap:4px;justify-content:center;flex-wrap:wrap;margin-bottom:24px}
+.ov-fn{padding:5px 12px;border-radius:4px;font-size:.7rem;font-weight:600;color:#888;background:#1e1e30;border:1.5px solid #2a2a40;cursor:pointer;transition:all .15s;text-decoration:none}
+.ov-fn:hover{border-color:#4a4a65;color:#bbb}
+.ov-fn.hl{border-color:#2563eb;color:#60a5fa}
+.ov-arr{color:#444;font-size:.7rem}
+.ov-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:24px;max-width:1200px;margin:0 auto}
+.ov-card{scroll-margin-top:80px}
+.ov-card-label{text-align:center;font-size:.75rem;font-weight:600;color:#888;margin-bottom:6px}
+
+/* Mini phone */
+.mini{width:220px;height:390px;border:2px solid #333;border-radius:24px;background:#111;overflow:hidden;display:flex;flex-direction:column;transition:border-color .2s,box-shadow .2s;cursor:pointer}
+.mini:hover{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.2)}
+.mini .m-notch{width:70px;height:14px;background:#111;border-radius:0 0 10px 10px;margin:0 auto}
+.mini .m-sbar{display:flex;justify-content:space-between;padding:1px 14px 2px;font-size:.5rem;color:#666}
+.mini .m-body{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.mini .m-tbar{display:flex;justify-content:space-between;align-items:center;padding:5px 12px;flex-shrink:0;font-size:.68rem}
+.mini .m-bal{font-weight:700;color:#fff}
+.mini .m-bal.wn{color:#4ade80}
+.mini .m-gear{color:#555;font-size:.6rem}
+.mini .m-stg{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative}
+.mini .m-mult{font-size:2rem;font-weight:800;color:#fff}
+.mini .m-mult.clb{color:#4ade80}.mini .m-mult.cra{color:#ef4444}.mini .m-mult.won{color:#60a5fa}
+.mini .m-lbl{font-size:.6rem;color:#666;margin-top:2px}
+.mini .m-res{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.mini .m-res-ic{font-size:2rem}
+.mini .m-res-tx{font-size:1rem;font-weight:800}
+.mini .m-res-dt{font-size:.6rem;color:#888}
+.mini .m-ctrl{padding:6px 12px;flex-shrink:0}
+.mini .m-cr{display:flex;gap:4px;margin-bottom:4px}
+.mini .m-ci{flex:1;height:24px;border:1px solid #333;border-radius:5px;display:flex;align-items:center;padding:0 8px;font-size:.6rem;color:#888;background:#1a1a2e}
+.mini .m-ci.lk{border-color:#222;color:#555;background:#151525}
+.mini .m-ci.af{border-color:#2563eb;color:#ddd}
+.mini .m-cta{width:100%;padding:8px;border:none;border-radius:6px;font-size:.7rem;font-weight:700;text-align:center;color:#fff;margin-top:2px}
+.mini .m-cta.pr{background:#2563eb}.mini .m-cta.co{background:#16a34a}
+.mini .m-cta.ds{background:#222;color:#555}.mini .m-cta.wb{background:#1a3a1a;color:#4ade80}.mini .m-cta.lb{background:#3a1a1a;color:#ef4444}
+.mini .m-tick{display:flex;gap:4px;padding:4px 12px;font-size:.5rem;color:#555;flex-shrink:0}
+.mini .m-hbar{width:60px;height:3px;background:#333;border-radius:2px;margin:4px auto 6px}
+.ov-state{text-align:center;margin-top:4px}
+.ov-st{font-size:.6rem;padding:2px 6px;border-radius:3px;font-weight:600}
+.ov-st.si{background:#2a2a40;color:#888}.ov-st.sb{background:#1e3a5f;color:#60a5fa}.ov-st.sc{background:#3a2f1e;color:#fbbf24}
+.ov-st.sa{background:#1a3a1a;color:#4ade80}.ov-st.sk{background:#1a3a1a;color:#4ade80}.ov-st.sr{background:#3a1a1a;color:#ef4444}.ov-st.ss{background:#2a2a40;color:#888}
+
+@media print{body{background:#fff}.tab-bar{position:static}.panel{display:block !important;break-before:page}}
+</style>
+</head>
+<body>
+
+<!-- Tab bar -->
+<div class="tab-bar">
+  <button class="tab active" onclick="switchTab('interactive')">Interactive Prototype</button>
+  <button class="tab" onclick="switchTab('overview')">All Screens Overview</button>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- INTERACTIVE PANEL                              -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="panel active" id="panel-interactive">
+<div class="interact-wrap">
+<div class="interact-title">SkyRush</div>
+<div class="interact-sub">Click buttons to navigate the game flow &mdash; Source: PRD &sect;4, &sect;5, &sect;6</div>
+
+<div class="flow-bar">
+  <div class="fb-n act" id="fb-idle" onclick="go('idle')">Idle</div><span class="fb-a">&rarr;</span>
+  <div class="fb-n" id="fb-betting" onclick="go('betting')">Betting</div><span class="fb-a">&rarr;</span>
+  <div class="fb-n" id="fb-countdown" onclick="go('countdown')">Countdown</div><span class="fb-a">&rarr;</span>
+  <div class="fb-n" id="fb-climbing" onclick="go('climbing')">Climbing</div><span class="fb-a">&rarr;</span>
+  <div class="fb-n" id="fb-cashedout" onclick="go('cashedout')">Cash Out</div><span class="fb-a">/</span>
+  <div class="fb-n" id="fb-crashed" onclick="go('crashed')">Crashed</div><span class="fb-a">&rarr;</span>
+  <div class="fb-n" id="fb-settling" onclick="go('settling')">Settle</div>
+</div>
+
+<div class="phone">
+  <div class="notch"></div>
+  <div class="sbar"><span>9:41</span><span>&#9679;&#9679;&#9679;&ensp;WiFi&ensp;100%</span></div>
+  <div class="sc-wrap">
+
+    <!-- IDLE -->
+    <div class="sc vis" id="s-idle">
+      <div class="tbar"><span class="bal">$1,250.00</span><div class="gear">&#9881;</div></div>
+      <div class="stg"><div class="mult">&mdash;</div><div class="stg-lbl">Waiting for next round</div><div class="curve">multiplier graph</div></div>
+      <div class="ctrl"><div class="cr"><div class="ci"><span class="cl">Bet</span>$10.00</div><div class="tw"><div class="tg"><div class="tk"></div></div>Auto</div></div><button class="cta pr" onclick="go('betting')">JOIN NEXT ROUND</button></div>
+      <div class="tick"><div class="td"><span class="tdot w"></span>2.1x</div><div class="td"><span class="tdot l"></span>1.3x</div><div class="td"><span class="tdot w"></span>5.8x</div><div class="td"><span class="tdot l"></span>1.0x</div><div class="td"><span class="tdot w"></span>3.2x</div></div>
+      <div class="hbar"></div>
+    </div>
+
+    <!-- BETTING -->
+    <div class="sc" id="s-betting">
+      <div class="tbar"><span class="bal">$1,250.00</span><div class="gear">&#9881;</div></div>
+      <div class="stg"><div class="stg-lbl" style="font-size:.9rem;color:#60a5fa">Accepting bets&hellip;</div><div class="curve">multiplier graph</div></div>
+      <div class="ctrl"><div class="cr"><div class="ci af"><span class="cl">Bet</span>$10.00</div><div class="tw"><div class="tg on" onclick="this.classList.toggle('on')"><div class="tk"></div></div>3.00x</div></div><button class="cta pr" onclick="go('countdown')">PLACE BET &mdash; $10.00</button></div>
+      <div class="tick"><div class="td"><span class="tdot w"></span>2.1x</div><div class="td"><span class="tdot l"></span>1.3x</div><div class="td"><span class="tdot w"></span>5.8x</div></div>
+      <div class="hbar"></div>
+    </div>
+
+    <!-- COUNTDOWN -->
+    <div class="sc" id="s-countdown">
+      <div class="tbar"><span class="bal">$1,240.00</span><div class="gear">&#9881;</div></div>
+      <div class="stg"><div class="mult cd-num" id="cd-disp">3</div><div class="stg-lbl">Starting&hellip;</div></div>
+      <div class="ctrl"><div class="cr"><div class="ci lk"><span class="cl">Bet</span>$10.00</div><div class="tw" style="opacity:.4"><div class="tg on"><div class="tk"></div></div>3.00x</div></div><div class="cta ds">Waiting&hellip;</div></div>
+      <div class="tick"><div class="td"><span class="tdot w"></span>2.1x</div><div class="td"><span class="tdot l"></span>1.3x</div></div>
+      <div class="hbar"></div>
+    </div>
+
+    <!-- CLIMBING -->
+    <div class="sc" id="s-climbing">
+      <div class="tbar"><span class="bal">$1,240.00</span><div class="gear">&#9881;</div></div>
+      <div class="stg"><div class="mult clb" id="clb-disp">1.00x</div><div class="stg-lbl">Climbing&hellip;</div><div class="curve" style="border-color:#2a4a2a"><div class="curve-ln" id="curve-ln"></div></div></div>
+      <div class="ctrl"><div class="cr"><div class="ci lk"><span class="cl">Bet</span>$10.00</div><div class="tw" style="opacity:.4"><div class="tg on"><div class="tk"></div></div>3.00x</div></div><button class="cta co" onclick="go('cashedout')">CASH OUT &mdash; <span id="co-am">$10.00</span></button></div>
+      <div class="tick"><div class="td"><span class="tdot w"></span>2.1x</div><div class="td"><span class="tdot l"></span>1.3x</div></div>
+      <div class="hbar"></div>
+    </div>
+
+    <!-- CASHED OUT -->
+    <div class="sc" id="s-cashedout">
+      <div class="tbar"><span class="bal wn" id="co-bal">$1,264.80</span><div class="gear">&#9881;</div></div>
+      <div class="stg"><div class="res sh"><div class="res-bg wbg"></div><div class="res-ic">&#127881;</div><div class="res-am" style="color:#4ade80" id="co-amt">+$24.80</div><div class="res-dt" id="co-dtl">Cashed out at 2.48x</div></div></div>
+      <div class="ctrl"><div class="cta wb">Cashed Out &#10003;</div><button class="cta pr" style="margin-top:8px" onclick="go('settling')">Continue</button></div>
+      <div class="tick"><div class="td"><span class="tdot w"></span>2.1x</div><div class="td"><span class="tdot l"></span>1.3x</div></div>
+      <div class="hbar"></div>
+    </div>
+
+    <!-- CRASHED -->
+    <div class="sc" id="s-crashed">
+      <div class="tbar"><span class="bal">$1,240.00</span><div class="gear">&#9881;</div></div>
+      <div class="stg"><div class="res sh"><div class="res-bg lbg"></div><div class="res-ic">&#128165;</div><div class="res-am" style="color:#ef4444">BOOM</div><div class="res-dt">Crashed at 4.12x</div></div></div>
+      <div class="ctrl"><div class="cta lb">Missed &#10007;</div><button class="cta pr" style="margin-top:8px" onclick="go('settling')">Continue</button></div>
+      <div class="tick"><div class="td"><span class="tdot w"></span>2.1x</div><div class="td"><span class="tdot l"></span>1.3x</div></div>
+      <div class="hbar"></div>
+    </div>
+
+    <!-- SETTLING -->
+    <div class="sc" id="s-settling">
+      <div class="tbar"><span class="bal">$1,264.80</span><div class="gear">&#9881;</div></div>
+      <div class="stg"><div style="text-align:center"><div style="font-size:.9rem;font-weight:700;margin-bottom:12px">Round Summary</div><div style="font-size:.82rem;color:#888;line-height:2">Final: 4.12x<br>Your result: <span style="color:#4ade80">+$24.80</span> at 2.48x<br><span style="color:#555">Leaderboard &middot; Results</span></div></div></div>
+      <div class="ctrl"><button class="cta pr" onclick="go('idle')">PLAY AGAIN</button></div>
+      <div class="tick"><div class="td"><span class="tdot w"></span>4.1x</div><div class="td"><span class="tdot w"></span>2.1x</div><div class="td"><span class="tdot l"></span>1.3x</div></div>
+      <div class="hbar"></div>
+    </div>
+
+  </div>
+</div>
+
+<div class="info">
+  <div class="info-r"><span class="info-l">State</span><span class="st si" id="st-tag">round_state: idle</span></div>
+  <div class="src" id="src-ref">Source: PRD &sect;4 &mdash; Gameplay Flow</div>
+  <div class="hint">Click buttons in the phone or the flow bar to navigate</div>
+</div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- OVERVIEW PANEL                                 -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="panel" id="panel-overview">
+<div class="ov-title">SkyRush &mdash; All States</div>
+<div class="ov-sub">Click any screen to jump to interactive mode at that state</div>
+
+<div class="ov-flow">
+  <a class="ov-fn" href="#ov-idle">Idle</a><span class="ov-arr">&rarr;</span>
+  <a class="ov-fn" href="#ov-betting">Betting</a><span class="ov-arr">&rarr;</span>
+  <a class="ov-fn" href="#ov-countdown">Countdown</a><span class="ov-arr">&rarr;</span>
+  <a class="ov-fn" href="#ov-climbing">Climbing</a><span class="ov-arr">&rarr;</span>
+  <a class="ov-fn" href="#ov-cashedout">Cash Out</a><span class="ov-arr">/</span>
+  <a class="ov-fn" href="#ov-crashed">Crashed</a><span class="ov-arr">&rarr;</span>
+  <a class="ov-fn" href="#ov-settling">Settle</a>
+</div>
+
+<div class="ov-grid">
+
+  <!-- Idle -->
+  <div class="ov-card" id="ov-idle">
+    <div class="ov-card-label">1. Idle</div>
+    <div class="mini" onclick="switchTab('interactive');go('idle')">
+      <div class="m-notch"></div><div class="m-sbar"><span>9:41</span><span>100%</span></div>
+      <div class="m-body">
+        <div class="m-tbar"><span class="m-bal">$1,250.00</span><span class="m-gear">&#9881;</span></div>
+        <div class="m-stg"><div class="m-mult">&mdash;</div><div class="m-lbl">Waiting for next round</div></div>
+        <div class="m-ctrl"><div class="m-cr"><div class="m-ci"><span style="font-size:.5rem;color:#555;margin-right:4px">BET</span>$10.00</div></div><div class="m-cta pr">JOIN NEXT ROUND</div></div>
+        <div class="m-tick"><span class="tdot w"></span>2.1x <span class="tdot l"></span>1.3x <span class="tdot w"></span>5.8x</div>
+        <div class="m-hbar"></div>
+      </div>
+    </div>
+    <div class="ov-state"><span class="ov-st si">idle</span></div>
+  </div>
+
+  <!-- Betting -->
+  <div class="ov-card" id="ov-betting">
+    <div class="ov-card-label">2. Betting</div>
+    <div class="mini" onclick="switchTab('interactive');go('betting')">
+      <div class="m-notch"></div><div class="m-sbar"><span>9:41</span><span>100%</span></div>
+      <div class="m-body">
+        <div class="m-tbar"><span class="m-bal">$1,250.00</span><span class="m-gear">&#9881;</span></div>
+        <div class="m-stg"><div class="m-lbl" style="color:#60a5fa">Accepting bets&hellip;</div></div>
+        <div class="m-ctrl"><div class="m-cr"><div class="m-ci af"><span style="font-size:.5rem;color:#555;margin-right:4px">BET</span>$10.00</div></div><div class="m-cta pr">PLACE BET &mdash; $10</div></div>
+        <div class="m-tick"><span class="tdot w"></span>2.1x <span class="tdot l"></span>1.3x</div>
+        <div class="m-hbar"></div>
+      </div>
+    </div>
+    <div class="ov-state"><span class="ov-st sb">betting</span></div>
+  </div>
+
+  <!-- Countdown -->
+  <div class="ov-card" id="ov-countdown">
+    <div class="ov-card-label">3. Countdown</div>
+    <div class="mini" onclick="switchTab('interactive');go('countdown')">
+      <div class="m-notch"></div><div class="m-sbar"><span>9:41</span><span>100%</span></div>
+      <div class="m-body">
+        <div class="m-tbar"><span class="m-bal">$1,240.00</span><span class="m-gear">&#9881;</span></div>
+        <div class="m-stg"><div class="m-mult" style="font-size:2.6rem">3</div><div class="m-lbl">Starting&hellip;</div></div>
+        <div class="m-ctrl"><div class="m-cr"><div class="m-ci lk"><span style="font-size:.5rem;color:#444;margin-right:4px">BET</span>$10.00</div></div><div class="m-cta ds">Waiting&hellip;</div></div>
+        <div class="m-tick"><span class="tdot w"></span>2.1x <span class="tdot l"></span>1.3x</div>
+        <div class="m-hbar"></div>
+      </div>
+    </div>
+    <div class="ov-state"><span class="ov-st sc">countdown</span></div>
+  </div>
+
+  <!-- Climbing -->
+  <div class="ov-card" id="ov-climbing">
+    <div class="ov-card-label">4. Climbing</div>
+    <div class="mini" onclick="switchTab('interactive');go('climbing')">
+      <div class="m-notch"></div><div class="m-sbar"><span>9:41</span><span>100%</span></div>
+      <div class="m-body">
+        <div class="m-tbar"><span class="m-bal">$1,240.00</span><span class="m-gear">&#9881;</span></div>
+        <div class="m-stg"><div class="m-mult clb">2.48x</div><div class="m-lbl">Climbing&hellip;</div></div>
+        <div class="m-ctrl"><div class="m-cr"><div class="m-ci lk"><span style="font-size:.5rem;color:#444;margin-right:4px">BET</span>$10.00</div></div><div class="m-cta co">CASH OUT &mdash; $24.80</div></div>
+        <div class="m-tick"><span class="tdot w"></span>2.1x <span class="tdot l"></span>1.3x</div>
+        <div class="m-hbar"></div>
+      </div>
+    </div>
+    <div class="ov-state"><span class="ov-st sa">active</span></div>
+  </div>
+
+  <!-- Cashed Out -->
+  <div class="ov-card" id="ov-cashedout">
+    <div class="ov-card-label">5a. Cashed Out</div>
+    <div class="mini" onclick="switchTab('interactive');go('cashedout')">
+      <div class="m-notch"></div><div class="m-sbar"><span>9:41</span><span>100%</span></div>
+      <div class="m-body">
+        <div class="m-tbar"><span class="m-bal wn">$1,264.80</span><span class="m-gear">&#9881;</span></div>
+        <div class="m-stg"><div class="m-res"><div class="m-res-ic">&#127881;</div><div class="m-res-tx" style="color:#4ade80">+$24.80</div><div class="m-res-dt">at 2.48x</div></div></div>
+        <div class="m-ctrl"><div class="m-cta wb">Cashed Out &#10003;</div></div>
+        <div class="m-tick"><span class="tdot w"></span>2.1x <span class="tdot l"></span>1.3x</div>
+        <div class="m-hbar"></div>
+      </div>
+    </div>
+    <div class="ov-state"><span class="ov-st sk">success</span></div>
+  </div>
+
+  <!-- Crashed -->
+  <div class="ov-card" id="ov-crashed">
+    <div class="ov-card-label">5b. Crashed</div>
+    <div class="mini" onclick="switchTab('interactive');go('crashed')">
+      <div class="m-notch"></div><div class="m-sbar"><span>9:41</span><span>100%</span></div>
+      <div class="m-body">
+        <div class="m-tbar"><span class="m-bal">$1,240.00</span><span class="m-gear">&#9881;</span></div>
+        <div class="m-stg"><div class="m-res"><div class="m-res-ic">&#128165;</div><div class="m-res-tx" style="color:#ef4444">BOOM</div><div class="m-res-dt">at 4.12x</div></div></div>
+        <div class="m-ctrl"><div class="m-cta lb">Missed &#10007;</div></div>
+        <div class="m-tick"><span class="tdot w"></span>2.1x <span class="tdot l"></span>1.3x</div>
+        <div class="m-hbar"></div>
+      </div>
+    </div>
+    <div class="ov-state"><span class="ov-st sr">failed</span></div>
+  </div>
+
+  <!-- Settling -->
+  <div class="ov-card" id="ov-settling">
+    <div class="ov-card-label">6. Settling</div>
+    <div class="mini" onclick="switchTab('interactive');go('settling')">
+      <div class="m-notch"></div><div class="m-sbar"><span>9:41</span><span>100%</span></div>
+      <div class="m-body">
+        <div class="m-tbar"><span class="m-bal">$1,264.80</span><span class="m-gear">&#9881;</span></div>
+        <div class="m-stg"><div style="text-align:center"><div style="font-size:.7rem;font-weight:700">Round Summary</div><div style="font-size:.6rem;color:#888;line-height:1.8;margin-top:4px">Final: 4.12x<br><span style="color:#4ade80">+$24.80</span> at 2.48x</div></div></div>
+        <div class="m-ctrl"><div class="m-cta pr">PLAY AGAIN</div></div>
+        <div class="m-tick"><span class="tdot w"></span>4.1x <span class="tdot w"></span>2.1x</div>
+        <div class="m-hbar"></div>
+      </div>
+    </div>
+    <div class="ov-state"><span class="ov-st ss">settled</span></div>
+  </div>
+
+</div>
+</div>
+
+<script>
+/* ═══ Tab switching ═══ */
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active')});
+  document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active')});
+  document.getElementById('panel-'+name).classList.add('active');
+  document.querySelector('.tab[onclick*="'+name+'"]').classList.add('active');
+}
+
+/* ═══ Interactive prototype logic ═══ */
+var stInfo={
+  idle:     {tag:'round_state: idle',      cls:'si',src:'PRD §4 — Gameplay Flow'},
+  betting:  {tag:'round_state: betting',   cls:'sb',src:'PRD §4 — Gameplay Flow'},
+  countdown:{tag:'round_state: countdown', cls:'sc',src:'PRD §4 — Gameplay Flow'},
+  climbing: {tag:'round_state: active',    cls:'sa',src:'PRD §4 + §6 — Main Screen'},
+  cashedout:{tag:'cashout_state: success', cls:'sk',src:'PRD §4 — Gameplay Flow'},
+  crashed:  {tag:'cashout_state: failed',  cls:'sr',src:'PRD §4 — Gameplay Flow'},
+  settling: {tag:'round_state: settled',   cls:'ss',src:'PRD §4 — Gameplay Flow'}
+};
+var cdTimer=null,clTimer=null,clVal=1;
+
+function go(s){
+  if(cdTimer){clearInterval(cdTimer);cdTimer=null}
+  if(clTimer){clearInterval(clTimer);clTimer=null}
+  document.querySelectorAll('.sc').forEach(function(e){e.classList.remove('vis')});
+  var el=document.getElementById('s-'+s);if(el)el.classList.add('vis');
+  document.querySelectorAll('.fb-n').forEach(function(n){n.classList.remove('act')});
+  var fb=document.getElementById('fb-'+s);if(fb)fb.classList.add('act');
+  var info=stInfo[s];
+  if(info){
+    var tag=document.getElementById('st-tag');
+    tag.textContent=info.tag;tag.className='st '+info.cls;
+    document.getElementById('src-ref').textContent='Source: '+info.src;
+  }
+  if(s==='countdown')startCd();
+  if(s==='climbing')startClb();
+}
+
+function startCd(){
+  var n=3,d=document.getElementById('cd-disp');d.textContent=n;
+  cdTimer=setInterval(function(){n--;if(n<=0){clearInterval(cdTimer);cdTimer=null;go('climbing')}else d.textContent=n},900);
+}
+
+function startClb(){
+  clVal=1;
+  var d=document.getElementById('clb-disp'),a=document.getElementById('co-am'),ln=document.getElementById('curve-ln');
+  d.textContent='1.00x';a.textContent='$10.00';if(ln)ln.style.width='0%';
+  setTimeout(function(){if(ln)ln.style.width='100%'},50);
+  var crash=3.5+Math.random()*3;
+  clTimer=setInterval(function(){
+    clVal+=.02+Math.random()*.06;
+    if(clVal>=crash){clearInterval(clTimer);clTimer=null;go('crashed');return}
+    d.textContent=clVal.toFixed(2)+'x';a.textContent='$'+(10*clVal).toFixed(2);
+    document.getElementById('co-amt').textContent='+$'+(10*clVal-10).toFixed(2);
+    document.getElementById('co-dtl').textContent='Cashed out at '+clVal.toFixed(2)+'x';
+    document.getElementById('co-bal').textContent='$'+(1240+10*clVal).toFixed(2);
+  },120);
+}
+</script>
+</body>
+</html>
