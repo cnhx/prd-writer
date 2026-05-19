@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.12.0
+- added first-run language configuration: `/write-prd` asks for document output language on first invocation, stores in `~/.prd-writer/config.json`, skips silently on subsequent runs
+- added Phase 5.6 HTML PRD export: generates self-contained `.html` files with Mermaid rendering, styled metadata cards, auto-generated TOC, and print-friendly layout
+- added split-aware HTML generation: when audience split is enabled, produces HTML for each split document (GDD, TDD, etc.) with cross-navigation links between them
+- added Phase 5.7 interactive HTML mockup: single-frame prototype with state switching via button clicks, timed transitions, and live data simulation
+- added dual-view mockup layout: Interactive Prototype tab (click through product flow) + All Screens Overview tab (thumbnail grid, clickable to jump into interactive mode)
+- added HTML PRD and interactive mockup examples in `examples/`
+- updated README with full workflow documentation covering all new phases
+- updated "After Completion" menu with conditional HTML mockup offer (only shown for multi-screen products)
+
 ## 0.11.0
 - added `scripts/update-skill.sh`, a safe startup updater that fetches upstream and applies only clean fast-forward updates
 - added `scripts/install-auto-update-hooks.sh` to register Claude Code and Codex startup hooks from a manual skill install

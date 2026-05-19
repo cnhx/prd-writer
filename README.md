@@ -1,6 +1,6 @@
 # PRD Writer
 
-Skill collection for structured PRD authoring across games, AI agents, SaaS/Ops tools, data products, platform products, growth products, and learning/content products. Markdown is the source of truth; Obsidian MD, Word, and PDF workflows are supported through export profiles.
+Skill collection for structured PRD authoring across games, AI agents, SaaS/Ops tools, data products, platform products, growth products, and learning/content products. Markdown is the source of truth; Obsidian MD, Word, PDF, and HTML workflows are supported through export profiles. Includes optional HTML PRD export with Mermaid rendering and interactive HTML mockup prototype generation.
 
 ## Install (Claude Code)
 
@@ -106,13 +106,18 @@ Install as a plugin in Claude Desktop → Cowork → Customize → Add plugin �
 ```
 
 The workflow will:
-1. Load context from files or user input
-2. Detect product type and output profile (`obsidian_md`, `word_docx`, `pdf`, `confluence`, or `multi`)
-3. Build a research pack when evidence is supplied
-4. Optionally offer `/grill-me` or a short Concept Lab if the idea is vague
-5. Ask one question at a time about market, users, scope, business model, risk, and product-type specifics
-6. Draft a structured PRD with implementation details downgraded to product contracts, complex conditions consolidated into tables, exception paths covered, and inline Mermaid diagrams when useful
-7. Review against a quality checklist, then optionally run `/opus-prd-polish`, `/prd-score`, and `/prd-split`
+1. **First-run config**: on the first invocation, ask the user to choose the document output language (stored in `~/.prd-writer/config.json`, only asked once)
+2. **Context loading**: load context from files, sibling PRDs, memory, or user input
+3. **Product type detection**: detect product type and output profile (`obsidian_md`, `word_docx`, `pdf`, `confluence`, or `multi`)
+4. **Research pack**: build an evidence table when the user supplies research data
+5. **Optional stress-test**: offer `/grill-me` or a short Concept Lab if the idea is vague
+6. **Product interrogation**: ask one question at a time about market, users, scope, business model, risk, and product-type specifics
+7. **PRD drafting**: draft a structured PRD with implementation details downgraded to product contracts, complex conditions consolidated into tables, exception paths covered, and inline Mermaid diagrams when useful
+8. **Review**: grill-driven review against a quality checklist
+9. **Polish and publish**: optionally run `/opus-prd-polish` and `/prd-score`
+10. **Audience split** (optional): auto-invoke `/prd-split` to generate audience-specific documents (GDD, TDD, Agent Spec, etc.)
+11. **HTML PRD export** (optional): generate self-contained `.html` files for browser viewing. If audience split ran, generates HTML for each split document as well, with cross-navigation links between them. Includes Mermaid diagram rendering, styled metadata cards, auto-generated TOC, and print-friendly layout
+12. **HTML mockup** (optional, only for multi-screen products): generate an interactive single-frame prototype with two views — an **Interactive Prototype** tab (click through the product flow in one simulated device frame) and an **All Screens Overview** tab (thumbnails of every state in a grid, clickable to jump into interactive mode)
 
 ## Format Support
 
@@ -120,6 +125,12 @@ The workflow will:
 - **Word**: Keep heading levels strict, tables simple, and Mermaid source blocks next to any exported diagram images. Do not use HTML-only layout.
 - **PDF**: Use stable headings, captions, page-friendly tables, and section-level diagram titles. If Mermaid rendering is unavailable, keep source fences in the PDF appendix.
 - **Confluence**: Keep headings H1-H3, tables simple, links explicit, and Mermaid diagrams paired with an exported image attachment plus the source block. Do not rely on Obsidian wiki links or raw HTML.
+- **HTML** (Phase 5.6): Self-contained `.html` file generated from the Markdown PRD. Mermaid diagrams rendered via CDN, YAML metadata displayed as styled cards, auto-generated TOC, print-friendly. When audience split is enabled, generates HTML for each split document with cross-navigation links. Zero external CSS frameworks — single mermaid.js CDN dependency.
+- **HTML Mockup** (Phase 5.7): Interactive prototype as a single `.html` file. One simulated device frame with state switching via button clicks. Dual-view: Interactive Prototype tab + All Screens Overview tab. Zero external dependencies. Only offered when the PRD describes multi-screen/multi-state products.
+
+## Configuration
+
+On the first run of `/write-prd`, the skill asks for the preferred document language and stores it in `~/.prd-writer/config.json`. This affects all prose output including HTML exports. Variable names, state names, and technical identifiers always stay in English regardless of this choice. The user can override per-session.
 
 ## Examples
 
@@ -156,7 +167,9 @@ See `docs/DEPENDENCIES.md` for details.
 - Avoid atomic implementation language; describe user-visible outcomes and acceptance criteria instead
 - Complex decision logic belongs in decision tables, not scattered nested bullets
 - Every core flow needs normal and exception paths with recovery and user-visible messaging
-- Output language follows user preference
+- Output language follows user preference (configured on first run, stored in `~/.prd-writer/config.json`)
+- HTML export generates per-split-doc files when audience split is enabled
+- HTML mockup is an interactive prototype, not a static wireframe gallery
 
 ## Contributing
 

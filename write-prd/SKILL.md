@@ -19,6 +19,49 @@ allowed-tools:
 
 Structured 5-phase PRD workflow. Accepts anything from a vague idea to a detailed brief.
 
+## First-run Configuration
+
+On the first invocation of `/write-prd`, check for a configuration file at
+`~/.prd-writer/config.json`. If the file does not exist, run the first-run
+setup before proceeding to Phase 0.
+
+### Language preference (first-run only)
+
+```bash
+mkdir -p ~/.prd-writer
+cat ~/.prd-writer/config.json 2>/dev/null || echo "NOT_FOUND"
+```
+
+If `NOT_FOUND` (or the file has no `language` key), ask the user:
+
+> "First time running /write-prd. What language should PRD documents be
+> written in? This affects all prose output including HTML exports. Variable
+> names, state names, and technical identifiers always stay in English
+> regardless of this choice."
+
+Options:
+- 中文
+- English
+- Other (user specifies)
+
+After the user answers, write the config file:
+
+```bash
+mkdir -p ~/.prd-writer
+cat > ~/.prd-writer/config.json << 'CONF'
+{
+  "language": "<user's choice>"
+}
+CONF
+```
+
+On subsequent runs, read the config file and use the stored `language` value
+as the default prose language for the PRD. The user can override per-session
+by specifying a different language in their input or when asked.
+
+If the config file exists and has a `language` key, skip this step silently
+and proceed to Phase 0.
+
 ## Phase 0 — Context Loading
 
 Sources, in priority order:
@@ -688,6 +731,156 @@ convention.
 If the split produces `to_be_confirmed` items, include them in the Phase 5
 completion report alongside any existing `DONE_WITH_GAPS` markers.
 
+### 5.6 HTML PRD Export (optional, user-triggered)
+
+Generate self-contained `.html` versions of PRD documents for browser viewing.
+
+**Trigger**: offer in the "After Completion" menu:
+> "Want me to generate **HTML versions** of the PRD documents? Opens directly in any browser."
+
+**Scope — split-aware generation**:
+
+If Phase 5.5 audience split ran and produced split documents, generate HTML for
+**each split document** plus the main PRD. If no split was performed, generate
+HTML for the main PRD only.
+
+| Scenario | HTML files generated |
+|---|---|
+| No audience split | `{prd-name}.html` |
+| Audience split enabled | `{prd-name}.html` + `{prd-name}-gdd.html` + `{prd-name}-tdd.html` + ... (one per split doc) |
+
+All HTML files go in the same directory as their Markdown source. The main PRD
+HTML includes a navigation section at the top linking to each split document's
+HTML file (relative links). Each split document HTML includes a "Back to main
+PRD" link.
+
+**Generation rules** (apply to every HTML file — main PRD and each split doc):
+
+1. Read the source Markdown file end-to-end.
+2. Output `{source-name}.html` in the same directory.
+3. The HTML file must be **self-contained** — all CSS inlined in a `<style>` block,
+   no external CSS framework (Bootstrap, Tailwind, etc.).
+4. **Mermaid rendering**: include a `<script>` tag loading mermaid.js from CDN
+   (`https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js`), call
+   `mermaid.initialize({startOnLoad:true})` on page load. Convert Markdown
+   ` ```mermaid ` fences into `<pre class="mermaid">` blocks.
+5. **YAML metadata blocks** (product_type, out_of_scope, research_pack,
+   audience_split, etc.) render as styled info cards with key-value layout —
+   not raw code blocks.
+6. **Table of contents**: auto-generate from H2 headings as anchor links at the
+   top of the page.
+7. **Typography**: clean sans-serif font stack (include Chinese fonts like
+   PingFang SC, Microsoft YaHei when language is Chinese), heading hierarchy
+   via size/weight/margin, adequate `line-height` for readability.
+8. **Tables**: bordered, striped rows, horizontal scroll wrapper for narrow
+   viewports.
+9. **Code blocks**: monospace with subtle background shading.
+10. **Print-friendly**: add `@media print` rules for clean paper output.
+11. Must render correctly when opened as a local `file://` URL.
+12. Preserve **all** document content — no summarization or omission.
+13. **Language**: follow the `language` setting from `~/.prd-writer/config.json`.
+    Section titles, metadata labels, TOC heading, and all prose use the
+    configured language. Variable/state/event names stay in English.
+
+After generation, report the list of all HTML files created.
+
+### 5.7 HTML Mockup Export (optional, user-triggered)
+
+Generate an interactive single-frame prototype as a `.html` file. The user
+experiences the product flow by clicking buttons inside one simulated device
+frame, transitioning between states as the real product would. This is **not**
+a visual design and **not** a gallery of side-by-side screens — it is a
+clickable walkthrough of the product logic.
+
+**Precondition**: offer this option only when the PRD contains multi-screen or
+multi-state content in §4 (product flow), §5 (functional requirements), or §6
+(design requirements). If the PRD is purely strategic, data-oriented, or policy
+with no UI flows, do not offer this option.
+
+**Trigger** (in "After Completion" menu):
+> "This PRD describes multiple screens/states. Want me to generate an **HTML
+> mockup** showing an interactive walkthrough of the product flow?"
+
+**Pre-generation step**:
+
+1. Extract a screen/page/state list from §4, §5, §6.
+2. Present the list to the user for confirmation or amendment.
+3. Proceed only after the user confirms the screen list.
+
+**Generation rules**:
+
+1. Read PRD §4, §5, §6 to identify screens, layouts, transitions, and
+   interactive elements.
+2. Output `{prd-name}-mockup.html` in the same directory as the source PRD.
+3. Self-contained: HTML + inlined CSS + vanilla JS. **Zero external
+   dependencies** — no JS framework, no CSS framework, no CDN.
+4. Must render correctly when opened as a local `file://` URL.
+
+**Core principle — single frame, state switching**:
+
+The mockup renders ONE device frame (phone or desktop, based on product type).
+All screens/states live inside this frame as stacked layers. Only the current
+state is visible. Clicking buttons, CTAs, and interactive elements within the
+frame transitions to the next state — exactly as the real product would behave.
+
+| Element | Implementation |
+|---|---|
+| Device frame | A fixed-size container simulating the target device (e.g. 340×600 for mobile, 960×600 for desktop). Includes status bar, notch/chrome if mobile. |
+| Screen layers | One absolutely-positioned `<div>` per state, all sharing the same frame. Only the active state has `opacity: 1` and `pointer-events: auto`. |
+| State transitions | CTA buttons and interactive elements call a `go(stateName)` function that hides the current screen and shows the target. Transitions use CSS opacity for smooth switching. |
+| Timed transitions | Where the PRD specifies automatic transitions (e.g. countdown → next state), implement with `setInterval`/`setTimeout`. |
+| Live data simulation | Where the PRD describes real-time values (e.g. climbing multiplier, timers, counters), animate them with JS intervals to simulate the experience. |
+| Flow bar | A horizontal bar above the device frame showing all states as clickable nodes with arrows. The current state is highlighted. Users can jump to any state directly for review purposes. |
+| Info panel | A small panel below the device frame showing: current `state` variables (from PRD §5), and source reference (PRD section number). |
+| Tab switching | The page has two tabs: **Interactive Prototype** (single-frame walkthrough, default) and **All Screens Overview** (all states displayed as mini device thumbnails in a grid). Clicking a thumbnail in Overview switches to Interactive mode at that state. |
+
+**Dual-view layout**:
+
+The HTML file includes both views in a single page, switched via tabs at the
+top:
+
+1. **Interactive Prototype** (default tab): the single-frame device with flow
+   bar, state transitions, and info panel as described above.
+2. **All Screens Overview**: every state rendered as a scaled-down mini device
+   frame (roughly 60% of interactive size) arranged in a grid. Each mini frame
+   shows a static snapshot of that state's layout. Mini frames are clickable —
+   clicking one switches to the Interactive tab and navigates to that state.
+   A flow bar above the grid provides the same state-to-state navigation for
+   context.
+
+This lets users both experience the product flow interactively and see all
+states at a glance for comparison and review.
+
+**Layout rules for each screen layer**:
+
+- Reproduce the spatial structure described in §6 (wireframes, block-beta
+  diagrams) or inferred from §4/§5 flow descriptions.
+- Use realistic proportions: top bar, main content area, controls, bottom
+  ticker/tab bar should occupy proportional vertical space as in a real app.
+- Interactive elements (buttons, toggles, inputs) must be visually
+  distinguishable and show hover/active states.
+- Disabled/locked states should be visually muted (reduced opacity, gray
+  colors).
+- State badges or variable displays show PRD-defined state values
+  (`round_state`, `cashout_state`, etc.) to connect the mockup back to the
+  spec.
+
+**Visual style**:
+
+- Dark or light theme appropriate to the product context.
+- Clean, minimal UI — not wireframe gray blocks, but not polished art either.
+  The goal is "looks like a real app in development" not "looks like a
+  Dribbble shot".
+- Blue accent for primary interactive elements. Green/red for success/failure
+  states.
+- Sans-serif system font stack.
+
+**Fallback**: if PRD screen descriptions are insufficient to construct the
+prototype, the agent lists what it found, asks the user to supplement, and
+only generates after confirmation.
+
+After generation, report the file path and number of states included.
+
 ## After Completion
 
 Offer:
@@ -698,6 +891,8 @@ Offer:
 - "Run `/grill-me` again to **pressure-test the PRD assumptions**."
 - "Run `/prd-score` to quantify Ready-to-Dev readiness."
 - "Want me to **split this PRD into audience documents**? `/prd-split` generates product-type-specific docs with requirements tables."
+- "Want me to generate an **HTML version** of this PRD? Opens directly in any browser."
+- (Only if PRD has multi-screen/multi-state content in §4/§5/§6) "Want me to generate an **HTML mockup** with wireframes and flow navigation?"
 
 ## Notes
 
