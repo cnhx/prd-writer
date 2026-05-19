@@ -19,6 +19,49 @@ allowed-tools:
 
 Structured 5-phase PRD workflow. Accepts anything from a vague idea to a detailed brief.
 
+## First-run Configuration
+
+On the first invocation of `/write-prd`, check for a configuration file at
+`~/.prd-writer/config.json`. If the file does not exist, run the first-run
+setup before proceeding to Phase 0.
+
+### Language preference (first-run only)
+
+```bash
+mkdir -p ~/.prd-writer
+cat ~/.prd-writer/config.json 2>/dev/null || echo "NOT_FOUND"
+```
+
+If `NOT_FOUND` (or the file has no `language` key), ask the user:
+
+> "First time running /write-prd. What language should PRD documents be
+> written in? This affects all prose output including HTML exports. Variable
+> names, state names, and technical identifiers always stay in English
+> regardless of this choice."
+
+Options:
+- 中文
+- English
+- Other (user specifies)
+
+After the user answers, write the config file:
+
+```bash
+mkdir -p ~/.prd-writer
+cat > ~/.prd-writer/config.json << 'CONF'
+{
+  "language": "<user's choice>"
+}
+CONF
+```
+
+On subsequent runs, read the config file and use the stored `language` value
+as the default prose language for the PRD. The user can override per-session
+by specifying a different language in their input or when asked.
+
+If the config file exists and has a `language` key, skip this step silently
+and proceed to Phase 0.
+
 ## Phase 0 — Context Loading
 
 Sources, in priority order:

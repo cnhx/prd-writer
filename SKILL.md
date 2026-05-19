@@ -86,7 +86,7 @@ before/after examples of each rule.
 
 ### Language policy (two-tier)
 
-1. **Prose + section titles** — follow user preference (中文 / English / other). Not forced.
+1. **Prose + section titles** — follow user preference (中文 / English / other). On first run, `/write-prd` asks for the preferred language and stores it in `~/.prd-writer/config.json`. The user can override per-session.
 2. **Variables, states, events, config fields, API identifiers** — **always English**, regardless of prose language. This is non-negotiable; it keeps the PRD implementable across teams.
 
 Example in a Chinese PRD:
