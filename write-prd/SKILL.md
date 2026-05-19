@@ -722,9 +722,11 @@ After generation, report the file path.
 
 ### 5.7 HTML Mockup Export (optional, user-triggered)
 
-Generate a wireframe-style `.html` file showing layout intent and flow
-navigation. This is **not** a visual design — it communicates structure,
-screen composition, and user path.
+Generate an interactive single-frame prototype as a `.html` file. The user
+experiences the product flow by clicking buttons inside one simulated device
+frame, transitioning between states as the real product would. This is **not**
+a visual design and **not** a gallery of side-by-side screens — it is a
+clickable walkthrough of the product logic.
 
 **Precondition**: offer this option only when the PRD contains multi-screen or
 multi-state content in §4 (product flow), §5 (functional requirements), or §6
@@ -733,7 +735,7 @@ with no UI flows, do not offer this option.
 
 **Trigger** (in "After Completion" menu):
 > "This PRD describes multiple screens/states. Want me to generate an **HTML
-> mockup** showing layout wireframes and flow navigation?"
+> mockup** showing an interactive walkthrough of the product flow?"
 
 **Pre-generation step**:
 
@@ -743,33 +745,77 @@ with no UI flows, do not offer this option.
 
 **Generation rules**:
 
-1. Read PRD §4, §5, §6 to identify screens, layouts, and transitions.
+1. Read PRD §4, §5, §6 to identify screens, layouts, transitions, and
+   interactive elements.
 2. Output `{prd-name}-mockup.html` in the same directory as the source PRD.
 3. Self-contained: HTML + inlined CSS + vanilla JS. **Zero external
    dependencies** — no JS framework, no CSS framework, no CDN.
 4. Must render correctly when opened as a local `file://` URL.
 
-**Content structure** — the mockup HTML has three integrated parts:
+**Core principle — single frame, state switching**:
 
-| Part | Location | Content |
-|---|---|---|
-| Flow Overview | Page top | CSS-drawn flow nodes connected by arrows. Each node = one screen/state. Nodes are clickable, scrolling to the corresponding wireframe section. Shows core user path and state transitions. |
-| Screen Wireframes | Main body | One `<section>` per screen/page. Wireframe style: light gray blocks with dark borders representing layout areas (header, content, sidebar, footer, buttons, lists, forms). Each area labeled with name and key state text. Source annotation at top: "Source: PRD §N — [section name]". |
-| Inter-screen Navigation | Within wireframes | Buttons/links representing navigation actions are clickable anchor links to target screen sections. Active screen highlighted in the flow overview via lightweight scroll-spy (vanilla JS). |
+The mockup renders ONE device frame (phone or desktop, based on product type).
+All screens/states live inside this frame as stacked layers. Only the current
+state is visible. Clicking buttons, CTAs, and interactive elements within the
+frame transitions to the next state — exactly as the real product would behave.
+
+| Element | Implementation |
+|---|---|
+| Device frame | A fixed-size container simulating the target device (e.g. 340×600 for mobile, 960×600 for desktop). Includes status bar, notch/chrome if mobile. |
+| Screen layers | One absolutely-positioned `<div>` per state, all sharing the same frame. Only the active state has `opacity: 1` and `pointer-events: auto`. |
+| State transitions | CTA buttons and interactive elements call a `go(stateName)` function that hides the current screen and shows the target. Transitions use CSS opacity for smooth switching. |
+| Timed transitions | Where the PRD specifies automatic transitions (e.g. countdown → next state), implement with `setInterval`/`setTimeout`. |
+| Live data simulation | Where the PRD describes real-time values (e.g. climbing multiplier, timers, counters), animate them with JS intervals to simulate the experience. |
+| Flow bar | A horizontal bar above the device frame showing all states as clickable nodes with arrows. The current state is highlighted. Users can jump to any state directly for review purposes. |
+| Info panel | A small panel below the device frame showing: current `state` variables (from PRD §5), and source reference (PRD section number). |
+| Tab switching | The page has two tabs: **Interactive Prototype** (single-frame walkthrough, default) and **All Screens Overview** (all states displayed as mini device thumbnails in a grid). Clicking a thumbnail in Overview switches to Interactive mode at that state. |
+
+**Dual-view layout**:
+
+The HTML file includes both views in a single page, switched via tabs at the
+top:
+
+1. **Interactive Prototype** (default tab): the single-frame device with flow
+   bar, state transitions, and info panel as described above.
+2. **All Screens Overview**: every state rendered as a scaled-down mini device
+   frame (roughly 60% of interactive size) arranged in a grid. Each mini frame
+   shows a static snapshot of that state's layout. Mini frames are clickable —
+   clicking one switches to the Interactive tab and navigates to that state.
+   A flow bar above the grid provides the same state-to-state navigation for
+   context.
+
+This lets users both experience the product flow interactively and see all
+states at a glance for comparison and review.
+
+**Layout rules for each screen layer**:
+
+- Reproduce the spatial structure described in §6 (wireframes, block-beta
+  diagrams) or inferred from §4/§5 flow descriptions.
+- Use realistic proportions: top bar, main content area, controls, bottom
+  ticker/tab bar should occupy proportional vertical space as in a real app.
+- Interactive elements (buttons, toggles, inputs) must be visually
+  distinguishable and show hover/active states.
+- Disabled/locked states should be visually muted (reduced opacity, gray
+  colors).
+- State badges or variable displays show PRD-defined state values
+  (`round_state`, `cashout_state`, etc.) to connect the mockup back to the
+  spec.
 
 **Visual style**:
 
-- Wireframe aesthetic: white/light-gray background, black/dark-gray borders,
-  blue accent for interactive elements
-- No decorative styling (no rounded corners, shadows, gradients)
-- Clear visual message: "this is layout intent, not art direction"
-- Sans-serif labels for UI areas, monospace for state/variable names
+- Dark or light theme appropriate to the product context.
+- Clean, minimal UI — not wireframe gray blocks, but not polished art either.
+  The goal is "looks like a real app in development" not "looks like a
+  Dribbble shot".
+- Blue accent for primary interactive elements. Green/red for success/failure
+  states.
+- Sans-serif system font stack.
 
-**Fallback**: if PRD screen descriptions are insufficient to construct
-wireframes, the agent lists what it found, asks the user to supplement, and
+**Fallback**: if PRD screen descriptions are insufficient to construct the
+prototype, the agent lists what it found, asks the user to supplement, and
 only generates after confirmation.
 
-After generation, report the file path and number of screens included.
+After generation, report the file path and number of states included.
 
 ## After Completion
 
