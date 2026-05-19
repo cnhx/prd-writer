@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.11.0
+- added `scripts/update-skill.sh`, a safe startup updater that fetches upstream and applies only clean fast-forward updates
+- added `scripts/install-auto-update-hooks.sh` to register Claude Code and Codex startup hooks from a manual skill install
+- added Claude Code plugin hook metadata via `hooks/hooks.json`
+- added Codex project-local hook template in `.codex/hooks.json`
+- documented manual update checks, forced safe updates, and hook installation paths
+
 ## 0.10.0
 - added mandatory implementation-detail policy in `/write-prd`; new PRDs default to `semantic_contract_only`
 - downgraded technical implementation details into product contracts by default, including Redis, database schema, cache/queue design, service boundaries, framework choices, SDK choices, and deployment topology

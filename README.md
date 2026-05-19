@@ -51,6 +51,20 @@ bash ~/path/to/prd-writer/scripts/setup-dependencies.sh
 
 The script prints exact `ln -s` commands for anything missing — copy and run them.
 
+### Auto-update on startup
+
+To let Claude Code and Codex update this skill when a new session starts, run:
+
+```sh
+bash ~/.claude/skills/prd-writer/scripts/install-auto-update-hooks.sh
+```
+
+For Pattern B, substitute your actual clone path. The hook runs
+`scripts/update-skill.sh --auto`: it fetches the configured upstream and applies
+only clean fast-forward updates. If the repo has local changes, is ahead, has
+diverged, lacks an upstream, or cannot fetch, it skips and reports the reason.
+Checks are throttled to once every 6 hours by default.
+
 ## Install (Claude Cowork)
 
 Install as a plugin in Claude Desktop → Cowork → Customize → Add plugin → From GitHub. All commands are registered automatically. See `platforms/cowork/INSTALL.md` for details.
@@ -120,6 +134,16 @@ The workflow will:
 **External (optional)**: [gstack](https://github.com/gstackio/gstack) — for QA, design review, deployment verification
 
 See `docs/DEPENDENCIES.md` for details.
+
+## Updates
+
+- `scripts/update-skill.sh --check-only --force --verbose`: check whether the
+  current clone is behind its upstream.
+- `scripts/update-skill.sh --auto --force --verbose`: apply a safe
+  fast-forward update immediately.
+- `scripts/install-auto-update-hooks.sh`: register startup hooks in
+  `~/.claude/settings.json` and `~/.codex/hooks.json`; for Codex it also enables
+  `codex_hooks` in `~/.codex/config.toml`.
 
 ## Design Rules
 
