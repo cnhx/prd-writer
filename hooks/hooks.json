@@ -1,0 +1,17 @@
+{
+  "description": "Auto-update prd-writer on Claude Code session start when the plugin is installed as a Claude Code plugin.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/scripts/update-skill.sh --auto",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}

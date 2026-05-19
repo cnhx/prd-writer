@@ -1,6 +1,6 @@
 ---
 name: prd-writer
-version: 0.10.0
+version: 0.11.0
 description: |
   PRD writing toolkit for games, AI agents, SaaS/Ops tools, data products, platform products,
   growth products, and learning/content products. Structured workflow with mandatory
@@ -101,6 +101,17 @@ Example in a Chinese PRD:
 
 **External** (install separately):
 - [gstack](https://github.com/gstackio/gstack) — headless browser QA, design review, deployment verification
+
+## Auto-update
+
+When installed as a Claude Code plugin, `hooks/hooks.json` runs
+`scripts/update-skill.sh --auto` on session start. The updater fetches the
+configured upstream and applies only clean fast-forward updates. It skips dirty,
+ahead, diverged, non-git, or unreachable repos and never rewrites local work.
+
+For manual Claude Code or Codex installs, run
+`scripts/install-auto-update-hooks.sh` once from this repo to register user-level
+startup hooks.
 
 Phase 3.5 diagrams use only inline Mermaid (rendered natively by GitHub, Obsidian,
 and VS Code). Word/PDF/Confluence users can export rendered diagrams from

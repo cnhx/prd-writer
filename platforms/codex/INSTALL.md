@@ -4,6 +4,7 @@
 
 - Codex CLI or workspace environment
 - A project directory where you want PRD output
+- For startup auto-update: Codex hooks enabled in `~/.codex/config.toml`
 
 ## Step 1: Copy prompt modules to your project
 
@@ -63,6 +64,20 @@ Ask Codex to set one of these `output_profile` values:
 
 No config file is required. The skill files are self-contained prompt modules.
 Codex reads them as part of the prompt context.
+
+## Optional: auto-update this skill on Codex startup
+
+If `prd-writer` is installed as a git clone, run this once from the clone:
+
+```sh
+bash scripts/install-auto-update-hooks.sh
+```
+
+The installer registers `scripts/update-skill.sh --auto` in
+`~/.codex/hooks.json` and sets `codex_hooks = true` in `~/.codex/config.toml`.
+On `startup` and `resume`, the updater fetches the configured upstream and
+applies only clean fast-forward updates. Dirty, ahead, diverged, non-git, or
+unreachable repos are skipped.
 
 ## Notes
 
