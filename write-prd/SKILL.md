@@ -783,17 +783,76 @@ HTML for the main PRD only.
 | No audience split | `{prd-name}.html` |
 | Audience split enabled | `{prd-name}.html` + `{prd-name}-gdd.html` + `{prd-name}-tdd.html` + ... (one per split doc) |
 
-All HTML files go in the same directory as their Markdown source. The main PRD
-HTML includes a navigation section at the top linking to each split document's
-HTML file (relative links). Each split document HTML includes a "Back to main
-PRD" link.
+All HTML files go in the same directory as their Markdown source.
 
-**Generation rules** (apply to every HTML file — main PRD and each split doc):
+**Primary path — themed renderer (use this whenever available)**:
+
+A vendored Python renderer (`prd_html_theme.py` + `prd-to-html.py`) ships with
+this skill under the **prd-writer skill root**'s `scripts/` directory. The skill
+root is the repo that contains both `write-prd/` and `scripts/` as siblings
+(commonly `~/.claude/skills/prd-writer/`). It produces a refined editorial
+three-column layout (section sidebar + body + mini-TOC) deterministically:
+frontmatter collapse cards, sticky table headers, `⚠️`/`📝`/`✅` callouts,
+Mermaid, anchor links, responsive, print-ready. Prefer it over hand-writing
+HTML — it is consistent and preserves all content.
+
+> **Network note**: the rendered HTML loads Mermaid (pinned `mermaid@11`) and
+> web fonts from `cdn.jsdelivr.net` / Google Fonts. It renders fine offline
+> (fonts fall back to system stacks; Mermaid diagrams just won't draw). Mention
+> this if the user needs a fully air-gapped artifact.
+
+1. Locate the renderer deterministically — do **not** rely on a bare
+   `find ~/.claude`. Resolve the prd-writer skill root, then append
+   `/scripts/prd-to-html.py`. In order of preference:
+   a. The known install path `~/.claude/skills/prd-writer/scripts/prd-to-html.py`.
+   b. Resolve from this skill file's real location: `write-prd/`'s parent dir,
+      then `/scripts/`. (Note: `write-prd` may be a symlink — resolve it with
+      `readlink -f` / `realpath` before taking the parent.)
+   c. Last resort: `find -L ~/.claude ~/.codex -name prd-to-html.py 2>/dev/null`
+      (`-L` follows symlinks; pick the path under a `prd-writer` root).
+2. Confirm dependencies once: `python3 -c "import markdown, yaml"`. If this fails
+   (or no `python3`), skip to the **Fallback** path below — do not silently
+   produce nothing, and do not call a script you could not locate.
+3. Render the main PRD:
+   ```bash
+   python3 <skill-root>/scripts/prd-to-html.py --md "{prd-name}.md"
+   ```
+   `--out` defaults to the source name with `.html`. Brand `product`, the
+   document title, and badges (product_type / output_profile / status) are
+   auto-derived from the H1 and frontmatter — pass `--crest "..."` only if the
+   user explicitly wants a custom eyebrow label. **Never inject a brand name the
+   user did not supply.**
+4. **Split-aware cross-doc nav**: if Phase 5.5 produced split docs, render each
+   one and wire bidirectional navigation via `--cross-doc` (a JSON list of
+   `{title, href, active}`). For each output, list every doc in the set and mark
+   the current one `"active": true`:
+   ```bash
+   python3 <skill-root>/scripts/prd-to-html.py --md "{prd-name}.md" \
+     --cross-doc '[{"title":"PRD","href":"{prd-name}.html","active":true},
+                   {"title":"GDD","href":"{prd-name}-gdd.html"},
+                   {"title":"TDD","href":"{prd-name}-tdd.html"}]'
+   ```
+   Repeat for each split doc, flipping which entry is `active`.
+5. **Language**: the document's own title and prose come straight from the
+   Markdown. The renderer's fixed UI chrome (sidebar/TOC eyebrows, "no
+   subsections" hint, `<html lang>`) defaults to Chinese; pass `--lang en` when
+   the configured `language` in `~/.prd-writer/config.json` is English. Source
+   identifiers (variable/state/event names) stay in English regardless.
+6. **Raw HTML passthrough**: the renderer does not sanitize inline HTML in the
+   Markdown body — any raw HTML/`<script>` in the source PRD is emitted as-is.
+   This is fine for the normal flow (the author renders and opens their own
+   document locally). Do not feed it untrusted third-party Markdown.
+7. After generation, report the list of all HTML files created (the script
+   prints each path plus H2 / Mermaid / YAML counts).
+
+**Fallback path — hand-generated HTML (only when python3 or deps are unavailable)**:
+
+Generate the HTML by hand, one file per document, following these rules:
 
 1. Read the source Markdown file end-to-end.
 2. Output `{source-name}.html` in the same directory.
-3. The HTML file must be **self-contained** — all CSS inlined in a `<style>` block,
-   no external CSS framework (Bootstrap, Tailwind, etc.).
+3. **Self-contained** — all CSS inlined in a `<style>` block, no external CSS
+   framework (Bootstrap, Tailwind, etc.).
 4. **Mermaid rendering**: include a `<script>` tag loading mermaid.js from CDN
    (`https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js`), call
    `mermaid.initialize({startOnLoad:true})` on page load. Convert Markdown
@@ -812,9 +871,13 @@ PRD" link.
 10. **Print-friendly**: add `@media print` rules for clean paper output.
 11. Must render correctly when opened as a local `file://` URL.
 12. Preserve **all** document content — no summarization or omission.
-13. **Language**: follow the `language` setting from `~/.prd-writer/config.json`.
+13. **Split nav**: the main PRD HTML links to each split doc's HTML at the top
+    (relative links); each split HTML includes a "Back to main PRD" link.
+14. **Language**: follow the `language` setting from `~/.prd-writer/config.json`.
     Section titles, metadata labels, TOC heading, and all prose use the
     configured language. Variable/state/event names stay in English.
+15. **No hardcoded brand**: do not add any company or product brand the user did
+    not explicitly provide.
 
 After generation, report the list of all HTML files created.
 

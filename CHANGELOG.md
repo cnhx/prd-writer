@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.14.0
+- replaced the hand-generated HTML export with a vendored deterministic renderer (`scripts/prd-to-html.py` + `scripts/prd_html_theme.py`): three-column editorial layout (section sidebar + body + mini-TOC), frontmatter cards, callouts, sticky table headers, anchor links, print-friendly
+- fixed sidebar and mini-TOC anchors to use python-markdown's real heading ids, so Chinese, numbered, and duplicate headings no longer produce dead navigation links
+- added BOM-safe reading (`utf-8-sig`) so a leading byte-order mark no longer breaks H1/title extraction
+- pinned Mermaid to `mermaid@11` (was floating latest, which risked silent breakage on future major releases) and only inject it when the document actually has diagrams
+- added `--lang zh|en` for renderer UI chrome, escaped Mermaid source against markup breakout, and a metadata-key guard so example YAML in the body no longer pollutes badges
+- `/write-prd` Phase 5.6 rewritten: the themed renderer is the primary path and hand-generated HTML is the fallback when python3 or the deps are unavailable
+- added `scripts/requirements.txt` (Python 3.8+, `markdown` + `pyyaml`) and a themed-HTML dependency check in `scripts/setup-dependencies.sh`
+- prompt-module platforms (Codex / Hermes / OpenClaw) now copy `scripts/` so the primary renderer path works there too
+
 ## 0.13.0
 - added `instruction_safety_policy: descriptive_not_executable` to new PRD metadata so generated documents can distinguish descriptive process text from executable prompt language
 - added instruction-safety drafting rules for flow, agent-behavior, reviewer, and Mermaid sections

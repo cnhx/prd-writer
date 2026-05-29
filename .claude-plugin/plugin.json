@@ -1,6 +1,6 @@
 {
   "name": "prd-writer",
-  "version": "0.12.0",
+  "version": "0.14.0",
   "description": "Structured PRD authoring toolkit for games, AI agents, SaaS/Ops tools, data products, platform products, growth products, and learning products. Includes implementation-detail boundaries, product-type routing, evidence metadata, exception coverage, inline Mermaid diagrams, audience splits, Obsidian/Word/PDF/Confluence export profiles, HTML PRD export with split-doc support, and interactive HTML mockup prototype generation.",
   "author": {
     "name": "cnhx"

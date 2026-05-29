@@ -20,6 +20,11 @@ cp prd-split/SKILL.md /path/to/your/project/.prd/prd-split.md
 cp examples/sample-input-brief.md /path/to/your/project/.prd/
 cp examples/sample-ai-agent-prd.md /path/to/your/project/.prd/
 cp examples/sample-saas-ops-prd.md /path/to/your/project/.prd/
+
+# Optional: themed HTML PRD export. Without these, /write-prd falls back to
+# hand-generated HTML. Deps: python3 -m pip install markdown pyyaml
+mkdir -p /path/to/your/project/.prd/scripts
+cp scripts/prd-to-html.py scripts/prd_html_theme.py /path/to/your/project/.prd/scripts/
 ```
 
 ## Step 2: Write a PRD

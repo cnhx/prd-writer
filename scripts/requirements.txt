@@ -1,0 +1,4 @@
+# Themed HTML PRD export (scripts/prd-to-html.py). Requires Python 3.8+.
+# The hand-generated HTML fallback in write-prd works without these.
+markdown>=3.4
+PyYAML>=6.0

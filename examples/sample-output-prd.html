@@ -1,194 +1,747 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SkyRush — 产品需求文档</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SkyRush — Sample PRD Output</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&family=Noto+Sans+SC:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", Roboto, sans-serif;
-    line-height: 1.8;
-    color: #1a1a1a;
-    background: #fff;
-    max-width: 960px;
-    margin: 0 auto;
-    padding: 40px 24px 80px;
-  }
-  h1 { font-size: 2rem; font-weight: 700; margin-bottom: 8px; border-bottom: 3px solid #1a1a1a; padding-bottom: 12px; }
-  h2 { font-size: 1.4rem; font-weight: 600; margin-top: 48px; margin-bottom: 16px; color: #1a1a1a; border-bottom: 1px solid #ddd; padding-bottom: 8px; }
-  h3 { font-size: 1.1rem; font-weight: 600; margin-top: 24px; margin-bottom: 12px; color: #333; }
-  p, li { font-size: 0.95rem; margin-bottom: 8px; }
-  ul { padding-left: 24px; margin-bottom: 16px; }
-  li { margin-bottom: 6px; }
-  code { font-family: "SF Mono", "Fira Code", "Consolas", monospace; font-size: 0.88rem; background: #f4f4f5; padding: 2px 6px; border-radius: 3px; }
+:root {
+  --font-serif: "Source Serif 4", "Source Serif Pro", "Songti SC", "STSong", Georgia, serif;
+  --font-sans: "Noto Sans SC", -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", sans-serif;
+  --font-mono: "JetBrains Mono", "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
 
-  .status-badge {
-    display: inline-block;
-    padding: 4px 12px;
-    border-radius: 4px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    margin-bottom: 24px;
-  }
-  .status-badge.gaps { background: #fef3c7; color: #92400e; }
+  --ivory:        #fbfaf6;
+  --ivory-soft:   #f5f4ee;
+  --ivory-deep:   #efede2;
+  --rule:         #e6e3d8;
+  --rule-soft:    #ece9dd;
 
-  .toc { background: #f8f9fa; border: 1px solid #e5e7eb; border-radius: 6px; padding: 16px 24px; margin: 24px 0 32px; }
-  .toc-title { font-size: 0.9rem; font-weight: 600; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
-  .toc a { color: #2563eb; text-decoration: none; font-size: 0.9rem; display: block; padding: 3px 0; }
-  .toc a:hover { text-decoration: underline; }
+  --ink:          #1a1817;
+  --ink-2:        #3a3733;
+  --ink-3:        #6b6760;
+  --ink-4:        #98948a;
 
-  .meta-card {
-    background: #f8f9fa;
-    border: 1px solid #e5e7eb;
-    border-radius: 6px;
-    padding: 16px 20px;
-    margin-bottom: 12px;
-    display: grid;
-    grid-template-columns: 160px 1fr;
-    gap: 4px 16px;
-    font-size: 0.88rem;
-  }
-  .meta-card .meta-key { font-weight: 600; color: #6b7280; }
-  .meta-card .meta-val { color: #1a1a1a; }
-  .meta-card .meta-title {
-    grid-column: 1 / -1;
-    font-weight: 600;
-    color: #374151;
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    margin-bottom: 4px;
-    padding-bottom: 4px;
-    border-bottom: 1px solid #e5e7eb;
-  }
-  .meta-group { margin-bottom: 24px; }
+  --accent:       #8b2c1f;
+  --accent-soft:  #c25a4a;
+  --accent-bg:    #faeae6;
 
-  .table-wrap { overflow-x: auto; margin: 16px 0; }
-  table { border-collapse: collapse; width: 100%; font-size: 0.9rem; }
-  th { background: #f3f4f6; font-weight: 600; text-align: left; padding: 10px 12px; border: 1px solid #d1d5db; }
-  td { padding: 8px 12px; border: 1px solid #e5e7eb; }
-  tr:nth-child(even) td { background: #f9fafb; }
+  --warn-bg:      #fdf6dd;
+  --warn-bd:      #d4a017;
+  --info-bg:      #e7eff8;
+  --info-bd:      #3a6ea5;
+  --ok-bg:        #e3efe2;
+  --ok-bd:        #4a7a47;
+  --note-bg:      #f0eee5;
+  --note-bd:      #98948a;
 
-  .mermaid { margin: 20px 0; text-align: center; }
+  --code-bg:      #f3f1e8;
+  --code-bg-soft: #f7f5ed;
 
-  @media print {
-    body { max-width: 100%; padding: 20px; font-size: 11pt; }
-    .toc { break-inside: avoid; }
-    h2 { break-after: avoid; }
-    .meta-card { break-inside: avoid; }
-    .mermaid svg { max-width: 100% !important; }
-  }
+  --sidebar-w:    280px;
+  --rail-w:       220px;
+  --gutter:       48px;
+  --content-w:    760px;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0; padding: 0;
+  background: var(--ivory);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.75;
+  font-feature-settings: "kern", "liga", "calt";
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: "";
+  position: fixed; inset: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(circle at 25% 30%, rgba(139,44,31,0.012) 0, transparent 50%),
+    radial-gradient(circle at 75% 70%, rgba(58,55,51,0.015) 0, transparent 50%);
+  z-index: 0;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+
+/* Layout */
+.layout {
+  display: grid;
+  grid-template-columns: var(--sidebar-w) minmax(0, 1fr) var(--rail-w);
+  max-width: calc(var(--sidebar-w) + var(--content-w) + var(--rail-w) + var(--gutter) * 4);
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+.sidebar-left, .sidebar-right {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 32px 24px;
+}
+.sidebar-left { border-right: 1px solid var(--rule); }
+.sidebar-right { border-left: 1px solid var(--rule); }
+.content { padding: 56px var(--gutter) 120px; min-width: 0; }
+
+.sidebar-left::-webkit-scrollbar,
+.sidebar-right::-webkit-scrollbar { width: 6px; }
+.sidebar-left::-webkit-scrollbar-thumb,
+.sidebar-right::-webkit-scrollbar-thumb { background: var(--rule); border-radius: 3px; }
+
+/* Brand */
+.brand {
+  padding-bottom: 22px;
+  margin-bottom: 18px;
+  border-bottom: 1px solid var(--rule);
+}
+.brand .crest {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.brand .product {
+  font-family: var(--font-serif);
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--ink);
+  margin-top: 4px;
+  line-height: 1.3;
+}
+.brand .ver {
+  display: inline-block;
+  margin-top: 6px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-3);
+  padding: 2px 8px;
+  background: var(--ivory-soft);
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+}
+
+/* Cross-doc nav (for multi-doc projects, e.g. a GDD + TDD split) */
+.cross-doc {
+  padding-bottom: 18px;
+  margin-bottom: 18px;
+  border-bottom: 1px solid var(--rule);
+}
+.cross-doc-eyebrow,
+.nav-eyebrow,
+.rail-eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  margin: 0 0 10px;
+}
+.cross-doc-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  font-size: 13.5px;
+}
+.cross-doc-nav a {
+  display: block;
+  padding: 6px 12px;
+  color: var(--ink-2);
+  border-left: 2px solid transparent;
+  border-radius: 0 4px 4px 0;
+  transition: color 120ms ease, background 120ms ease, border-color 120ms ease;
+}
+.cross-doc-nav a:hover {
+  color: var(--ink);
+  background: var(--ivory-soft);
+  text-decoration: none;
+}
+.cross-doc-nav a.active {
+  color: var(--accent);
+  font-weight: 500;
+  border-left-color: var(--accent);
+  background: var(--accent-bg);
+  pointer-events: none;
+}
+
+/* Section nav (auto-generated from H2) */
+.nav-eyebrow { margin: 18px 0 10px; }
+.section-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  font-size: 14px;
+}
+.section-nav a {
+  display: block;
+  padding: 7px 12px 7px 14px;
+  color: var(--ink-2);
+  border-left: 2px solid transparent;
+  border-radius: 0 4px 4px 0;
+  transition: color 120ms ease, background 120ms ease, border-color 120ms ease;
+  line-height: 1.45;
+}
+.section-nav a:hover {
+  color: var(--ink);
+  background: var(--ivory-soft);
+  text-decoration: none;
+}
+.section-nav a.active {
+  color: var(--accent);
+  font-weight: 500;
+  border-left-color: var(--accent);
+  background: var(--accent-bg);
+}
+.section-nav .num {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-4);
+  margin-right: 8px;
+}
+.section-nav a.active .num { color: var(--accent-soft); }
+
+/* Doc header */
+.doc-header {
+  max-width: var(--content-w);
+  margin-bottom: 40px;
+  padding-bottom: 28px;
+  border-bottom: 1px solid var(--rule);
+}
+.doc-badges {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+.doc-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  padding: 4px 10px;
+  border-radius: 3px;
+  background: var(--ivory-soft);
+  border: 1px solid var(--rule);
+  color: var(--ink-3);
+}
+.doc-badge.accent {
+  background: var(--accent-bg);
+  border-color: #f0c7be;
+  color: var(--accent);
+}
+.doc-badge .dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  display: inline-block;
+}
+.doc-title {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: 40px;
+  line-height: 1.18;
+  letter-spacing: -0.012em;
+  color: var(--ink);
+  margin: 0 0 14px;
+}
+.doc-meta {
+  font-size: 14px;
+  color: var(--ink-3);
+}
+.doc-meta .sep {
+  display: inline-block;
+  width: 4px; height: 4px;
+  background: var(--ink-4);
+  border-radius: 50%;
+  margin: 0 10px;
+  vertical-align: middle;
+}
+
+/* Frontmatter card */
+.frontmatter {
+  max-width: var(--content-w);
+  background: var(--ivory-soft);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  margin: 0 0 36px;
+  overflow: hidden;
+}
+.frontmatter summary {
+  cursor: pointer;
+  padding: 14px 20px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: var(--ink-3);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  user-select: none;
+  list-style: none;
+}
+.frontmatter summary::-webkit-details-marker { display: none; }
+.frontmatter summary::before {
+  content: "▸";
+  font-family: var(--font-sans);
+  font-size: 11px;
+  transition: transform 150ms ease;
+  color: var(--ink-4);
+  width: 12px;
+}
+.frontmatter[open] summary::before { transform: rotate(90deg); }
+.frontmatter summary .label { text-transform: uppercase; font-weight: 500; }
+.frontmatter summary .preview {
+  margin-left: auto;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: var(--ink-4);
+  letter-spacing: normal;
+  text-transform: none;
+}
+.frontmatter[open] summary .preview { opacity: 0; }
+.frontmatter .fm-body { padding: 4px 20px 20px; border-top: 1px solid var(--rule-soft); }
+.frontmatter dl {
+  margin: 14px 0 0;
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  column-gap: 20px;
+  row-gap: 8px;
+  font-size: 14px;
+}
+.frontmatter dt {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-3);
+  padding-top: 2px;
+}
+.frontmatter dd { margin: 0; color: var(--ink-2); word-break: break-word; }
+.frontmatter dd code,
+.frontmatter dt code {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  background: var(--ivory);
+  padding: 1px 6px;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+}
+.frontmatter .fm-list { margin: 0; padding-left: 18px; }
+.frontmatter .fm-list li { margin: 2px 0; }
+.frontmatter .fm-nested {
+  margin: 4px 0;
+  padding-left: 14px;
+  border-left: 2px solid var(--rule);
+}
+
+/* Headings */
+article { max-width: var(--content-w); }
+
+h1, h2, h3, h4 {
+  font-family: var(--font-serif);
+  color: var(--ink);
+  font-weight: 600;
+  position: relative;
+  scroll-margin-top: 24px;
+}
+h1 { display: none; }  /* article H1 hidden; doc-title rendered separately */
+h2 {
+  font-size: 28px;
+  letter-spacing: -0.008em;
+  line-height: 1.25;
+  margin: 64px 0 18px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--rule);
+}
+article > h2:first-of-type { margin-top: 0; }
+h3 { font-size: 20px; line-height: 1.35; margin: 40px 0 12px; }
+h4 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 28px 0 10px;
+  font-family: var(--font-sans);
+  color: var(--ink-2);
+}
+
+/* Anchor hover */
+h2 .anchor, h3 .anchor, h4 .anchor {
+  position: absolute;
+  left: -22px;
+  top: 50%;
+  transform: translateY(-55%);
+  color: var(--accent-soft);
+  opacity: 0;
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: 0.65em;
+  transition: opacity 120ms ease;
+  text-decoration: none;
+}
+h2:hover .anchor, h3:hover .anchor, h4:hover .anchor { opacity: 1; }
+
+/* Body */
+p { margin: 0.9em 0; color: var(--ink-2); }
+strong, b { color: var(--ink); font-weight: 600; }
+em, i { color: var(--ink-2); font-style: italic; }
+hr {
+  border: none;
+  margin: 48px 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--rule) 20%, var(--rule) 80%, transparent);
+}
+ul, ol { padding-left: 22px; color: var(--ink-2); }
+li { margin: 0.3em 0; }
+li::marker { color: var(--ink-4); }
+
+/* Code */
+code {
+  font-family: var(--font-mono);
+  font-size: 0.87em;
+  background: var(--code-bg);
+  padding: 2px 6px;
+  border-radius: 3px;
+  color: var(--ink);
+  border: 1px solid var(--rule-soft);
+}
+pre {
+  font-family: var(--font-mono);
+  background: var(--code-bg-soft);
+  border: 1px solid var(--rule);
+  padding: 16px 18px;
+  border-radius: 6px;
+  overflow-x: auto;
+  line-height: 1.55;
+  font-size: 13px;
+  margin: 18px 0;
+  color: var(--ink);
+}
+pre code { background: transparent; border: none; padding: 0; border-radius: 0; font-size: inherit; color: inherit; }
+
+/* Mermaid */
+pre.mermaid {
+  background: transparent;
+  border: none;
+  padding: 16px 0;
+  text-align: center;
+  font-family: inherit;
+  overflow: visible;
+  margin: 18px 0;
+}
+
+/* Tables */
+.table-wrap {
+  margin: 22px 0;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  overflow: auto;
+  max-width: 100%;
+  position: relative;
+}
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+  font-size: 14px;
+  color: var(--ink-2);
+}
+thead { position: sticky; top: 0; z-index: 2; }
+thead th {
+  background: var(--ivory-deep);
+  font-weight: 600;
+  text-align: left;
+  padding: 10px 14px;
+  font-size: 12.5px;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+  border-bottom: 1px solid var(--rule);
+  white-space: nowrap;
+}
+tbody td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--rule-soft);
+  vertical-align: top;
+}
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:nth-child(even) td { background: rgba(245,244,238,0.45); }
+tbody td:first-child { font-weight: 500; color: var(--ink); }
+tbody tr:hover td { background: var(--accent-bg); }
+tbody td code { font-size: 12px; background: var(--ivory); }
+
+/* Callouts */
+blockquote {
+  margin: 22px 0;
+  padding: 14px 18px 14px 44px;
+  background: var(--note-bg);
+  border-left: 3px solid var(--note-bd);
+  border-radius: 0 4px 4px 0;
+  color: var(--ink-2);
+  font-size: 15px;
+  line-height: 1.7;
+  position: relative;
+}
+blockquote::before {
+  content: "💬";
+  position: absolute;
+  left: 14px;
+  top: 12px;
+  font-size: 16px;
+  line-height: 1;
+}
+blockquote.warn { background: var(--warn-bg); border-color: var(--warn-bd); }
+blockquote.warn::before { content: "⚠️"; }
+blockquote.info { background: var(--info-bg); border-color: var(--info-bd); }
+blockquote.info::before { content: "📝"; }
+blockquote.ok { background: var(--ok-bg); border-color: var(--ok-bd); }
+blockquote.ok::before { content: "✅"; }
+blockquote p:first-child { margin-top: 0; }
+blockquote p:last-child { margin-bottom: 0; }
+blockquote strong { color: inherit; }
+blockquote.warn strong { color: #7a5a00; }
+blockquote.info strong { color: #1f4068; }
+blockquote.ok strong { color: #2d4d2b; }
+
+/* Right rail mini-TOC */
+.mini-toc {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.55;
+  border-left: 1px solid var(--rule);
+}
+.mini-toc li { margin: 0; }
+.mini-toc a {
+  display: block;
+  padding: 5px 12px 5px 14px;
+  color: var(--ink-3);
+  margin-left: -1px;
+  border-left: 1px solid transparent;
+  transition: color 120ms ease, border-color 120ms ease;
+}
+.mini-toc a.lvl4 { padding-left: 26px; font-size: 12.5px; color: var(--ink-4); }
+.mini-toc a:hover { color: var(--ink); text-decoration: none; }
+.mini-toc a.active {
+  color: var(--accent);
+  border-left-color: var(--accent);
+  font-weight: 500;
+}
+.mini-toc .empty-hint {
+  color: var(--ink-4);
+  font-size: 12px;
+  padding: 6px 14px;
+  font-style: italic;
+}
+
+/* Footer */
+.doc-footer {
+  max-width: var(--content-w);
+  margin-top: 80px;
+  padding-top: 24px;
+  border-top: 1px solid var(--rule);
+  font-size: 13px;
+  color: var(--ink-4);
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Responsive */
+@media (max-width: 1280px) {
+  .layout { grid-template-columns: var(--sidebar-w) 1fr; }
+  .sidebar-right { display: none; }
+  .content { padding-right: 32px; }
+}
+@media (max-width: 920px) {
+  .layout { grid-template-columns: 1fr; }
+  .sidebar-left { display: none; }
+  .content { padding: 32px 24px 80px; }
+}
+
+/* Print */
+@media print {
+  body::before { display: none; }
+  .sidebar-left, .sidebar-right, .doc-footer { display: none; }
+  .layout { display: block; }
+  .content { padding: 0; max-width: none; }
+  article, .doc-header, .frontmatter { max-width: none; }
+  .frontmatter summary::before { display: none; }
+  details:not([open]) > *:not(summary) { display: revert; }
+  h2, h3 { page-break-after: avoid; }
+  table, pre, blockquote { page-break-inside: avoid; }
+  a { color: var(--ink); text-decoration: none; }
+}
 </style>
 </head>
 <body>
+<div class="layout">
+  <aside class="sidebar-left">
+    <div class="brand"><div class="crest"></div><div class="product">SkyRush — Sample PRD Output</div></div>
+    
+    <div class="nav-eyebrow">Contents</div><nav class="section-nav" id="section-nav"><a href="#summary" data-section="summary">Summary</a><a href="#gameplay-flow" data-section="gameplay-flow">Gameplay Flow</a><a href="#functional-requirements" data-section="functional-requirements">Functional Requirements</a><a href="#art-and-design-requirements" data-section="art-and-design-requirements">Art and Design Requirements</a><a href="#known-gaps" data-section="known-gaps">Known Gaps</a></nav>
+  </aside>
+  <main class="content">
+    <header class="doc-header">
+      <div class="doc-badges"><span class="doc-badge accent"><span class="dot"></span>game_interactive</span><span class="doc-badge">confluence</span></div>
+      <h1 class="doc-title">SkyRush — Sample PRD Output</h1>
+      <div class="doc-meta"></div>
+    </header>
+    
+    <article>
+<h1 id="skyrush-sample-prd-output">SkyRush — Sample PRD Output</h1>
+<p>Status: DONE_WITH_GAPS</p>
+<div class="frontmatter" open style="margin: 18px 0;"><div class="fm-body" style="border: none;"><div style="font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em; color: var(--ink-3); text-transform: uppercase; margin-bottom: 10px;">YAML</div><dl><dt>product_type</dt><dd>game_interactive</dd><dt>secondary_product_type</dt><dd><code>null</code></dd><dt>output_profile</dt><dd>confluence</dd></dl></div></div>
 
-<h1>SkyRush — 产品需求文档</h1>
-<span class="status-badge gaps">完成（有待确认项）</span>
+<div class="frontmatter" open style="margin: 18px 0;"><div class="fm-body" style="border: none;"><div style="font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em; color: var(--ink-3); text-transform: uppercase; margin-bottom: 10px;">YAML</div><dl><dt>research_pack</dt><dd><code>[]</code></dd></dl></div></div>
 
-<div class="meta-group">
-  <div class="meta-card">
-    <div class="meta-title">产品类型</div>
-    <div class="meta-key">product_type</div>
-    <div class="meta-val">game_interactive</div>
-    <div class="meta-key">secondary_product_type</div>
-    <div class="meta-val">null</div>
-    <div class="meta-key">output_profile</div>
-    <div class="meta-val">confluence</div>
-  </div>
+<div class="frontmatter" open style="margin: 18px 0;"><div class="fm-body" style="border: none;"><div style="font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em; color: var(--ink-3); text-transform: uppercase; margin-bottom: 10px;">YAML</div><dl><dt>out_of_scope</dt><dd>tech_stack, payment_channels, infra_deployment</dd></dl></div></div>
 
-  <div class="meta-card">
-    <div class="meta-title">调研资料</div>
-    <div class="meta-key">research_pack</div>
-    <div class="meta-val">（无）</div>
-  </div>
+<div class="frontmatter" open style="margin: 18px 0;"><div class="fm-body" style="border: none;"><div style="font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em; color: var(--ink-3); text-transform: uppercase; margin-bottom: 10px;">YAML</div><dl><dt>diagrams_generated</dt><dd><ul class="fm-list"><li><dl class="fm-nested"><dt>section</dt><dd><code>4</code></dd><dt>subtype</dt><dd>stateDiagram-v2</dd><dt>purpose</dt><dd>core_game_loop</dd><dt>export_note</dt><dd>attach_skyrush-core-loop.png_and_keep_mermaid_source</dd></dl></li><li><dl class="fm-nested"><dt>section</dt><dd><code>6</code></dd><dt>subtype</dt><dd>block-beta</dd><dt>purpose</dt><dd>main_screen_wireframe</dd><dt>export_note</dt><dd>attach_skyrush-main-screen.png_and_keep_mermaid_source</dd></dl></li></ul></dd></dl></div></div>
 
-  <div class="meta-card">
-    <div class="meta-title">不在本 PRD 范围内</div>
-    <div class="meta-key">tech_stack</div>
-    <div class="meta-val">已排除</div>
-    <div class="meta-key">payment_channels</div>
-    <div class="meta-val">已排除</div>
-    <div class="meta-key">infra_deployment</div>
-    <div class="meta-val">已排除</div>
-  </div>
-
-  <div class="meta-card">
-    <div class="meta-title">已生成图表</div>
-    <div class="meta-key">§4 stateDiagram-v2</div>
-    <div class="meta-val">core_game_loop</div>
-    <div class="meta-key">§6 block-beta</div>
-    <div class="meta-val">main_screen_wireframe</div>
-  </div>
-</div>
-
-<div class="toc">
-  <div class="toc-title">目录</div>
-  <a href="#summary">概述</a>
-  <a href="#gameplay-flow">游戏流程</a>
-  <a href="#functional-requirements">功能需求</a>
-  <a href="#art-and-design-requirements">美术与设计需求</a>
-  <a href="#known-gaps">待确认项</a>
-</div>
-
-<h2 id="summary">概述</h2>
-<p>SkyRush 是一款移动端优先的 Crash 游戏，目标是将短时段流量转化为持续投注行为。MVP 阶段优先保证快速入场、低摩擦下注以及清晰可见的 cash-out 紧张感。</p>
-
-<h2 id="gameplay-flow">游戏流程</h2>
-
-<h3>核心游戏循环</h3>
+<h2 id="summary">Summary<a class="anchor" href="#summary">#</a></h2>
+<p>SkyRush is a mobile-first crash game designed to convert short-session traffic into repeat betting behavior. The MVP prioritizes fast entry, low-friction betting, and visible cash-out tension.</p>
+<h2 id="gameplay-flow">Gameplay Flow<a class="anchor" href="#gameplay-flow">#</a></h2>
+<h3 id="core-game-loop">Core Game Loop<a class="anchor" href="#core-game-loop">#</a></h3>
 <pre class="mermaid">
 stateDiagram-v2
-    [*] --> idle
-    idle --> betting : round_start
-    betting --> countdown : bets_locked
-    countdown --> climbing : countdown_end
-    climbing --> crashed : boom_event
-    climbing --> cashed_out : player_cashout
-    crashed --> settling : settle_start
-    cashed_out --> settling : settle_start
-    settling --> idle : settle_done
+    [*] --&gt; idle
+    idle --&gt; betting : round_start
+    betting --&gt; countdown : bets_locked
+    countdown --&gt; climbing : countdown_end
+    climbing --&gt; crashed : boom_event
+    climbing --&gt; cashed_out : player_cashout
+    crashed --&gt; settling : settle_start
+    cashed_out --&gt; settling : settle_start
+    settling --&gt; idle : settle_done
 </pre>
 
-<h2 id="functional-requirements">功能需求</h2>
+<h2 id="functional-requirements">Functional Requirements<a class="anchor" href="#functional-requirements">#</a></h2>
 <ul>
-  <li><code>bet_amount</code>：玩家在回合开始前输入的投注金额</li>
-  <li><code>auto_cashout_multiplier</code>：可选的自动 cash-out 倍数阈值</li>
-  <li><code>round_state</code>：<code>countdown | active | crashed | settled</code></li>
-  <li><code>cashout_state</code>：<code>pending | success | failed</code></li>
+<li><code>bet_amount</code>: player stake entered before round start</li>
+<li><code>auto_cashout_multiplier</code>: optional automatic cashout threshold</li>
+<li><code>round_state</code>: <code>countdown | active | crashed | settled</code></li>
+<li><code>cashout_state</code>: <code>pending | success | failed</code></li>
 </ul>
-
-<h2 id="art-and-design-requirements">美术与设计需求</h2>
+<h2 id="art-and-design-requirements">Art and Design Requirements<a class="anchor" href="#art-and-design-requirements">#</a></h2>
 <ul>
-  <li>现代霓虹视觉风格，强对比度</li>
-  <li>倍数显示居于舞台中央，作为核心视觉焦点</li>
-  <li>倒计时、攀升、爆炸三个阶段各自有独立的动画处理</li>
-  <li>胜/负音效层与核心游戏逻辑需求分离</li>
+<li>modern neon visual direction with strong contrast</li>
+<li>clear multiplier focus at center stage</li>
+<li>separate animation treatment for countdown, climb, and crash</li>
+<li>win/loss audio layers kept distinct from core game logic requirements</li>
 </ul>
-
-<h3>主屏幕线框</h3>
+<h3 id="main-screen-wireframe">Main Screen Wireframe<a class="anchor" href="#main-screen-wireframe">#</a></h3>
 <pre class="mermaid">
 block-beta
   columns 1
-  header["顶栏 · 余额 · 设置"]
-  stage["倍数舞台 · 2.48x（攀升中）"]
+  header[&quot;Top Bar · balance · settings&quot;]
+  stage[&quot;Multiplier Stage · 2.48x (climbing)&quot;]
   block:controls
     columns 2
-    bet["投注金额输入"]
-    auto["自动 Cash-Out 开关"]
+    bet[&quot;Bet Amount Input&quot;]
+    auto[&quot;Auto-Cashout Toggle&quot;]
   end
-  cta["Cash Out 按钮（主 CTA）"]
-  history["近期回合滚动条"]
+  cta[&quot;Cash Out Button (primary CTA)&quot;]
+  history[&quot;Recent Rounds Ticker&quot;]
 </pre>
 
-<h2 id="known-gaps">待确认项</h2>
+<h2 id="known-gaps">Known Gaps<a class="anchor" href="#known-gaps">#</a></h2>
 <ul>
-  <li>RTP 待数学模型表确认</li>
-  <li>最大倍数待风控评审确认</li>
-  <li>司法管辖区合规要求待法务确认</li>
+<li>RTP pending math table</li>
+<li>max multiplier pending risk review</li>
+<li>jurisdiction-specific compliance pending legal confirmation</li>
 </ul>
+    </article>
+    <footer class="doc-footer">
+      <span></span>
+      <span></span>
+    </footer>
+  </main>
+  <aside class="sidebar-right">
+    <div class="rail-eyebrow">On this page</div>
+    <ul class="mini-toc" id="mini-toc"><li><a href="#core-game-loop" class="lvl3">Core Game Loop</a></li><li><a href="#main-screen-wireframe" class="lvl3">Main Screen Wireframe</a></li></ul>
+  </aside>
+</div>
 
-<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
-<script>mermaid.initialize({ startOnLoad: true, theme: 'default' });</script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js" crossorigin="anonymous"></script>
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'base',
+      themeVariables: {
+        fontFamily: '"Noto Sans SC", -apple-system, "PingFang SC", sans-serif',
+        primaryColor: '#f5f4ee',
+        primaryTextColor: '#1a1817',
+        primaryBorderColor: '#8b2c1f',
+        lineColor: '#6b6760',
+        secondaryColor: '#e7eff8',
+        tertiaryColor: '#fdf6dd',
+        background: '#fbfaf6',
+      },
+      // 'loose' 保留：PRD 图表常在 label 内用 <br/> 换行；信任模型是单作者本地渲染自有文档
+      securityLevel: 'loose',
+    });
+  }
+</script>
+
+
+<script>
+(function () {
+  const navItems = document.querySelectorAll('#section-nav a');
+  const tocItems = document.querySelectorAll('#mini-toc a');
+  const h2s = document.querySelectorAll('article h2[id]');
+  const h3s = document.querySelectorAll('article h3[id], article h4[id]');
+
+  function setActive(items, predicate) {
+    items.forEach(el => el.classList.remove('active'));
+    const hit = Array.from(items).find(predicate);
+    if (hit) hit.classList.add('active');
+  }
+
+  function syncByScroll() {
+    const y = window.scrollY + 120;
+    let curH2 = h2s[0];
+    h2s.forEach(h => { if (h.offsetTop <= y) curH2 = h; });
+    if (curH2) setActive(navItems, el => el.getAttribute('data-section') === curH2.id);
+
+    let curH3 = null;
+    h3s.forEach(h => { if (h.offsetTop <= y + 40) curH3 = h; });
+    if (curH3) setActive(tocItems, el => el.getAttribute('href') === '#' + curH3.id);
+  }
+
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      window.requestAnimationFrame(() => { syncByScroll(); ticking = false; });
+      ticking = true;
+    }
+  }, { passive: true });
+
+  document.querySelectorAll('a[href^="#"]').forEach(link => {
+    link.addEventListener('click', (e) => {
+      const id = link.getAttribute('href').slice(1);
+      const target = document.getElementById(id);
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        history.replaceState(null, '', '#' + id);
+      }
+    });
+  });
+
+  syncByScroll();
+})();
+</script>
+
 </body>
 </html>

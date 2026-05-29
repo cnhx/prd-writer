@@ -6,3 +6,10 @@
 outputs/
 # PRDs generated while dogfooding the skill — keep out of the repo
 docs/prd/
+
+__pycache__/
+*.pyc
+
+# Claude Code session runtime state
+.claude/scheduled_tasks.lock
+.gstack/

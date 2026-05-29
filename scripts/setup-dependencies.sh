@@ -42,6 +42,23 @@ else
   echo "  Install: cd ${SKILLS_DIR} && git clone <gstack-repo> gstack"
 fi
 
+# Themed HTML PRD export needs the vendored renderer scripts + python3 + markdown + pyyaml.
+# Optional: the hand-generated HTML fallback works without any of these.
+HTML_RENDERER="${REPO_DIR}/scripts/prd-to-html.py"
+HTML_THEME="${REPO_DIR}/scripts/prd_html_theme.py"
+if [ ! -f "${HTML_RENDERER}" ] || [ ! -f "${HTML_THEME}" ]; then
+  echo "[OPTIONAL] HTML renderer scripts missing from scripts/ — themed HTML export unavailable"
+  echo "  Expected: ${HTML_RENDERER}"
+  echo "            ${HTML_THEME}"
+  echo "  (These must be committed to the repo; the hand-generated fallback still works without them.)"
+elif command -v python3 >/dev/null 2>&1 && \
+     python3 -c "import markdown, yaml" >/dev/null 2>&1; then
+  echo "[OK] HTML export ready (renderer scripts + python3 + markdown + pyyaml)"
+else
+  echo "[OPTIONAL] HTML export deps missing — themed HTML export unavailable (hand-generated fallback still works)"
+  echo "  Install: python3 -m pip install -r ${REPO_DIR}/scripts/requirements.txt"
+fi
+
 echo ""
 
 if [ $ERRORS -eq 0 ]; then

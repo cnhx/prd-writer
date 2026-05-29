@@ -1,6 +1,6 @@
 ---
 name: prd-writer
-version: 0.13.0
+version: 0.14.0
 description: |
   PRD writing toolkit for games, AI agents, SaaS/Ops tools, data products, platform products,
   growth products, and learning/content products. Structured workflow with mandatory
