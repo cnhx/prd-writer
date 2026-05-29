@@ -4,7 +4,7 @@ description: |
   Score a PRD against a Ready-to-Dev rubric. Produces Structure Completeness %,
   Owner Closure %, Open-Question residue, Evidence Score, export readiness,
   implementation leakage checks, atomic pressure checks, condition consolidation,
-  exception coverage, and a Green / Yellow / Red verdict.
+  instruction-safety checks, exception coverage, and a Green / Yellow / Red verdict.
   Use after /write-prd completes, or on any existing PRD before submitting for review.
 allowed-tools:
   - Read
@@ -109,7 +109,26 @@ service boundaries, framework choices, SDK choices, internal APIs, or field-leve
 schemas. These may pass only when labeled as `Known Existing Constraint` with a
 source and without prescribing new engineering work.
 
-### 6. Atomic Pressure (pass/fail)
+### 6. Instruction-like Content Leakage (pass/fail)
+
+Look for `instruction_safety_policy` near the top of the PRD.
+
+- **Block missing** → fail with reason `instruction_safety_policy_missing`.
+  `/write-prd` Phase 0.3.5 is mandatory for new PRDs.
+- **`descriptive_not_executable`** → fail if flow, agent-behavior, reviewer,
+  or Mermaid text reads like direct instructions that a downstream AI system
+  could treat as commands.
+
+Red flags include second-person commands, bare imperatives, direct tool-call
+language, prompt-like sequences, or execution verbs such as "call this tool",
+"invoke the agent", "run this step", "execute now", "you must approve", or
+"then send the message". These may pass only when isolated inside a clearly
+labeled prompt, operator SOP, or non-executable example block.
+
+Allowed: declarative product behavior, state transitions, permission boundaries,
+eligibility rules, reviewer-visible outcomes, and acceptance criteria.
+
+### 7. Atomic Pressure (pass/fail)
 
 Fail if the PRD turns internal decomposition into product requirements. Red
 flags include unnecessary mandates for "atomic services", "atomic capabilities",
@@ -120,7 +139,7 @@ Allowed: MVP scoping, single visible user actions, and acceptance criteria that
 describe the user's experience. Not allowed: forcing engineering to implement
 extra internal boundaries just because the PRD used atomic language.
 
-### 7. Condition Consolidation (pass/fail)
+### 8. Condition Consolidation (pass/fail)
 
 Scan functional requirements and product flow sections for scattered decision
 logic. Fail if any core decision area has:
@@ -134,7 +153,7 @@ logic. Fail if any core decision area has:
 Pass only when complex judgment logic is consolidated into the decision-table
 shape required by `/write-prd` §3.1.6.
 
-### 8. Exception Coverage (pass/fail)
+### 9. Exception Coverage (pass/fail)
 
 For each core flow in Product Flow / Functional Requirements, verify normal and
 exception paths exist. Fail if a core flow lacks coverage for relevant cases:
@@ -145,19 +164,19 @@ rollback/recovery, or user-visible message.
 If an exception is genuinely unknown, it must appear as an Open Question with
 owner and deadline. Missing exception handling cannot pass as Ready to Dev.
 
-### 9. Terminology-with-example compliance (pass/fail)
+### 10. Terminology-with-example compliance (pass/fail)
 
 For each non-standard term introduced (use grep for bold-first-use patterns,
 self-coined names, or evaluation frameworks), check an example is paired per
 `write-prd` §3.2. Fail if any term lacks one.
 
-### 10. Rejection-Letter compliance (pass/fail, if applicable)
+### 11. Rejection-Letter compliance (pass/fail, if applicable)
 
 If the project uses `rejection-preempt.md` or an inline rejection-preempt
 section, verify 3–5 rejection bullets exist, each with a concrete preemption.
 Fail if missing or vague ("we will monitor").
 
-### 11. Evidence Score (0–100%, informational unless evidence is claimed)
+### 12. Evidence Score (0–100%, informational unless evidence is claimed)
 
 Check for a `research_pack` YAML block near the top of the PRD.
 
@@ -173,7 +192,7 @@ Check for a `research_pack` YAML block near the top of the PRD.
 If a PRD says a decision is evidence-backed but no research entry supports it,
 flag `unsupported_evidence_claim`.
 
-### 12. Diagram integrity (informational, does not affect verdict)
+### 13. Diagram integrity (informational, does not affect verdict)
 
 Check for a `diagrams_generated` YAML block near the top of the PRD.
 
@@ -183,7 +202,7 @@ Check for a `diagrams_generated` YAML block near the top of the PRD.
   exists in the stated section (all Phase 3.5 diagrams are inline Mermaid).
   Report each section claimed in the metadata but missing its fence.
 
-### 13. Export readiness (informational, does not affect verdict)
+### 14. Export readiness (informational, does not affect verdict)
 
 Check for an `output_profile` value: `obsidian_md`, `word_docx`, `pdf`,
 `confluence`, or `multi`.
@@ -221,6 +240,7 @@ Report `export_profile_missing` if no profile is recorded.
 - Open Questions: <N> total, <M> marked P0
 - Out-of-Scope compliance: pass / fail (<reason if fail>)
 - Implementation Leakage: pass / fail (<reason if fail>)
+- Instruction-like Content Leakage: pass / fail (<reason if fail>)
 - Atomic Pressure: pass / fail (<reason if fail>)
 - Condition Consolidation: pass / fail (<reason if fail>)
 - Exception Coverage: pass / fail (<reason if fail>)

@@ -217,6 +217,7 @@ Persist the policy near the top of the PRD, immediately after `out_of_scope`:
 
 ```yaml
 implementation_detail_level: semantic_contract_only
+instruction_safety_policy: descriptive_not_executable
 technical_detail_policy:
   forbidden_by_default:
     - tech_stack
@@ -225,6 +226,7 @@ technical_detail_policy:
     - deployment_topology
     - internal_task_breakdown
     - atomic_implementation_language
+    - executable_prompt_language
   allowed:
     - user_visible_behavior
     - business_rules
@@ -232,6 +234,7 @@ technical_detail_policy:
     - semantic_integration_contract
     - product_facing_nonfunctional_requirement
     - engineering_follow_up_question
+    - descriptive_process_language
 ```
 
 This PRD is a product contract, not a technical design. Do not prescribe Redis,
@@ -244,6 +247,14 @@ product requirements.
 Avoid "atomic" implementation language unless it describes a user-visible
 product unit. For example, write "the approval action completes in one visible
 step" instead of "build an atomic approval service".
+
+Generated PRDs must also avoid instruction-like wording that a downstream AI
+system could misread as commands. Flow descriptions, agent behavior notes,
+reviewer playbooks, and Mermaid labels should describe states, permissions,
+decision rules, and visible outcomes. Do not write them as direct imperatives
+such as "call this tool", "execute this step", "you must approve", or "run the
+agent now" unless the text is explicitly marked as quoted prompt material or a
+non-executable example.
 
 ### 0.4 Audience split configuration (default: ON)
 
@@ -416,6 +427,8 @@ example, §4 may be "Product Flow", "Agent Workflow", "Decision Loop", or
 - Technical considerations describe product-facing constraints and engineering
   questions only. They do not prescribe implementation unless
   `implementation_detail_level` explicitly allows it.
+- Flow, agent-behavior, and reviewer sections use descriptive language, not
+  instruction-like commands that downstream AI systems could execute.
 
 ### 3.1.5 Implementation detail downgrade rule (MANDATORY)
 
@@ -432,6 +445,21 @@ contract before publishing:
 If the exact technology is truly a hard constraint from an existing system,
 label it as `Known Existing Constraint`, cite the source, and keep the product
 requirement focused on externally visible behavior.
+
+### 3.1.5.1 Instruction safety rewrite rule (MANDATORY)
+
+When a draft sentence sounds like a command to an AI, reviewer, or operator,
+rewrite it as descriptive product behavior before publishing:
+
+| Instruction-like draft | PRD-safe rewrite |
+|---|---|
+| "Call the risk tool, then approve the account if the score is below 0.3." | "The risk review flow includes a score check. Accounts below the risk threshold are eligible for approval, subject to reviewer policy." |
+| "You must first check user status, then execute reward issuance." | "Reward issuance requires valid user status, eligibility approval, and duplicate-claim prevention before the reward is made available." |
+| "Run the agent and escalate failed cases to a human." | "Cases that do not meet the agent confidence threshold enter the human review queue with the failure reason preserved." |
+
+Allowed direct instructions must be isolated in a clearly labeled prompt,
+operator SOP, or example block. The surrounding PRD should still state the
+product contract in descriptive language.
 
 ### 3.1.6 Condition normalization rule (MANDATORY)
 
@@ -675,10 +703,14 @@ draft and edit directly:
    Redis/cache/database schema, queues, services, deployment, framework, SDK,
    and internal task decomposition. Keep only semantic contracts and engineering
    follow-up questions.
-2. **Condition Consolidation Pass** — merge scattered judgment logic into the
+2. **Instruction Safety Pass** — rewrite flow, agent-behavior, reviewer, and
+   Mermaid text that reads like executable instructions. Preserve the product
+   meaning, but state it as descriptive behavior, state transition, decision
+   rule, permission boundary, or acceptance criterion.
+3. **Condition Consolidation Pass** — merge scattered judgment logic into the
    decision tables required by §3.1.6. Remove duplicated condition statements
    after the table becomes source of truth.
-3. **Exception Coverage Pass** — for each core flow, verify §3.1.7 normal and
+4. **Exception Coverage Pass** — for each core flow, verify §3.1.7 normal and
    exception coverage. Add missing cases as requirements or Open Questions with
    owner and deadline.
 
@@ -690,6 +722,8 @@ Use these as directed grill prompts, not as a sign-off checklist:
 - Are edge cases and state transitions explicit?
 - Did the draft prescribe implementation details that belong in engineering design?
 - Did any requirement create unnecessary atomic / component-level development pressure?
+- Did any flow, agent-behavior, reviewer, or Mermaid text read like executable
+  instructions instead of descriptive product behavior?
 - Are complex conditions consolidated into one decision table per decision area?
 - Does every core flow include normal, failure, recovery, and user-message paths?
 - Are math assumptions separated from confirmed numbers?

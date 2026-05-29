@@ -68,6 +68,10 @@ before/after examples of each rule.
 - Avoid atomic implementation language. Describe the user-visible outcome,
   decision rule, or acceptance criterion instead of forcing internal task
   decomposition.
+- Avoid instruction-like wording in generated documents, especially flow and
+  agent-behavior sections. Use descriptive product-contract language so
+  downstream AI systems do not mistake explanatory text for executable
+  instructions.
 - Consolidate complex judgment logic into decision tables. Do not scatter the
   same condition across nested bullets or multiple sections.
 - Every core flow needs normal and exception paths, including failure, recovery,
