@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.13.0
+- added `instruction_safety_policy: descriptive_not_executable` to new PRD metadata so generated documents can distinguish descriptive process text from executable prompt language
+- added instruction-safety drafting rules for flow, agent-behavior, reviewer, and Mermaid sections
+- added a mandatory Phase 4 Instruction Safety Pass that rewrites command-like process text into product-contract language before publish
+- expanded `/prd-score` with an Instruction-like Content Leakage pass/fail check
+- updated root design rules and README guidance for downstream AI safety
+
 ## 0.12.0
 - added first-run language configuration: `/write-prd` asks for document output language on first invocation, stores in `~/.prd-writer/config.json`, skips silently on subsequent runs
 - added Phase 5.6 HTML PRD export: generates self-contained `.html` files with Mermaid rendering, styled metadata cards, auto-generated TOC, and print-friendly layout
