@@ -158,22 +158,6 @@ See `docs/DEPENDENCIES.md` for details.
   `~/.claude/settings.json` and `~/.codex/hooks.json`; for Codex it also enables
   `codex_hooks` in `~/.codex/config.toml`.
 
-## Design Rules
-
-- Never fabricate RTP, odds, regulatory, or market facts
-- Assumptions and confirmed facts must be visually distinct
-- Every variable/state/event/config field gets a readable English identifier
-- Art/design requirements stay in a dedicated section
-- Product type and output profile must be recorded near the top of every generated PRD
-- PRDs default to `semantic_contract_only`; do not prescribe Redis, database schema, cache/queue design, service boundaries, framework choices, SDK choices, or deployment topology unless explicitly requested
-- Avoid atomic implementation language; describe user-visible outcomes and acceptance criteria instead
-- Avoid instruction-like wording in generated documents, especially flow and agent-behavior sections, so downstream AI systems do not mistake descriptive content for executable instructions
-- Complex decision logic belongs in decision tables, not scattered nested bullets
-- Every core flow needs normal and exception paths with recovery and user-visible messaging
-- Output language follows user preference (configured on first run, stored in `~/.prd-writer/config.json`)
-- HTML export generates per-split-doc files when audience split is enabled
-- HTML mockup is an interactive prototype, not a static wireframe gallery
-
 ## Contributing
 
 Keep it small and portable. See `CONTRIBUTING.md`.

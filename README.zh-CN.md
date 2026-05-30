@@ -150,22 +150,6 @@ bash ~/.claude/skills/prd-writer/scripts/install-auto-update-hooks.sh
 - `scripts/update-skill.sh --auto --force --verbose`：立即应用一次安全的 fast-forward 更新。
 - `scripts/install-auto-update-hooks.sh`：在 `~/.claude/settings.json` 和 `~/.codex/hooks.json` 里注册启动 hook；对 Codex 还会在 `~/.codex/config.toml` 里启用 `codex_hooks`。
 
-## 设计规则
-
-- 绝不编造 RTP、赔率、监管或市场事实
-- 假设和已确认事实在视觉上必须可区分
-- 每个变量/状态/事件/配置字段都要有可读的英文标识符
-- 美术/设计需求单独成节
-- 产品类型和输出 profile 必须记录在每份生成 PRD 的开头附近
-- PRD 默认 `semantic_contract_only`；除非明确要求，不规定 Redis、数据库 schema、缓存/队列设计、服务边界、框架选型、SDK 选型或部署拓扑
-- 避免原子化的实现措辞；改为描述用户可见的结果和验收标准
-- 生成文档里避免指令式措辞，尤其是流程和 agent 行为章节，以免下游 AI 系统把描述性内容误读为可执行指令
-- 复杂决策逻辑放进决策表，而不是散落的嵌套要点
-- 每条核心流程都要有正常路径和异常路径，并带恢复手段和用户可见的提示
-- 输出语言跟随用户偏好（首次运行配置，存于 `~/.prd-writer/config.json`）
-- 开启受众拆分时，HTML 导出为每个拆分文档各生成一份文件
-- HTML 原型是可交互原型，而非静态线框图集
-
 ## 贡献
 
 保持小而可移植。见 `CONTRIBUTING.md`。
