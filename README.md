@@ -1,5 +1,7 @@
 # PRD Writer
 
+**English** | [中文](README.zh-CN.md)
+
 Skill collection for structured PRD authoring across games, AI agents, SaaS/Ops tools, data products, platform products, growth products, and learning/content products. Markdown is the source of truth; Obsidian MD, Word, PDF, and HTML workflows are supported through export profiles. Includes optional HTML PRD export with Mermaid rendering and interactive HTML mockup prototype generation.
 
 ## Install (Claude Code)

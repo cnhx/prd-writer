@@ -13,3 +13,6 @@ __pycache__/
 # Claude Code session runtime state
 .claude/scheduled_tasks.lock
 .gstack/
+
+# Local handoff notes — not part of the repo
+HANDOFF.md
