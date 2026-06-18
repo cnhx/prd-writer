@@ -22,6 +22,27 @@ Quantify a PRD's readiness. Produces a short report the PM can hand to reviewers
 - **Required**: path to the PRD markdown file
 - **Optional**: path to a `rejection-preempt.md` if the project uses one
 
+## Legacy mode (external PRDs)
+
+Before scoring dimensions 4–6, check for the three `/write-prd` metadata blocks:
+`out_of_scope`, `implementation_detail_level`, and `instruction_safety_policy`.
+
+- **All three missing** → the PRD did not come from `/write-prd`. Score it in
+  **legacy mode**: dimensions 4, 5, and 6 are judged by a substantive scan of
+  the body instead of failing on the missing blocks —
+  - Dimension 4: does the PRD discuss scope boundaries / out-of-scope areas
+    anywhere, and does its prose stay inside them?
+  - Dimension 5: does the body prescribe implementation choices (the same red
+    flags listed under dimension 5)?
+  - Dimension 6: does flow/agent/reviewer/Mermaid text read as executable
+    instructions (the same red flags listed under dimension 6)?
+  Each missing block is recorded as a `missing_metadata_block` warning flag,
+  not a fail. The Verdict carries the note: "external PRD scored in legacy
+  mode; recommend adding the metadata blocks."
+- **Some present, some missing** → not legacy mode. The PRD went through (or
+  claims) the `/write-prd` flow; each missing block fails its dimension per
+  the normal rules below, because it indicates a skipped mandatory phase.
+
 ## Scoring dimensions
 
 ### 1. Structure Completeness (0–100%)
@@ -32,7 +53,7 @@ Required sections present and non-empty. Weighted:
 |---|---|
 | Summary | 5 |
 | Project positioning | 5 |
-| Market / target user | 8 |
+| Market strategy | 8 |
 | Product or gameplay flow | 12 |
 | Functional requirements | 12 |
 | Art / design (if applicable) | 6 |
@@ -83,9 +104,10 @@ out_of_scope:
 
 Behavior:
 
-- **Block missing** → fail this dimension with reason `boundary_scan_not_run`.
-  `/write-prd` Phase 0.3 is mandatory; a missing block means the scan was
-  skipped and the PRD's scope is undefined.
+- **Block missing** → fail this dimension with reason `boundary_scan_not_run`,
+  unless legacy mode applies (see Legacy mode above). `/write-prd` Phase 0.3 is
+  mandatory; a missing block means the scan was skipped and the PRD's scope is
+  undefined.
 - **Block present, `[]`** → pass; record `boundary_scan_empty`.
 - **Block present with entries** → scan the rest of the PRD for prescriptive
   language that violates each OUT category (e.g. specific payment SDK names if
@@ -96,12 +118,15 @@ Behavior:
 
 Look for `implementation_detail_level` near the top of the PRD.
 
-- **Block missing** → fail with reason `implementation_policy_missing`.
-  `/write-prd` Phase 0.3.5 is mandatory for new PRDs.
+- **Block missing** → fail with reason `implementation_policy_missing`,
+  unless legacy mode applies (see Legacy mode above). `/write-prd` Phase 0.3.5
+  is mandatory for new PRDs.
 - **`semantic_contract_only`** → fail if the PRD prescribes implementation
   choices instead of product behavior.
 - **Explicit implementation level** → implementation notes may exist only when
   the PRD says who requested them and why they belong in this artifact.
+- **Unrecognized value** → treat as `semantic_contract_only` and record flag
+  `unknown_policy_value`.
 
 Red flags include prescriptive references to Redis/cache design, database
 tables, indexes, collections, queues, cron jobs, Kubernetes/cloud topology,
@@ -113,11 +138,14 @@ source and without prescribing new engineering work.
 
 Look for `instruction_safety_policy` near the top of the PRD.
 
-- **Block missing** → fail with reason `instruction_safety_policy_missing`.
-  `/write-prd` Phase 0.3.5 is mandatory for new PRDs.
+- **Block missing** → fail with reason `instruction_safety_policy_missing`,
+  unless legacy mode applies (see Legacy mode above). `/write-prd` Phase 0.3.5
+  is mandatory for new PRDs.
 - **`descriptive_not_executable`** → fail if flow, agent-behavior, reviewer,
   or Mermaid text reads like direct instructions that a downstream AI system
   could treat as commands.
+- **Unrecognized value** → treat as `descriptive_not_executable` and record
+  flag `unknown_policy_value`.
 
 Red flags include second-person commands, bare imperatives, direct tool-call
 language, prompt-like sequences, or execution verbs such as "call this tool",
@@ -166,9 +194,11 @@ owner and deadline. Missing exception handling cannot pass as Ready to Dev.
 
 ### 10. Terminology-with-example compliance (pass/fail)
 
-For each non-standard term introduced (use grep for bold-first-use patterns,
-self-coined names, or evaluation frameworks), check an example is paired per
-`write-prd` §3.2. Fail if any term lacks one.
+For each non-standard term introduced, check an example is paired per
+`write-prd` §3.2. To find candidates, grep for bold-first-use patterns
+(`\*\*[^*]+\*\*`), then judge semantically which candidates are self-coined
+names or evaluation frameworks rather than standard vocabulary. Fail if any
+such term lacks an example.
 
 ### 11. Rejection-Letter compliance (pass/fail, if applicable)
 
@@ -191,6 +221,10 @@ Check for a `research_pack` YAML block near the top of the PRD.
 
 If a PRD says a decision is evidence-backed but no research entry supports it,
 flag `unsupported_evidence_claim`.
+
+When `unsupported_evidence_claim` is flagged, this dimension enters the
+pass/fail aggregate as a **fail**. Otherwise it stays informational only and
+does not affect the verdict (same treatment as dimension 13).
 
 ### 13. Diagram integrity (informational, does not affect verdict)
 
@@ -219,6 +253,10 @@ Check for an `output_profile` value: `obsidian_md`, `word_docx`, `pdf`,
 
 Report `export_profile_missing` if no profile is recorded.
 
+Result mapping: all "should" items for the recorded profile satisfied → `pass`;
+any "should" item unmet → `warning` (list the unmet items); no profile block →
+`missing-profile`.
+
 ## Verdict
 
 - **Green (Ready to Dev)**: Structure ≥ 90%, Owner Closure ≥ 80%, no P0 Open
@@ -227,6 +265,12 @@ Report `export_profile_missing` if no profile is recorded.
   most 1 P0 Open Question with an explicit owner + deadline, all pass/fail
   dimensions pass.
 - **Red (Not Ready)**: any other state. Produce specific remediation list.
+
+Dimension 12 counts toward "all pass/fail dimensions pass" only when
+`unsupported_evidence_claim` is flagged (see dimension 12). In legacy mode,
+`missing_metadata_block` warnings do not count as fails; append the note
+"external PRD scored in legacy mode; recommend adding the metadata blocks"
+to the Verdict line.
 
 ## Output format
 
