@@ -114,7 +114,7 @@ bash ~/.claude/skills/prd-writer/scripts/install-auto-update-hooks.sh
 8. **评审**：用质量清单做追问式评审
 9. **打磨发布**：可选地跑 `/opus-prd-polish` 和 `/prd-score`
 10. **受众拆分**（可选）：自动调用 `/prd-split` 生成面向不同受众的文档（GDD、TDD、Agent 规格等）
-11. **HTML PRD 导出**（可选）：生成可在浏览器直接打开的自包含 `.html`。如果做了受众拆分，每个拆分文档也各自生成 HTML，相互之间带跳转链接。包含 Mermaid 图渲染、样式化的元数据卡片、自动生成的目录、对打印友好的版式
+11. **HTML PRD 导出**（可选）：生成可在浏览器直接打开的自包含 `.html`。如果做了受众拆分，每个拆分文档也各自生成 HTML，相互之间带跳转链接。包含 Mermaid 图渲染、自动生成的目录；frontmatter 和首个 H2 之前的元数据 YAML 块默认不显示，加 `--show-meta` 才显示、对打印友好的版式
 12. **HTML 原型**（可选，仅多屏产品）：生成可交互的单帧原型，带两个视图——**Interactive Prototype** 标签页（在一个模拟设备框里点击走完产品流程）和 **All Screens Overview** 标签页（所有状态的缩略图网格，点击任一可跳进交互模式）
 
 ## 格式支持

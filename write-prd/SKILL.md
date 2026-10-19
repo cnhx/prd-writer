@@ -792,9 +792,18 @@ this skill under the **prd-writer skill root**'s `scripts/` directory. The skill
 root is the repo that contains both `write-prd/` and `scripts/` as siblings
 (commonly `~/.claude/skills/prd-writer/`). It produces a refined editorial
 three-column layout (section sidebar + body + mini-TOC) deterministically:
-frontmatter collapse cards, sticky table headers, `⚠️`/`📝`/`✅` callouts,
-Mermaid, anchor links, responsive, print-ready. Prefer it over hand-writing
-HTML — it is consistent and preserves all content.
+sticky table headers, `⚠️`/`📝`/`✅` callouts, Mermaid, anchor links,
+responsive, print-ready. Prefer it over hand-writing HTML — it is consistent
+and preserves all reader-facing content.
+
+**Metadata stays out of the HTML by default.** The YAML frontmatter and every
+` ```yaml ` block before the first H2 (product_type, out_of_scope,
+implementation policy, audience_split, research_pack, diagrams_generated, …)
+exist for `/prd-score` and `/prd-split`, not for readers. The renderer drops
+them and the auto badges derived from them; the HTML starts at the title, the
+date/status line, and the first section. The Markdown source is never edited
+for this. Pass `--show-meta` only when the user explicitly asks to see the
+metadata in the HTML.
 
 > **Network note**: the rendered HTML loads Mermaid (pinned `mermaid@11`) and
 > web fonts from `cdn.jsdelivr.net` / Google Fonts. It renders fine offline
@@ -817,9 +826,9 @@ HTML — it is consistent and preserves all content.
    ```bash
    python3 <skill-root>/scripts/prd-to-html.py --md "{prd-name}.md"
    ```
-   `--out` defaults to the source name with `.html`. Brand `product`, the
-   document title, and badges (product_type / output_profile / status) are
-   auto-derived from the H1 and frontmatter — pass `--crest "..."` only if the
+   `--out` defaults to the source name with `.html`. Brand `product` and the
+   document title are auto-derived from the H1; product_type / output_profile /
+   status badges appear only with `--show-meta`. Pass `--crest "..."` only if the
    user explicitly wants a custom eyebrow label. **Never inject a brand name the
    user did not supply.**
 4. **Split-aware cross-doc nav**: if Phase 5.5 produced split docs, render each
@@ -857,9 +866,10 @@ Generate the HTML by hand, one file per document, following these rules:
    (`https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js`), call
    `mermaid.initialize({startOnLoad:true})` on page load. Convert Markdown
    ` ```mermaid ` fences into `<pre class="mermaid">` blocks.
-5. **YAML metadata blocks** (product_type, out_of_scope, research_pack,
-   audience_split, etc.) render as styled info cards with key-value layout —
-   not raw code blocks.
+5. **Metadata is omitted**: leave out the YAML frontmatter and every YAML
+   block before the first H2 (product_type, out_of_scope, research_pack,
+   audience_split, etc.). Include them as key-value cards only when the user
+   explicitly asks to see metadata.
 6. **Table of contents**: auto-generate from H2 headings as anchor links at the
    top of the page.
 7. **Typography**: clean sans-serif font stack (include Chinese fonts like
