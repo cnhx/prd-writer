@@ -3,12 +3,15 @@
 prd-to-html — 把 PRD Markdown 渲染成自包含的主题化 HTML。
 
 调用同目录的 prd_html_theme.build_html（refined editorial 三栏 Docs 风：
-左侧章节栏 + 中央正文 + 右侧 mini-TOC，frontmatter 折叠卡片、表格 sticky
-表头、callout、Mermaid CDN 渲染、响应式、打印优化）。
+左侧章节栏 + 中央正文 + 右侧 mini-TOC，表格 sticky 表头、callout、
+Mermaid CDN 渲染、响应式、打印优化）。
+
+frontmatter 与首个 H2 之前的 ```yaml 元数据块默认不进 HTML（源 md 不动，
+prd-score / prd-split 仍读得到）；--show-meta 时才渲染成卡片。
 
 brand / badges 默认从文档自动推导，不硬编码任何品牌：
   - product = 第一个 H1（去掉「— 产品需求文档 / — PRD」后缀）
-  - badges  = frontmatter / 首个 ```yaml 块里的 product_type、output_profile、status
+  - badges  = 仅 --show-meta 时从 product_type、output_profile、status 推导
   - crest   = 默认留空，仅 --crest 显式提供时才渲染
 
 用法：
@@ -117,6 +120,11 @@ def main() -> None:
     ap.add_argument("--cross-doc", default=None, help="JSON list of {title, href, active} for multi-doc nav")
     ap.add_argument("--cross-doc-title", default=None, help="label for cross-doc nav block (default: by --lang)")
     ap.add_argument("--lang", default="zh", choices=["zh", "en"], help="UI chrome language (default: zh)")
+    ap.add_argument(
+        "--show-meta",
+        action="store_true",
+        help="show frontmatter card, metadata yaml blocks before the first H2, and auto badges (default: hidden)",
+    )
     args = ap.parse_args()
 
     src: Path = args.md
@@ -137,7 +145,8 @@ def main() -> None:
     if args.crest or product or args.ver:
         brand = {"crest": args.crest, "product": product or "", "ver": args.ver or ""}
 
-    badges = _auto_badges(meta)
+    # product_type / output_profile 这类徽章同属工具链元数据，跟随 --show-meta
+    badges = _auto_badges(meta) if args.show_meta else []
     badges += [{"text": b} for b in args.badge]
 
     cross_doc_nav = None
@@ -162,6 +171,7 @@ def main() -> None:
         footer_left=args.footer_left,
         footer_right=args.footer_right,
         lang=args.lang,
+        show_meta=args.show_meta,
     )
 
     size = dst.stat().st_size

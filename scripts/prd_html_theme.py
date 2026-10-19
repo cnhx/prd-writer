@@ -8,7 +8,7 @@ PRD HTML 主题模板 — refined editorial（双栏 Docs 风）
   右 220px mini-TOC（当前章节的 H3 / H4，IntersectionObserver 同步）
 
 特性：
-  - frontmatter 折叠卡片
+  - frontmatter 与首个 H2 前的 yaml 元数据默认隐藏，show_meta=True 时渲染成折叠卡片
   - 表格 sticky thead + scroll-shadow
   - blockquote 自动识别 ⚠️ / 📝 / ✅ 渲染成 callout
   - mermaid 块原样保留，CDN 渲染
@@ -938,6 +938,21 @@ def extract_h2_sections(html_body: str) -> list[dict]:
 # 主入口
 # ---------------------------------------------------------------------------
 
+_ANY_FENCE_RE = re.compile(r"^```.*?^```", re.DOTALL | re.MULTILINE)
+_FIRST_H2_RE = re.compile(r"^## ", re.MULTILINE)
+
+
+def strip_leading_meta_yaml(text: str) -> str:
+    """去掉首个 H2 之前的 ```yaml 块——它们是给 prd-score / prd-split 用的工具链元数据，
+    读者不需要看。首个 H2 之后的 yaml 视为正文内容，原样保留。"""
+    # 把代码块整段替换成等长空白再找 H2，避免代码块里的 "## " 被误判
+    masked = _ANY_FENCE_RE.sub(lambda m: " " * len(m.group(0)), text)
+    h2 = _FIRST_H2_RE.search(masked)
+    cut = h2.start() if h2 else len(text)
+    head = re.sub(r"\n{3,}", "\n\n", INLINE_YAML_RE.sub("", text[:cut]))
+    return head + text[cut:]
+
+
 def split_frontmatter(text: str):
     m = FRONTMATTER_RE.match(text)
     if not m:
@@ -980,6 +995,7 @@ def build_html(
     footer_left: str = "",
     footer_right: str = "",
     lang: str = "zh",
+    show_meta: bool = False,
 ) -> dict:
     """Convert markdown to themed HTML.
 
@@ -1003,6 +1019,8 @@ def build_html(
         Override meta line under title (default: auto from frontmatter)
     footer_left, footer_right : str
         Footer text
+    show_meta : bool
+        展示 frontmatter 卡片与首个 H2 之前的 yaml 元数据块（默认隐藏）
 
     Returns
     -------
@@ -1015,6 +1033,8 @@ def build_html(
     # utf-8-sig 透明剥离 BOM——否则前导 ﻿ 会让 H1 / frontmatter 失配
     raw = md_path.read_text(encoding="utf-8-sig")
     frontmatter, body_md = split_frontmatter(raw)
+    if not show_meta:
+        body_md = strip_leading_meta_yaml(body_md)
 
     body_md, mermaid_blocks, yaml_blocks = preprocess_markdown(body_md)
 
@@ -1100,7 +1120,7 @@ def build_html(
     mini_toc_html = build_mini_toc(html_body, labels["no_subsections"])
 
     # ---- frontmatter card ----
-    fm_html = render_frontmatter_card(frontmatter) if frontmatter else ""
+    fm_html = render_frontmatter_card(frontmatter) if frontmatter and show_meta else ""
 
     # ---- assemble ----
     full = f"""<!DOCTYPE html>
