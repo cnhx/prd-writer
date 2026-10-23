@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.15.0
+- added the Phase 5.6 visual self-review loop: render → `scripts/prd-html-qa.mjs` (zero-dependency Node + local Chrome via CDP: hard/soft checks, screenshots at desktop, dark, tablet and mobile, interaction smoke tests) → score against `references/html-visual-rubric.md` → patch the renderer, at most 3 rounds; source-level gaps go to the user as suggestions
+- fixed the document title never showing (a global `h1 { display: none }` also hid the page header title); the first H1 now moves into the header instead of being duplicated
+- added a mobile drawer TOC (narrow screens previously had no navigation), dark mode that follows the system with a remembered toggle, and Mermaid diagrams themed from the same color tokens and re-rendered on toggle
+- the right rail now lists only the current section's H3/H4 and keeps the active item in view; GitHub/Obsidian-compatible heading anchors that keep Chinese (`#3-功能需求` instead of `#3`, so hand-written TOC links resolve), copy-link on heading anchors, landing highlight after a jump, reading progress bar, back-to-top, image and diagram click-to-zoom
+- tables: short columns stay on one line, numeric columns right-align, long text columns get a minimum width, headers pin to the viewport when the table fits and horizontal-scroll shadows appear when it does not
+- typography and color: CJK measure tightened to about 42 characters per line, serif CJK headings via Noto Serif SC, numbered headings in the accent color, all text tokens at ≥ 4.5 contrast in both themes; Obsidian `[[wikilinks]]` render as their label and `\~` no longer leaks a backslash
+- a `---` right before a heading no longer stacks a second divider on the heading's own rule
+- everything respects `prefers-reduced-motion`; print forces the light palette and hides UI chrome
+
 ## 0.14.0
 - replaced the hand-generated HTML export with a vendored deterministic renderer (`scripts/prd-to-html.py` + `scripts/prd_html_theme.py`): three-column editorial layout (section sidebar + body + mini-TOC), frontmatter cards, callouts, sticky table headers, anchor links, print-friendly
 - fixed sidebar and mini-TOC anchors to use python-markdown's real heading ids, so Chinese, numbered, and duplicate headings no longer produce dead navigation links

@@ -123,7 +123,7 @@ bash ~/.claude/skills/prd-writer/scripts/install-auto-update-hooks.sh
 - **Word**：标题层级严格，表格简单，导出的图表图片旁保留 Mermaid 源码块。不要用纯 HTML 排版。
 - **PDF**：标题稳定，配图带说明，表格适配页面，图表带章节级标题。若无法渲染 Mermaid，把源码块保留在 PDF 附录里。
 - **Confluence**：标题用 H1-H3，表格简单，链接显式写出，Mermaid 图配一张导出的图片附件外加源码块。不要依赖 Obsidian wiki 链接或裸 HTML。
-- **HTML**（Phase 5.6）：由 vendor 进来的 Python 渲染器（`scripts/prd-to-html.py`，需要 `markdown` + `pyyaml`——`pip install -r scripts/requirements.txt`，Python 3.8+）从 Markdown PRD 生成主题化 `.html`。三栏 editorial 版式（章节侧栏 + 正文 + mini-TOC），YAML 元数据渲染成样式化卡片，callout、自动锚点、对打印友好。开启受众拆分时，每个拆分文档各生成一份 HTML 并相互带跳转链接。从 CDN 加载固定版本的 `mermaid@11` 和 Web 字体（离线也能打开，字体回退到系统字体、图表不绘制）。如果 Python 或依赖不可用，`/write-prd` 会自动回退到手工生成 HTML。
+- **HTML**（Phase 5.6）：由 vendor 进来的 Python 渲染器（`scripts/prd-to-html.py`，需要 `markdown` + `pyyaml`——`pip install -r scripts/requirements.txt`，Python 3.8+）从 Markdown PRD 生成主题化 `.html`。三栏 editorial 版式（章节侧栏 + 正文 + 只列当前章节的 mini-TOC），带深色模式、手机抽屉目录、可复制链接的锚点、短列不折行的表格和可点击放大的图表；frontmatter 和首个 H2 之前的元数据默认不显示，callout、对打印友好。开启受众拆分时，每个拆分文档各生成一份 HTML 并相互带跳转链接。从 CDN 加载固定版本的 `mermaid@11` 和 Web 字体（离线也能打开，字体回退到系统字体、图表不绘制）。如果 Python 或依赖不可用，`/write-prd` 会自动回退到手工生成 HTML。生成后进入有上限的视觉自审环：`scripts/prd-html-qa.mjs`（Node 22+ 加本机 Chrome，不装 npm 包）在桌面、深色、平板、手机四种尺寸截图，跑版式、对比度和交互检查，agent 再按 `references/html-visual-rubric.md` 打分，最多 3 轮。
 - **HTML 原型**（Phase 5.7）：单个 `.html` 的可交互原型。一个模拟设备框，通过点击按钮切换状态。双视图：Interactive Prototype 标签页 + All Screens Overview 标签页。零外部依赖。仅当 PRD 描述多屏/多状态产品时才提供。
 
 ## 配置

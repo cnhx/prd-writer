@@ -791,10 +791,13 @@ A vendored Python renderer (`prd_html_theme.py` + `prd-to-html.py`) ships with
 this skill under the **prd-writer skill root**'s `scripts/` directory. The skill
 root is the repo that contains both `write-prd/` and `scripts/` as siblings
 (commonly `~/.claude/skills/prd-writer/`). It produces a refined editorial
-three-column layout (section sidebar + body + mini-TOC) deterministically:
-sticky table headers, `⚠️`/`📝`/`✅` callouts, Mermaid, anchor links,
-responsive, print-ready. Prefer it over hand-writing HTML — it is consistent
-and preserves all reader-facing content.
+three-column layout (section sidebar + body + current-section mini-TOC)
+deterministically: dark mode with a remembered toggle, mobile drawer TOC,
+Unicode anchors with copy-link, tables that keep short columns on one line,
+right-align numeric columns and pin their headers, `⚠️`/`📝`/`✅` callouts,
+themed Mermaid with click-to-zoom, reading progress, print-ready. Prefer it
+over hand-writing HTML — it is consistent and preserves all reader-facing
+content.
 
 **Metadata stays out of the HTML by default.** The YAML frontmatter and every
 ` ```yaml ` block before the first H2 (product_type, out_of_scope,
@@ -851,8 +854,33 @@ metadata in the HTML.
    Markdown body — any raw HTML/`<script>` in the source PRD is emitted as-is.
    This is fine for the normal flow (the author renders and opens their own
    document locally). Do not feed it untrusted third-party Markdown.
-7. After generation, report the list of all HTML files created (the script
-   prints each path plus H2 / Mermaid / YAML counts).
+7. **Visual self-review loop** — run it on every generated HTML file, at most
+   **3 rounds** per file:
+   1. **Read**: run the QA script (Node 22+ and a local Chrome / Chromium /
+      Edge; zero npm dependencies):
+      ```bash
+      node <skill-root>/scripts/prd-html-qa.mjs "{prd-name}.html"
+      ```
+      It prints hard (`✗`) and soft (`△`) findings per viewport and writes
+      `report.json` plus screenshots to the directory it names.
+   2. **Compare**: open `<skill-root>/references/html-visual-rubric.md`, read
+      the screenshots it asks for, and score its eight dimensions (typography,
+      whitespace, visual_hierarchy, color, motion, micro_interaction,
+      responsive, originality) as pass or gap. Classify each gap as theme gap,
+      source gap, or accepted, as the rubric defines.
+   3. **Patch**: fix theme gaps in `scripts/prd_html_theme.py` with a general
+      rule, re-render, and start the next round. Source gaps go to the user as
+      suggestions; the Markdown changes only on their approval.
+
+   The loop is done when the QA script exits 0 and every dimension is pass,
+   or every remaining gap is a source gap or accepted. If round 3 still has a
+   hard finding, stop and report it with its screenshot path.
+   If Node or a browser is missing, say so and skip the loop; the HTML itself
+   is still valid output.
+8. After generation, report: every HTML file created (the renderer prints each
+   path plus H2 / Mermaid / YAML counts), the final QA status per viewport,
+   any renderer changes made in the loop, source-gap suggestions, and accepted
+   soft findings with their one-line reason.
 
 **Fallback path — hand-generated HTML (only when python3 or deps are unavailable)**:
 
@@ -889,7 +917,11 @@ Generate the HTML by hand, one file per document, following these rules:
 15. **No hardcoded brand**: do not add any company or product brand the user did
     not explicitly provide.
 
-After generation, report the list of all HTML files created.
+After generation, run the QA script's screenshots and the rubric from step 7
+of the primary path where Node and a browser exist. The checks that look for the
+themed renderer's markup (`title-hidden`, `no-navigation`, `drawer`,
+`nav-jump`, `theme-toggle`) do not apply to hand-generated pages; record them
+as accepted. Then report the list of all HTML files created.
 
 ### 5.7 HTML Mockup Export (optional, user-triggered)
 

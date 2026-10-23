@@ -59,6 +59,21 @@ else
   echo "  Install: python3 -m pip install -r ${REPO_DIR}/scripts/requirements.txt"
 fi
 
+# HTML visual QA (Phase 5.6 self-review loop) needs Node 22+ (built-in WebSocket) and a local Chromium-family browser.
+if command -v node >/dev/null 2>&1 && node -e "process.exit(typeof WebSocket === 'function' ? 0 : 1)" >/dev/null 2>&1; then
+  BROWSER_FOUND="${CHROME_PATH:-}"
+  for b in "/Applications/Google Chrome.app" "/Applications/Chromium.app" "/Applications/Microsoft Edge.app" /usr/bin/google-chrome /usr/bin/chromium /usr/bin/chromium-browser /usr/bin/microsoft-edge; do
+    [ -z "${BROWSER_FOUND}" ] && [ -e "$b" ] && BROWSER_FOUND="$b"
+  done
+  if [ -n "${BROWSER_FOUND}" ]; then
+    echo "[OK] HTML visual QA ready (node + browser)"
+  else
+    echo "[OPTIONAL] No Chrome / Chromium / Edge found — HTML visual QA skipped (set CHROME_PATH to override)"
+  fi
+else
+  echo "[OPTIONAL] Node 22+ not found — HTML visual QA skipped (HTML export itself still works)"
+fi
+
 echo ""
 
 if [ $ERRORS -eq 0 ]; then

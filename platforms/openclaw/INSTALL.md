@@ -23,7 +23,10 @@ cp examples/sample-saas-ops-prd.md /path/to/your/project/.prd/
 # Optional: themed HTML PRD export. Without these, /write-prd falls back to
 # hand-generated HTML. Deps: python3 -m pip install markdown pyyaml
 mkdir -p /path/to/your/project/.prd/scripts
-cp scripts/prd-to-html.py scripts/prd_html_theme.py /path/to/your/project/.prd/scripts/
+cp scripts/prd-to-html.py scripts/prd_html_theme.py scripts/prd-html-qa.mjs /path/to/your/project/.prd/scripts/
+# Visual self-review loop (needs Node 22+ and a local Chrome / Chromium / Edge):
+mkdir -p /path/to/your/project/.prd/references
+cp references/html-visual-rubric.md /path/to/your/project/.prd/references/
 ```
 
 ## Step 2: Run it
