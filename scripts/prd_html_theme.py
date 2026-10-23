@@ -653,12 +653,14 @@ td {
   padding: 10px 14px;
   border-bottom: 1px solid var(--rule-soft);
   vertical-align: top;
+  overflow-wrap: anywhere;
 }
 tbody tr:last-child td { border-bottom: none; }
 tbody tr:nth-child(even) td { background: var(--row-alt); }
 tbody tr:hover td { background: var(--row-hover); }
 td:first-child { font-weight: 500; color: var(--ink); }
-td code { font-size: 12.5px; background: var(--paper); }
+td code { font-size: 12.5px; background: var(--paper); overflow-wrap: normal; }
+th code { font-size: 12px; }
 td { min-width: 4.5em; }
 td.long { min-width: 13em; }
 td.nw, th.nw { white-space: nowrap; }
@@ -1222,6 +1224,33 @@ def render_frontmatter_card(data: dict) -> str:
 # Markdown 预处理 / 后处理
 # ---------------------------------------------------------------------------
 
+_FENCE_LINE_RE = re.compile(r"^\s{0,3}(```|~~~)")
+_TABLE_ROW_RE = re.compile(r"^\s*\|.*\|\s*$")
+_TABLE_SEP_RE = re.compile(r"^\s*\|?\s*:?-{3,}:?\s*(\|\s*:?-{3,}:?\s*)*\|?\s*$")
+_LIST_ITEM_RE = re.compile(r"^(?:[-*+]|\d+[.)])\s+\S")
+
+
+def normalize_block_breaks(text: str) -> str:
+    """Obsidian（CommonMark）里表格、列表可以紧贴上一段，python-markdown 要求先空一行，
+    否则表格露出竖线、列表并进段落。这里在顶格的表头和列表首项前补空行，代码块内不动。"""
+    lines = text.split("\n")
+    out: list[str] = []
+    in_fence = False
+    for i, line in enumerate(lines):
+        if _FENCE_LINE_RE.match(line):
+            in_fence = not in_fence
+        prev = out[-1] if out else ""
+        prev_is_text = bool(prev.strip()) and not prev.startswith((" ", "\t", ">"))
+        if not in_fence and prev_is_text:
+            next_line = lines[i + 1] if i + 1 < len(lines) else ""
+            starts_table = _TABLE_ROW_RE.match(line) and _TABLE_SEP_RE.match(next_line) and not _TABLE_ROW_RE.match(prev)
+            starts_list = _LIST_ITEM_RE.match(line) and not _LIST_ITEM_RE.match(prev) and not _TABLE_ROW_RE.match(prev) and not prev.lstrip().startswith("#")
+            if starts_table or starts_list:
+                out.append("")
+        out.append(line)
+    return "\n".join(out)
+
+
 def preprocess_markdown(text: str):
     mermaid_blocks: list[str] = []
     yaml_blocks: list[dict] = []
@@ -1241,7 +1270,11 @@ def preprocess_markdown(text: str):
         return m.group(0)
 
     text = MERMAID_RE.sub(_mermaid_sub, text)
-    text = INLINE_YAML_RE.sub(_yaml_sub, text)
+    # 只有首个 H2 之前的 yaml 是工具链元数据，才转成卡片；正文里的 yaml 多是 schema 示例，
+    # 按代码块原样保留（转卡片会丢注释、嵌套结构也挤不下）
+    cut = _first_h2_offset(text)
+    text = INLINE_YAML_RE.sub(_yaml_sub, text[:cut]) + text[cut:]
+    text = normalize_block_breaks(text)
     return text, mermaid_blocks, yaml_blocks
 
 
@@ -1290,6 +1323,8 @@ _ROW_RE = re.compile(r"<tr>(.*?)</tr>", re.DOTALL)
 _CELL_RE = re.compile(r"<(td|th)([^>]*)>(.*?)</\1>", re.DOTALL)
 _NUMERIC_RE = re.compile(r"^[\s\d.,%+\-–~×xX/:¥$€]*\d[\s\d.,%+\-–~×xX/:¥$€]*$")
 NOWRAP_MAX_WIDTH = 7  # 全列最长不超过约 7 个汉字宽，就整列不折行
+_CODE_SPAN_RE = re.compile(r"<code>([^<]+)</code>")
+_CODE_BREAK_RE = re.compile(r"([_./])(?=[^_./])")
 LONG_AVG_WIDTH = 16   # 列平均超过约 16 个汉字宽，算长文本列，给最小宽度防止被挤成窄条
 
 
@@ -1353,6 +1388,8 @@ def _tune_tables(html_body: str) -> str:
                     cls = cls.replace("long", "").strip()
                 if cls:
                     attrs = _add_class(attrs, cls)
+                # 表格里的标识符只在 _ . / 处折行，不拦腰断词
+                content = _CODE_SPAN_RE.sub(lambda c: "<code>" + _CODE_BREAK_RE.sub(r"\1<wbr>", c.group(1)) + "</code>", content)
                 col += 1
                 return f"<{tag}{attrs}>{content}</{tag}>"
 
@@ -1538,13 +1575,17 @@ _ANY_FENCE_RE = re.compile(r"^```.*?^```", re.DOTALL | re.MULTILINE)
 _FIRST_H2_RE = re.compile(r"^## ", re.MULTILINE)
 
 
-def strip_leading_meta_yaml(text: str) -> str:
-    """去掉首个 H2 之前的 ```yaml 块——它们是给 prd-score / prd-split 用的工具链元数据，
-    读者不需要看。首个 H2 之后的 yaml 视为正文内容，原样保留。"""
+def _first_h2_offset(text: str) -> int:
     # 把代码块整段替换成等长空白再找 H2，避免代码块里的 "## " 被误判
     masked = _ANY_FENCE_RE.sub(lambda m: " " * len(m.group(0)), text)
     h2 = _FIRST_H2_RE.search(masked)
-    cut = h2.start() if h2 else len(text)
+    return h2.start() if h2 else len(text)
+
+
+def strip_leading_meta_yaml(text: str) -> str:
+    """去掉首个 H2 之前的 ```yaml 块——它们是给 prd-score / prd-split 用的工具链元数据，
+    读者不需要看。首个 H2 之后的 yaml 视为正文内容，原样保留。"""
+    cut = _first_h2_offset(text)
     head = re.sub(r"\n{3,}", "\n\n", INLINE_YAML_RE.sub("", text[:cut]))
     return head + text[cut:]
 

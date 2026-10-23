@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.15.1
+- fixed content loss: ```yaml blocks after the first H2 (usually schema examples) now render as code blocks; converting them to key-value cards dropped every YAML comment and crushed nested structures on phones. Only metadata YAML before the first H2 can become a card (`--show-meta`)
+- tables and lists that sit directly under a paragraph without a blank line (valid in Obsidian / CommonMark) now render; python-markdown previously printed the raw `|` rows and merged list items into the paragraph
+- table cells wrap long URLs instead of widening the table; inline code in tables breaks only at `_` `.` `/`; header code no longer drops below 12px
+
 ## 0.15.0
 - added the Phase 5.6 visual self-review loop: render → `scripts/prd-html-qa.mjs` (zero-dependency Node + local Chrome via CDP: hard/soft checks, screenshots at desktop, dark, tablet and mobile, interaction smoke tests) → score against `references/html-visual-rubric.md` → patch the renderer, at most 3 rounds; source-level gaps go to the user as suggestions
 - fixed the document title never showing (a global `h1 { display: none }` also hid the page header title); the first H1 now moves into the header instead of being duplicated
